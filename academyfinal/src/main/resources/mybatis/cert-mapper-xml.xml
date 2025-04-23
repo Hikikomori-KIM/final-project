@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+  <mapper namespace="cert">
+  	<insert id="send">
+  		insert into cert(cert_email, cert_number)
+  		values(#{certEmail}, #{certNumber})
+  	</insert>
+  	
+  	<delete id="delete">
+  		delete from cert where cert_email = #{cert_email}
+  	</delete>
+  	
+  	<select id="find" resultType="certDto">
+  		select * from cert where cert_email = #{cert_email}
+  	</select>
+  	
+  </mapper>
