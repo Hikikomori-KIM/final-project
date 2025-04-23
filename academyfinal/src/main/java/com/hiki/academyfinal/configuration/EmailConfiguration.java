@@ -5,6 +5,7 @@ import java.util.Properties;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 
 @Configuration
@@ -18,9 +19,9 @@ public class EmailConfiguration {
 //	username= 사용자 계정이름  = sswoo4111 맞나?;
 //	password = 사용자계정 비밀번호 = 메일비번받은거 
 	@Bean
-	public JavaMailSenderImpl sender() {
+	public JavaMailSender sender() {
 		JavaMailSenderImpl sender = new JavaMailSenderImpl();
-		sender.setHost("mail.gmail.com");
+		sender.setHost("smtp.gmail.com");
 		sender.setPort(587);
 		sender.setUsername(siwooMail.getUsername());
 		sender.setPassword(siwooMail.getPassword());

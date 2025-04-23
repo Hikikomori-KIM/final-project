@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+  <mapper namespace="cert">
+  	<insert id="send">
+  		insert into cert(cert_email, cert_number)
+  		values(#{certEmail}, #{certNumber})
+  	</insert>
+  	
+  	<delete id="delete">
+  		delete from cert where cert_email = #{certEmail}
+  	</delete>
+  	
+  	<select id="find" resultType="certDto">
+  		select * from cert where cert_email = #{certEmail}
+  	</select>
+  	
+  	<update id="update">
+  		update cert set cert_number = #{certNumber}, cert_time =#{certTime}, cert_confirm=null
+  		where cert_email = #{certEmail}
+  	</update>
+  	
+  	<update id="confirm">
+		update cert set cert_confirm = systimestamp
+		where cert_email = #{certEmail}
+	</update>
+	
+	   <delete id="clean">
+        <![CDATA[
+        delete from cert
+        where cert_email in (
+            select TMP.cert_email from (
+                select
+                    cert.*, 
+                    extract(day from (systimestamp - cert_time)) * 24 * 60 +
+                    extract(hour from (systimestamp - cert_time)) * 60 +
+                    extract(minute from (systimestamp - cert_time)) +
+                    extract(second from (systimestamp - cert_time)) / 60 as diff
+                from cert
+            ) TMP
+            where 
+                (cert_confirm is null and diff >= #{expireMinutes}) 
+                or (cert_confirm is not null and diff >= #{expireAccept})
+        )
+        ]]>
+    </delete>
+	
+  </mapper>
