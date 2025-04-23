@@ -21,10 +21,19 @@ public class UsersDao {
 	
 	//회원가입 + 비밀번호 암호화
 	public void insert(UsersDto usersDto) {
-	String pwEncoder = encoder.encode(usersDto.getUsersPw());
-	usersDto.setUsersPw(pwEncoder);
-	Map<String,Object> result = new HashMap<>();
-	result.put("usersDto", usersDto);
-	sqlSession.insert("users.join",usersDto);
+		String pwEncoder = encoder.encode(usersDto.getUsersPw());
+		usersDto.setUsersPw(pwEncoder);
+		Map<String,Object> result = new HashMap<>();
+		result.put("usersDto", result);
+		sqlSession.insert("users.join",result);
 	}
+	
+	//아이디중복검사 // 조회
+	public UsersDto findId(String usersId) {
+		Map<String,Object> result = new HashMap<>();
+		result.put("usersId",usersId);
+		return sqlSession.selectOne("users.findId", result);
+	}
+	
+	
 }
