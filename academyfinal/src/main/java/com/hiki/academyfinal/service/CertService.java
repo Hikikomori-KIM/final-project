@@ -24,7 +24,7 @@ public class CertService {
 	private CertDao certDao;
 	
 	@Autowired
-	private JavaMailSender sender; //zz통째로불러오는게 아니라 기능을좀ㅋㅋ
+	private JavaMailSender sender; 
 	
 	@Autowired
 	private CertProperties certProperties;
@@ -67,9 +67,9 @@ public class CertService {
 		return false;//인증 실패
 	}
 
-//	// 정기적으로 인증정보 중 사용할 수 없는 것들을 제거하는 메소드
-//	@Scheduled(cron = "0 0 * * * *")
-//	public void work() {
-//		certDao.clean(certProperties.getExpireMinutes(), certProperties.getExpireAccept());
-//	}
+	// 정기적으로 인증정보 중 사용할 수 없는 것들을 제거하는 메소드
+	@Scheduled(cron = "0 0 * * * *")
+	public void work() {
+		certDao.clean(certProperties.getExpireMinutes(), certProperties.getExpireAccept());
+	}
 }

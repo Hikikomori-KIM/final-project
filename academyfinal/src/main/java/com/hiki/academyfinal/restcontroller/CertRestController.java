@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.hiki.academyfinal.dao.CertDao;
 import com.hiki.academyfinal.dto.CertDto;
 import com.hiki.academyfinal.error.TargetNotFoundException;
 import com.hiki.academyfinal.service.CertService;
@@ -19,10 +20,20 @@ public class CertRestController {
 	@Autowired
 	private CertService certService;
 	
+	@Autowired
+	private CertDao certDao;
+	
 	@PostMapping("/")
 	public void certSend(@RequestBody CertDto certDto) {
-		certService.sendMail(certDto.getCertEmail());
-		//이메일주고 끝
+		CertDto findDto = certDao.selectOne(certDto.getCertEmail()); 
+		if(findDto == null) {
+			certService.sendMail(certDto.getCertEmail());
+		}
+		else {
+			certDao.delete(certDto.getCertEmail());
+			certService.sendMail(certDto.getCertEmail());
+		}
+		System.out.println(findDto.toString());
 	}
 	
 	@PostMapping("/check")
