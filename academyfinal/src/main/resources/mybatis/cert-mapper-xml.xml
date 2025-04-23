@@ -18,4 +18,13 @@
   		select * from cert where cert_email = #{cert_email}
   	</select>
   	
+  	<update id="update">
+  		update cert set cert_number = #{certNumber}, cert_time =#{certTime}, cert_confirm=null
+  		where cert_email = #{certEmail}
+  	</update>
+  	
+  	<update id="confirm">
+		update cert set cert_confirm = systimestamp
+		where cert_email = #{certEmail}
+	</update>
   </mapper>

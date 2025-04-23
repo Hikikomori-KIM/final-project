@@ -8,5 +8,6 @@ import lombok.Data;
 @Component @Data
 @ConfigurationProperties(prefix = "custom.cert") 
 public class CertProperties {
-	private int sepireMinutes;
+	private int expireMinutes;//custom.cert.expire-minutes
+	private int expireAccept;//custom.cert.expire-accept
 }
