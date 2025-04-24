@@ -13,5 +13,4 @@ public class NoticeDto {
 	private String noticeTitle;
 	private String noticeContent;
 	private Timestamp noticeDate;
-
 }
