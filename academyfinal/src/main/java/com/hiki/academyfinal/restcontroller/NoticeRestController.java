@@ -19,9 +19,11 @@ public class NoticeRestController {
 	@Autowired
 	private NoticeDao noticeDao;
 	
-	@GetMapping("/list")
+	@GetMapping("/")
 	public List<NoticeDto> list() {
 		return noticeDao.selectList();
 	}
+	
+	
 	
 }

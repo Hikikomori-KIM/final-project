@@ -16,4 +16,8 @@ public class NoticeDao {
 	public List<NoticeDto> selectList() {
 		return sqlSession.selectList("notice.list");
 	}
+	
+	public NoticeDto selectOne(long noticeNo) {
+		return sqlSession.selectOne("notice.find", noticeNo);
+	}
 }
