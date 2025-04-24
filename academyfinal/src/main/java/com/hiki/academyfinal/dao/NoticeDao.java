@@ -18,6 +18,11 @@ public class NoticeDao {
 	}
 	
 	public NoticeDto selectOne(long noticeNo) {
-		return sqlSession.selectOne("notice.find", noticeNo);
+		return sqlSession.selectOne("notice.detail", noticeNo);
 	}
+	
+	public NoticeDto selectOne(NoticeDto noticeDto) {
+		return sqlSession.selectOne("notice.detail", noticeDto);
+	}
+	
 }
