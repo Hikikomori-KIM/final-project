@@ -6,6 +6,6 @@
 <mapper namespace="notice">
 	<!-- 조회 -->
 	<select id="list" resultType="NoticeDto">
-		select * from notice order by notice_no asc
+		select * from notice order by notice_no desc
 	</select>
 </mapper>
