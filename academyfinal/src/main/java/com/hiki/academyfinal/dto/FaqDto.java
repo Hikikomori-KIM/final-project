@@ -7,8 +7,8 @@ import lombok.NoArgsConstructor;
 
 @Data @Builder @NoArgsConstructor @AllArgsConstructor
 public class FaqDto {
-	private long faq_no;
-	private String faq_type;
-	private String faq_title;
-	private String faq_content;
+	private long faqNo;
+	private String faqType;
+	private String faqTitle;
+	private String faqContent;
 }
