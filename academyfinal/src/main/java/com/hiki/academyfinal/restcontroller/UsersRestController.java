@@ -23,6 +23,8 @@ public class UsersRestController {
 	//가입
 	@PostMapping("/")
 	public void join(@RequestBody UsersDto usersDto) {
+		
+		System.out.println(usersDto.getUsersContact());
 		usersDao.insert(usersDto);
 	}
 	//아이디중복

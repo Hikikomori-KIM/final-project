@@ -38,9 +38,7 @@ public class CertDao {
 	}
 	//오버로딩 
 	public CertDto selectOne(CertDto certDto) {
-		Map<String,Object> result = new HashMap<>();
-		result.put("certDto", certDto.getCertEmail());
-		return sqlSession.selectOne("cert.find",result);
+		return sqlSession.selectOne("cert.find",certDto.getCertEmail());
 	}
 	
 	
@@ -63,9 +61,7 @@ public class CertDao {
 		}
 	}
 	public boolean confirm(String certEmail) {
-		Map<String,String> result = new HashMap<>();
-		result.put("certEmail", certEmail);
-		return sqlSession.delete("cert.confirm", result) > 0;
+		return sqlSession.delete("cert.confirm", certEmail) > 0;
 	}
 	
 	public boolean clean(int expireMinutes, int expireAccept) {
