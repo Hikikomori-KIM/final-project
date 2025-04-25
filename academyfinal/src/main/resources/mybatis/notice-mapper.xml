@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd"> 
+
+<mapper namespace="notice">
+	
+	<select id="list" resultType="NoticeDto">
+		select * from notice order by notice_no desc
+	</select>
+	
+	<select id="detail" resultType="NoticeDto">
+		select * from notice where notice_no = #{noticeNo}
+	</select>
+	
+</mapper>
