@@ -19,11 +19,11 @@ public class FaqDao {
 	}
 	
 	public FaqDto selectOne(long faqNo) {
-		return sqlSession.selectOne("faq.find", faqNo);
+		return sqlSession.selectOne("faq.detail", faqNo);
 	}
 	
 	public FaqDto selectOne(FaqDto faqDto) {
-		return sqlSession.selectOne("faq.find", faqDto);
+		return sqlSession.selectOne("faq.detail", faqDto);
 	}
 	
 }

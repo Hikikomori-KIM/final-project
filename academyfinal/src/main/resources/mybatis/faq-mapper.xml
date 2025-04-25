@@ -9,7 +9,7 @@
 		select * from faq order by faq_no asc
 	</select>
 	
-	<select id="find" resultType="FaqDto">
+	<select id="detail" resultType="FaqDto">
 		select * from faq where faq_no = #{faqNo}
 	</select>
 	
