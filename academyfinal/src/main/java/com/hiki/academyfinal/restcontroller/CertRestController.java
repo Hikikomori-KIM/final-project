@@ -33,13 +33,15 @@ public class CertRestController {
 			certDao.delete(certDto.getCertEmail());
 			certService.sendMail(certDto.getCertEmail());
 		}
-		System.out.println(findDto.toString());
 	}
 	
 	@PostMapping("/check")
 	public void certCheck(@RequestBody CertDto certDto) {
-		if(certService.checkCert(certDto) == false) {
-			throw new TargetNotFoundException("인증 실패"); //실패하면 404..?;뭐줘
-		}
+//		System.out.println("인증 요청 들어옴: " + certDto.getCertEmail());
+//		System.out.println("번호 확인 " + certDto.getCertNumber());
+		CertDto qq = certDao.selectOne(certDto.getCertEmail());
+//		System.out.println("find로 찾은 갖고있는번호" + qq);
+		boolean result = certService.checkCert(certDto);
+		if(result == false) throw new TargetNotFoundException("인증 실패");
 	}
 }
