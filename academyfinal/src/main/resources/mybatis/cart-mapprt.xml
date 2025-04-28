@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd"> 
+
+<mapper namespace="cart">
+	<select id="list" resultType="CartDto">
+		select * from cart order by cart_items_no
+	</select>
+	
+	<select id="find" resultType="CartDto">
+		select * from cart where cart_items_no = #{cartItemsNo}
+	</select>
+	
+	<select id="sequence" resultType="long">
+		select cart_seq.nextval from dual
+	</select>
+
+</mapper>
