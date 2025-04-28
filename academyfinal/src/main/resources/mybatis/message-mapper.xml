@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="message">
+
+	<!-- 등록 -->
+	<select id="sequence" resultType="long">
+		select message_seq.nextval from dual
+	</select>
+	<insert id="add">
+		insert into message(
+			message_no, message_type, message_content,
+			message_time, message_sender, message_receiver
+		)
+		values(
+			#{messageNo}, #{messageType}, #{messageContent},
+			#{messageTime}, #{messageSender}, #{messageReceiver}
+		)
+	</insert>
+	
+	<!-- 메시지 조회 -->
+	<!-- 관리자 채팅 목록 뷰 -->
+	<select id="listForAdmin" resultType="MessageViewDto">
+	    select mv.*, u.users_id, u.users_name
+	    from message_view mv
+	    join users u on (u.user_id = mv.message_sender or u.user_id = mv.message_receiver)
+	    where mv.message_type in ('CHAT', 'DM')
+	    and u.users_type = '관리자'  <!-- 관리자만 필터 -->
+	    order by mv.message_no asc
+	</select>
+	
+	<!-- 회원 채팅 목록 뷰 -->
+	<select id="listForUsers" resultType="MessageViewDto">
+	    select mv.*, u.users_id
+	    from message_view mv
+	    join users u on (u.user_id = mv.message_sender or u.user_id = mv.message_receiver)
+	    where mv.message_type in ('DM', 'SYSTEM')
+	    and (
+	        (mv.message_sender = #{userId} or mv.message_receiver = #{userId})
+	        or
+	        (mv.message_receiver = '관리자' 
+	            and mv.message_sender = #{userId}
+	            and u.users_id is not null)
+	    )
+	    and u.users_type = '일반회원'  <!-- 일반 회원만 필터 -->
+	    order by mv.message_no asc
+	</select>
+	
+	<!-- 일정 개수만큼만의 메시지를 조회 -->
+	<select id="listPaging" resultType="MessageViewDto">
+	    select * from (
+	        <include refid="top-n-header"></include>
+	        select * from message_view
+	        where 
+	            (
+	                message_type in ('CHAT', 'SYSTEM')
+	                or
+	                message_type = 'DM' 
+	                and
+	                (message_sender = #{userId} 
+	                or 
+	                message_receiver = #{userId})
+	            )
+	        <if test="messageNo != null">
+	            <![CDATA[
+	            and message_no < #{messageNo}
+	            ]]>
+	        </if>
+	        order by message_no desc
+	        <include refid="top-n-footer"></include>
+	    ) order by message_no asc
+	</select>	
+	
+	<!-- Top N Query 템플릿 -->
+	<sql id="top-n-header">
+		select * from (
+			select rownum rn, TMP.* from (
+	</sql>
+	<sql id="top-n-footer">
+			) TMP
+		) where rn between 1 and 10
+	</sql>
+	
+</mapper>
