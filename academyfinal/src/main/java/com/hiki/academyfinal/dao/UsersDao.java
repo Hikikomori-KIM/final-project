@@ -24,6 +24,9 @@ public class UsersDao {
 
 		sqlSession.insert("users.join",usersDto);
 	}
+	public void insertNaver(UsersDto usersDto) {
+		sqlSession.insert("users.naverJoin",usersDto);
+	}
 	
 	//아이디중복검사 // 조회
 	public UsersDto findId(String usersId) {
