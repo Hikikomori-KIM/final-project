@@ -1,4 +1,4 @@
-package com.hiki.academyfinal.restcontroller;
+package com.hiki.academyfinal.restcontroller.websocket;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -15,12 +15,11 @@ import lombok.extern.slf4j.Slf4j;
 @CrossOrigin
 @RestController
 @RequestMapping("/api/service/contact")
-public class MessageRestController {
+public class MemberMessageRestController {
 	@Autowired
 	private MessageDao messageDao;
 	@Autowired
 	private TokenService tokenService;
 	
-	@GetMapping("/")
 	
 }

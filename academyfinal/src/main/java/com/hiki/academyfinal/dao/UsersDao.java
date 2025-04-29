@@ -36,10 +36,17 @@ public class UsersDao {
 	//로그인
 	public UsersDto login(UsersDto usersDto) {
 		UsersDto findDto = findId(usersDto);
-		if(findDto ==null) return null;
+		if(findDto == null) return null;
 		
 		boolean isValid = encoder.matches(usersDto.getUsersPw(), findDto.getUsersPw());
 		return isValid ? findDto : null;
+	}
+	
+	public UsersDto selectOne(String usersId) {
+		return sqlSession.selectOne("users.find", usersId);
+	}
+	public UsersDto selectOne(UsersDto usersDto) {
+		return sqlSession.selectOne("users.find", usersDto);
 	}
 	
 }

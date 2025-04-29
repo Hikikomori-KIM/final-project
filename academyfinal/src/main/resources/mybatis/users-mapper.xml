@@ -17,5 +17,9 @@
   	select * from users where users_id = #{usersId}
   </select>
   
+  <!--상세 조회-->
+  <select id="find" resultType="UsersDto">
+  	select * from users where users_id = #{usersId}
+  </select>
   
   </mapper>
