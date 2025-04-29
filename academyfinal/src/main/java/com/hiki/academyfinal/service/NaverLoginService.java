@@ -3,7 +3,7 @@ package com.hiki.academyfinal.service;
 import java.net.URI;
 import java.net.URISyntaxException;
 
-import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.client.RestTemplate;
 
-import com.hiki.academyfinal.configuration.NaverLoginProperties;
+
 import com.hiki.academyfinal.vo.NaverLoginRequestVO;
 import com.hiki.academyfinal.vo.UserProfileResponseVO;
 
@@ -21,9 +21,7 @@ import lombok.extern.slf4j.Slf4j;
 @Service
 public class NaverLoginService {
 
-	@Autowired 
-	private NaverLoginProperties naverLoginProperties;
-	
+
 
 	
 	//엑세스토큰 네이버꺼 받아오기

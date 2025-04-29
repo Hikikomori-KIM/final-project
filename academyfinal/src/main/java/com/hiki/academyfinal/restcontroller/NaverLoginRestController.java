@@ -82,18 +82,19 @@ public class NaverLoginRestController {
 		            	 usersDto.setUsersName(usersProfile.getResponse().getName());
 		            	 usersDto.setUsersPw("naver_dummy_pw");
 		            	 usersDto.setUsersContact(withoutHyphens);
-		            	 usersDto.setUsersBirth(usersProfile.getResponse().getBirthday());
 		            	 usersDto.setUsersEmail(usersProfile.getResponse().getEmail());
 		            	 usersDto.setUsersProvider("naver");
-		            	 usersDao.insert(usersDto);
-//		            	 usersDao.findId(usersDto);
-//		            	 System.out.println("db추가한후 유저 조회 : "+ usersDto);
+		            	 System.out.println("현재 provider 값: " + usersDto.getUsersProvider()); 
+		            	 usersDao.insertNaver(usersDto);
+		            	 System.out.println("인서트후 provider 값: " + usersDto.getUsersProvider()); 
+		            	 UsersDto findDto = usersDao.findId(usersDto);
+		            
 		            	  //후토큰발행
 		            	  return UsersLoginResponseVO.builder()
-		      					.usersId(usersDto.getUsersId())
-		      					.usersType(usersDto.getUsersType())
-		      					.accessToken(tokenService.generateAccessToken(usersDto))
-		      					.refreshToken(tokenService.generateRefreshToken(usersDto))
+		      					.usersId(findDto.getUsersId())
+		      					.usersType(findDto.getUsersType())
+		      					.accessToken(tokenService.generateAccessToken(findDto))
+		      					.refreshToken(tokenService.generateRefreshToken(findDto))
 		      				.build();
 		              }
 		              //이미 멤버이라면
