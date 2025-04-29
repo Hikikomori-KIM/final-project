@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.hiki.academyfinal.configuration.TokenProperties;
 import com.hiki.academyfinal.dao.UsersTokenDao;
-import com.hiki.academyfinal.dto.NaverUsersDto;
+
 import com.hiki.academyfinal.dto.UsersDto;
 import com.hiki.academyfinal.dto.UsersTokenDto;
 import com.hiki.academyfinal.error.TargetNotFoundException;
@@ -146,49 +146,6 @@ public class TokenService {
 		return expire.getTime() - now.getTime();
 	}
 	
-public String generateAccessTokenNaver(NaverUsersDto naverUsersDto) {
-		
-		Calendar c = Calendar.getInstance();
-		Date now = c.getTime();
-		c.add(Calendar.MINUTE, tokenProperties.getAccessLimit());
-		Date limit = c.getTime();
-		//제이슨웹토큰서비스임
-		return Jwts.builder()
-					.signWith(tokenProperties.getKey())
-					.expiration(limit)
-					.issuer(tokenProperties.getIssuer())
-					.issuedAt(now)
-					.claim("usersId", naverUsersDto.getNaverUsersId())
-					.claim("usersType", naverUsersDto.getUsersType())
-				.compact();
-	}
-
-public String generateRefreshTokenNaver(NaverUsersDto naverUsersDto) {
-	Calendar c = Calendar.getInstance();
-	Date now = c.getTime();
-	c.add(Calendar.MINUTE, tokenProperties.getRefreshLimit());
-	Date limit = c.getTime();
-
-	//토큰생성
-	String tokenValue = Jwts.builder()
-		.signWith(tokenProperties.getKey())
-		.expiration(limit)
-		.issuer(tokenProperties.getIssuer())
-		.issuedAt(now)
-		.claim("usersId", naverUsersDto.getNaverUsersId())
-		.claim("usersType",naverUsersDto.getUsersType())
-	.compact();
-	
-	//db저장
-	UsersTokenDto usersTokenDto = usersTokenDao.insert(
-		UsersTokenDto.builder()
-			.usersTokenTarget(naverUsersDto.getNaverUsersId())
-			.usersTokenValue(tokenValue)
-		.build()
-	);
-
-	return tokenValue;
-}
 
 
 }

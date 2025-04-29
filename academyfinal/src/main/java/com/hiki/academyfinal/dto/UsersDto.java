@@ -15,6 +15,7 @@ public class UsersDto {
 	private String usersBirth;
 	private String usersType;
 	private String usersEmail;
+	private String usersProvider;
 	
 
 }

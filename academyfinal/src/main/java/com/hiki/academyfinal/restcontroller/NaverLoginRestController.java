@@ -12,8 +12,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hiki.academyfinal.configuration.NaverLoginProperties;
-import com.hiki.academyfinal.dao.NaverUsersDao;
-import com.hiki.academyfinal.dto.NaverUsersDto;
+import com.hiki.academyfinal.dao.UsersDao;
+import com.hiki.academyfinal.dto.UsersDto;
 import com.hiki.academyfinal.service.NaverLoginService;
 import com.hiki.academyfinal.service.TokenService;
 import com.hiki.academyfinal.vo.NaverLoginInfoVO;
@@ -34,7 +34,7 @@ public class NaverLoginRestController {
 	private NaverLoginService naverLoginService;
 	
 	@Autowired
-	private NaverUsersDao naverUsersDao;
+	private UsersDao usersDao;
 	
 	@Autowired
 	private TokenService tokenService;
@@ -57,7 +57,7 @@ public class NaverLoginRestController {
 		            .state(vo.getState())
 		            .build();
 		        String repsonse = naverLoginService.ready(naverVO);
-		        System.out.println("네이버로그인결과: " + repsonse);
+//		        System.out.println("네이버로그인결과: " + repsonse);
 		        //2번 엑세스토큰 다시보내고 유저정보 받아오기 
 		          try {
 		        	  //엑세스토큰만 쓸거임 유저정보받아오고 우리토큰발행해줄것입니다^_^
@@ -68,47 +68,48 @@ public class NaverLoginRestController {
 //		              System.out.println("엑세스토큰추출: " + accessToken);
 		              UserProfileResponseVO usersProfile = naverLoginService.responseProfile(accessToken);
 //		              System.out.println("유저 정보조회결과: "+usersProfile);
-		              
-		              NaverUsersDto naverUsersDto = new NaverUsersDto();
-		              naverUsersDto.setNaverUsersId(usersProfile.getResponse().getId());
-		              naverUsersDto.setNaverUsersName(usersProfile.getResponse().getName());
-		              naverUsersDto.setNaverUsersEmail(usersProfile.getResponse().getEmail());
-		              naverUsersDto.setNaverUsersMobile(usersProfile.getResponse().getMobile());
-//		              System.out.println("유저정보 매핑결과 :"+ naverUsersDto);
-		              //이미 멤버인지 확인
-		              NaverUsersDto member = naverUsersDao.findNaverUser(naverUsersDto);
-//		              System.out.println("이미 디비에 들어가 있는 정보인가 : "+ member);
-		              if(member.equals(null) || member == null) {
+		              UsersDto usersDto = new UsersDto();
+		              usersDto = usersDao.findId(usersProfile.getResponse().getId());
+//		              System.out.println("유저 아이디조회 : "+ usersDto);
+		              if(usersDto == null) {
+		            	 usersDto = new UsersDto();
 		            	  //멤버 아니면 디비저장
-		            	  naverUsersDao.insert(naverUsersDto);
-		            	  
-		            	  //다시정보뽑아놓고
-		            	 NaverUsersDto findDto = naverUsersDao.findNaverUser(naverUsersDto);
-//		            	 System.out.println("유저 정보추출 :"+ findDto);
-		 
-
+		            	 //비밀번호 어차피 인증에 사용안됌
+		            	 //하이픈들어와서 뺌 ㅡㅡ
+		            	 String number = usersProfile.getResponse().getMobile();
+		            	 String withoutHyphens = number.replace("-", "");
+		            	 usersDto.setUsersId(usersProfile.getResponse().getId());
+		            	 usersDto.setUsersName(usersProfile.getResponse().getName());
+		            	 usersDto.setUsersPw("naver_dummy_pw");
+		            	 usersDto.setUsersContact(withoutHyphens);
+		            	 usersDto.setUsersBirth(usersProfile.getResponse().getBirthday());
+		            	 usersDto.setUsersEmail(usersProfile.getResponse().getEmail());
+		            	 usersDto.setUsersProvider("naver");
+		            	 usersDao.insert(usersDto);
+//		            	 usersDao.findId(usersDto);
+//		            	 System.out.println("db추가한후 유저 조회 : "+ usersDto);
 		            	  //후토큰발행
 		            	  return UsersLoginResponseVO.builder()
-		      					.usersId(findDto.getNaverUsersId())
-		      					.usersType(findDto.getUsersType())
-		      					.accessToken(tokenService.generateAccessTokenNaver(findDto))
-		      					.refreshToken(tokenService.generateRefreshTokenNaver(findDto))
+		      					.usersId(usersDto.getUsersId())
+		      					.usersType(usersDto.getUsersType())
+		      					.accessToken(tokenService.generateAccessToken(usersDto))
+		      					.refreshToken(tokenService.generateRefreshToken(usersDto))
 		      				.build();
 		              }
 		              //이미 멤버이라면
 		              else {
 		            	 return UsersLoginResponseVO.builder()
-			      					.usersId(member.getNaverUsersId())
-			      					.usersType(member.getUsersType())
-			      					.accessToken(tokenService.generateAccessTokenNaver(member))
-			      					.refreshToken(tokenService.generateRefreshTokenNaver(member))
+			      					.usersId(usersDto.getUsersId())
+			      					.usersType(usersDto.getUsersType())
+			      					.accessToken(tokenService.generateAccessToken(usersDto))
+			      					.refreshToken(tokenService.generateRefreshToken(usersDto))
 			      				.build();
 		            	  //그냥 토큰발행후 리턴
 		            	  
 		              }
 		              
 		          } catch (Exception e) {     
-		             throw new TargetNotFoundException("로그인실패");
+		             throw new TargetNotFoundException("로그인실패"+e.getMessage());
 		          }
 	}
 	
