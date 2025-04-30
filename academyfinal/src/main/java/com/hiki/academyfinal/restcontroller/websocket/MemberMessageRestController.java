@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.hiki.academyfinal.dao.MessageDao;
+import com.hiki.academyfinal.dao.websocket.MessageDao;
 import com.hiki.academyfinal.service.TokenService;
 
 import lombok.extern.slf4j.Slf4j;

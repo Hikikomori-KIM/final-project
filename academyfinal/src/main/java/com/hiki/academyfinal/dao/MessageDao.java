@@ -22,9 +22,9 @@ public class MessageDao {
 		return messageDto;
 	}
 	
-//	public List<MemberMessageViewDto> selectListForAdmin(String usersType) {
-// 		return sqlSession.selectList("message.listForAdmin", usersType);
-// 	}
+	public List<MessageViewDto> selectListForAdmin(String usersType) {
+ 		return sqlSession.selectList("message.listForAdmin", usersType);
+ 	}
 	
 	public List<MessageViewDto> selectListForUsers(String usersType) {
 		return sqlSession.selectList("message.listForUsers", usersType);
