@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+  <mapper namespace="category">
+<!--   	카테고리 추가 -->
+  	<insert id="add">
+  		insert into Categories (
+  			category_no, category_name, parent_category_no
+  		) values (
+  			#{categoryNo}, #{categoryName}, #{parentCategoryNo}
+  		)
+  	</insert>
+<!--   	시퀀스 -->
+  	<select id="sequence" resultType="int">
+  		select categories_seq.nextval from dual
+  	</select>
+<!--   	카테고리 조회 -->
+	<select id="selectList" resultType="CategoryDto">
+		select category_no, category_name, parent_category_no 
+		from categories 
+		order by category_no
+	</select>
+<!-- 	카테고리 수정 -->
+	<update id="update">
+		update categories 
+		set category_name = #{categoryName} 
+		where category_no = #{categoryNo}
+	</update>
+  	
+  	
+  </mapper>
