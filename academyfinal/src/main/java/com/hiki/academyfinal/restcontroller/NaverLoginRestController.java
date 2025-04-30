@@ -14,13 +14,13 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hiki.academyfinal.configuration.NaverLoginProperties;
 import com.hiki.academyfinal.dao.UsersDao;
 import com.hiki.academyfinal.dto.UsersDto;
+import com.hiki.academyfinal.error.TargetNotFoundException;
 import com.hiki.academyfinal.service.NaverLoginService;
 import com.hiki.academyfinal.service.TokenService;
 import com.hiki.academyfinal.vo.NaverLoginInfoVO;
 import com.hiki.academyfinal.vo.NaverLoginRequestVO;
 import com.hiki.academyfinal.vo.UserProfileResponseVO;
 import com.hiki.academyfinal.vo.UsersLoginResponseVO;
-import com.kh.spring12.error.TargetNotFoundException;
 
 @RestController
 @CrossOrigin

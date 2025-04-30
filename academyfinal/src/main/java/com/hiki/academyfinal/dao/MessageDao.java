@@ -8,7 +8,6 @@ import org.springframework.stereotype.Repository;
 
 import com.hiki.academyfinal.dto.websocket.MessageDto;
 import com.hiki.academyfinal.dto.websocket.MessageViewDto;
-import com.kh.spring12.dto.websocket.MemberMessageViewDto;
 
 @Repository
 public class MessageDao {
@@ -23,9 +22,9 @@ public class MessageDao {
 		return messageDto;
 	}
 	
-	public List<MemberMessageViewDto> selectListForAdmin(String usersType) {
- 		return sqlSession.selectList("message.listForAdmin", usersType);
- 	}
+//	public List<MemberMessageViewDto> selectListForAdmin(String usersType) {
+// 		return sqlSession.selectList("message.listForAdmin", usersType);
+// 	}
 	
 	public List<MessageViewDto> selectListForUsers(String usersType) {
 		return sqlSession.selectList("message.listForUsers", usersType);
