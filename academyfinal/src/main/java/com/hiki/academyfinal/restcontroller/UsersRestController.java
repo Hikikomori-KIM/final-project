@@ -107,7 +107,7 @@ public class UsersRestController {
 					.build();
 		}
 		
-		//새 비밀번호 보내기
+		//새 비밀번호 보내기 //리팩토링필요 //기능확인은 ok 기능됨 //서비스로빼야됌
 		@PatchMapping("/password")
 		public ResponseEntity<String> password(@RequestBody UsersDto usersDto){
 			System.out.println("클라이언트에서 온값 : " + usersDto);
@@ -117,14 +117,11 @@ public class UsersRestController {
 			System.out.println("Dto 찾기 : "+ findDto);
 			//그 아이디로 email 과 가져온 이메일 일치하는지 확인
 			String usersEmail = usersDao.findEmail(findDto.getUsersId());
-//			System.out.println("db에서 찾은 이메일: " + usersEmail);
 			if(usersEmail.equals(usersDto.getUsersEmail())==false) {
-//				System.out.println("이메일이 일치하지않음!!!!!!!!!!!!!");
 				throw new TargetNotFoundException("본인 이메일아님");	
 			}
 			//email 보내가
 			CertPwDto certPwDto = new CertPwDto();
-//			System.out.println("넘어온 이메일: " + usersEmail);
 			System.out.println("usersDtoEmail :"+ usersDto.getUsersEmail());
 			certPwDto.setCertPwEmail(usersEmail);
 			certService.sendNewPw(certPwDto); //여기 랜덤스트링있음
