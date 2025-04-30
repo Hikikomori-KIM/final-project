@@ -9,6 +9,7 @@
   	<select id="sequence" resultType="long">
   		select room_seq.nextval from dual
   	</select>
+  	
   	<insert id="create">
   		insert into room(room_no, room_title, room_owner)
   		values(#{roomNo}, #{roomTitle}, #{roomOwner})  	
