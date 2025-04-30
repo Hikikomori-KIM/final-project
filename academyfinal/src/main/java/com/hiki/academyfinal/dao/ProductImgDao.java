@@ -18,4 +18,8 @@ public class ProductImgDao {
 		);
 		sqlSession.insert("productImg.add",param);
 	}
+	
+	public Integer findAttachmentNoByProductNo(int productNo) {
+	    return sqlSession.selectOne("productImg.findAttachmentNoByProductNo", productNo);
+	}
 }

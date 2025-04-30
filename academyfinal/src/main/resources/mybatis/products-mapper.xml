@@ -9,23 +9,33 @@
   <insert id="add">
     INSERT INTO products (
       product_no, product_name, product_detail,
-      product_price, product_stock, product_created_at,
-      category_no, brand, strength
+      product_price, product_stock, product_created_at, 
+      category_no, brand_no, strength
     ) VALUES (
       #{productNo}, #{productName}, #{productDetail},
-      #{productPrice}, #{productStock}, #{productCreatedAt},
-      #{categoryNo}, #{brand}, #{strength}
+      #{productPrice}, #{productStock}, SYSDATE, 
+      #{categoryNo}, #{brandNo}, #{strength}
     )
   </insert>
 
   <!-- 상품 조회 -->
-  <select id="list" resultType="com.hiki.academyfinal.dto.ProductsDto">
-    SELECT * FROM products
-    ORDER BY product_no ASC
-  </select>
+<select id="list" resultType="ProductsDto">
+  SELECT
+    p.*,
+    a.attachment_no AS attachmentNo
+  FROM
+    products p
+  LEFT JOIN
+    product_img pi ON p.product_no = pi.product_no
+  LEFT JOIN
+    attachment a ON pi.attachment_no = a.attachment_no
+  ORDER BY
+    p.product_no ASC
+</select>
+
 
   <!-- 상품 단일조회 -->
-  <select id="find" resultType="com.hiki.academyfinal.dto.ProductsDto">
+  <select id="find" resultType="ProductsDto">
     SELECT * FROM products WHERE product_no = #{productNo}
   </select>
 
@@ -41,9 +51,9 @@
       product_detail = #{productDetail},
       product_price = #{productPrice},
       product_stock = #{productStock},
-      brand = #{brand},
       strength = #{strength},
-      category_no = #{categoryNo}
+      category_no = #{categoryNo},
+      brand_no = #{brandNo}
     WHERE product_no = #{productNo}
   </update>
 
@@ -51,5 +61,13 @@
   <select id="sequence" resultType="int">
     SELECT products_seq.nextval FROM dual
   </select>
+	<!-- 향 계열 필터링 조회 -->
+	<select id="selectByAccord" resultType="ProductsDto">
+	  SELECT p.*
+	  FROM products p
+	  INNER JOIN PRODUCTACCORD pa ON p.product_no = pa.product_no
+	  WHERE pa.accord_no = #{accordNo}
+	  ORDER BY p.product_no ASC
+	</select>
 
 </mapper>

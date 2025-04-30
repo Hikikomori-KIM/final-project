@@ -1,19 +1,22 @@
 package com.hiki.academyfinal.dto;
 
 import java.util.List;
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@Data  @NoArgsConstructor @AllArgsConstructor @Builder
-public class ProductAddRequestDto { // 상품입력시 한방에 처리하려는 dto
-	 // 🔸 Products
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+public class ProductAddRequestDto {
+
+    // 🔸 Products
     private String productName;
     private String productDetail;
     private Integer productPrice;
-    private String brand;
+    private Integer brandNo;
     private String strength;
 
     // 🔸 PerfumeDetails
@@ -21,6 +24,12 @@ public class ProductAddRequestDto { // 상품입력시 한방에 처리하려는
     private String middleNote;
     private String baseNote;
 
-    // 🔸 Volume 리스트 (ex: [{volumeMl: \"50ml\", volumeStock: 10}, ...])
+    // 🔸 추가: category 번호
+    private Integer categoryNo;
+
+    // 🔸 추가: 향 계열 accords 리스트
+    private List<String> accords;
+
+    // 🔸 Volume 리스트
     private List<VolumeDto> volumes;
 }

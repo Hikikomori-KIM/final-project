@@ -8,14 +8,19 @@ import lombok.NoArgsConstructor;
 
 @Data @AllArgsConstructor @NoArgsConstructor @Builder
 public class ProductsDto {
-	private int productNo;             // VARCHAR2(20) → String
-	private String productName;
-	private String productDetail;
-	private Integer productPrice;         // NUMBER → Integer
-	private Integer productStock;
-	private Timestamp productCreatedAt;
+    private int productNo;             
+    private String productName;
+    private String productDetail;
+    private Integer productPrice;         
+    private Integer productStock;
+    private Timestamp productCreatedAt;
 
-	private int categoryNo;            // FK 참조용
-	private String brand;
-	private String strength;
+    private int categoryNo;           // FK
+    private int brandNo;              // ✅ 브랜드 이름(X) → 브랜드 번호(FK)
+    private String strength;
+    
+    private Integer attachmentNo; // ✅ 추가
+    
+    private String imageUrl; //이미지 경로
+    
 }

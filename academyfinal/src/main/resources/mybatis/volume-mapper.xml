@@ -8,10 +8,10 @@
   		insert into volume ( 
   			volume_no, product_no, volume_ml, volume_stock
   		) values (
-  			#{volumeNo}, #{productNo}, #{volumeMl}, #{volumesStock} 
+  			#{volumeNo}, #{productNo}, #{volumeMl}, #{volumeStock} 
   		)
  	</insert>
- 	<select id="sequence">
+ 	<select id="sequence" resultType="int">
  		select volume_seq.nextval from dual
  	</select>
   </mapper>

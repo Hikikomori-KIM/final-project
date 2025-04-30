@@ -1,21 +1,20 @@
 package com.hiki.academyfinal.dao;
 
+import java.util.List;
+
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import com.hiki.academyfinal.dto.VolumeDto;
+import com.hiki.academyfinal.dto.BrandDto;
 
 @Repository
-public class VolumeDao {
+public class BrandDao {
+	
 	@Autowired
 	private SqlSession sqlSession;
 	
-	public int sequence() {
-		return sqlSession.selectOne("volume.sequence");
-	}
-	
-	public void insert(VolumeDto volumeDto) {
-		sqlSession.insert("volume.add",volumeDto);
+	public List<BrandDto> selectList(){
+		return sqlSession.selectList("brands.findAll");
 	}
 }

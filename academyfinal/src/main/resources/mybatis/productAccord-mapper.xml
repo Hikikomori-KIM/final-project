@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="productAccord">
+
+  <insert id="insert">
+    INSERT INTO ProductAccord (
+      product_accord_no, product_no, accord_no
+    ) VALUES (
+      product_accord_seq.nextval, #{productNo}, #{accordNo}
+    )
+  </insert>
+
+</mapper>

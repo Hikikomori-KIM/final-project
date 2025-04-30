@@ -22,4 +22,8 @@ public class CategoryDao {
 	public List<CategoryDto> selectList(){
 		return sqlSession.selectList("category.selectList");
 	}
+	
+//	public CategoryDto update(int categoryNo) {
+//		return 
+//	}
 }

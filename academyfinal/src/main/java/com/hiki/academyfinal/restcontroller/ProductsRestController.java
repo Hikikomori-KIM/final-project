@@ -23,12 +23,25 @@ public class ProductsRestController {
     @Autowired private ProductsDao productsDao;
     @Autowired private ProductService productService;
 
-    // 전체 조회
-    @GetMapping("/")
-    public List<ProductsDto> list() {
-        return productsDao.selectList();
+    // ✅ 통합 등록 - 제일 먼저!
+    @PostMapping(value = "/new", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<?> register(
+        @RequestPart("data") ProductAddRequestDto dto,
+        @RequestPart(value = "image", required = false) MultipartFile image
+    ) throws IOException {
+        productService.registerProduct(dto, image);
+        return ResponseEntity.ok("상품 등록 완료!");
     }
 
+    // 전체 조회
+    @GetMapping
+    public List<ProductsDto> list(@RequestParam(required = false) Integer accordNo) {
+        if (accordNo != null) {
+            return productService.getProductsByAccord(accordNo);
+        } else {
+            return productService.getAllProducts();
+        }
+    }
     // 단일 조회
     @GetMapping("/{productsNo}")
     public ProductsDto find(@PathVariable Integer productsNo) {
@@ -51,18 +64,7 @@ public class ProductsRestController {
                      @RequestBody ProductsDto productsDto) {
         ProductsDto targetDto = productsDao.selectOne(productsNo);
         if (targetDto == null) throw new TargetNotFoundException();
-
         productsDto.setProductNo(productsNo);
         productsDao.update(productsDto);
-    }
-
-    // 통합 등록
-    @PostMapping(value = "/new", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<?> register(
-        @RequestPart("data") ProductAddRequestDto dto,
-        @RequestPart(value = "image", required = false) MultipartFile image
-    ) throws IOException {
-        productService.registerProduct(dto, image);
-        return ResponseEntity.ok("상품 등록 완료!");
     }
 }

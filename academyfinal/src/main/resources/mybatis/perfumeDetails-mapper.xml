@@ -13,7 +13,9 @@
   		  #{baseNote}, #{strengthLevel} 
   		  )
   	</insert>
-  	<select id="sequence">
-  		select perfume_seq.nextval from dual
-  	</select>
+
+  <select id="sequence" resultType="int"> <!-- ✅ 추가 -->
+    select perfume_seq.nextval from dual
+  </select>
+  
   </mapper>

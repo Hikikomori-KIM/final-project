@@ -3,12 +3,19 @@
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-  <mapper namespace="productImg">
-  	<select id="add">
-  		select into product_img (
-  			attachment_no, product_no
-  		) values (
-  			#{attchmentNo}, #{productNo} 
-  		)
-  	</select>
-  </mapper>
+<mapper namespace="productImg">
+  
+  <insert id="add">
+    insert into product_img (
+      product_no, attachment_no
+    ) values (
+      #{productNo}, #{attachmentNo}
+    )
+  </insert>
+  <select id="findAttachmentNoByProductNo" parameterType="int" resultType="int">
+    SELECT attachment_no
+    FROM product_img
+    WHERE product_no = #{productNo}
+</select>
+
+</mapper>

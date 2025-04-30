@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+  <mapper namespace="brands">
+  
+  	<select id="findAll" resultType="BrandDto">
+  		select brand_no, brand_name 
+  		from brands 
+  		order by brand_name 
+  	</select>
+  	
+  	<delete id="delete">
+  		delete brands where brand_no = #{brandNo}
+  	</delete>
+  	
+  </mapper>

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+  <mapper namespace="accord">
+  
+  	<select id="findAll" resultType="AccordDto">
+  		select accord_no, accord_name 
+  		from accords 
+  		order by accord_name 
+  	</select>
+	<select id="findNoByName" resultType="int">
+	 	SELECT accord_no
+	 	FROM Accords
+	    WHERE accord_name = #{accordName}
+	</select>
+	  	
+  	
+  </mapper>
