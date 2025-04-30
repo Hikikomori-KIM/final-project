@@ -11,7 +11,10 @@
   	insert into users(users_id, users_name, users_pw, users_contact, users_birth, users_email)
   	values(#{usersId}, #{usersName}, #{usersPw}, #{usersContact}, #{usersBirth}, #{usersEmail})
   </insert>
-  
+  <insert id="naverJoin">
+  	insert into users(users_id, users_name, users_pw, users_contact, users_birth, users_email, users_provider)
+  	values(#{usersId}, #{usersName}, #{usersPw}, #{usersContact}, #{usersBirth}, #{usersEmail}, #{usersProvider})
+  </insert>
   <!-- id찾기 -->
   <select id="findId" resultType="usersDto">
   	select * from users where users_id = #{usersId}
