@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.hiki.academyfinal.configuration.TokenProperties;
 import com.hiki.academyfinal.dao.UsersTokenDao;
+
 import com.hiki.academyfinal.dto.UsersDto;
 import com.hiki.academyfinal.dto.UsersTokenDto;
 import com.hiki.academyfinal.error.TargetNotFoundException;
@@ -15,6 +16,7 @@ import com.hiki.academyfinal.vo.ClaimVO;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
+import lombok.extern.slf4j.Slf4j;
 
 @Service
 public class TokenService {
@@ -143,4 +145,7 @@ public class TokenService {
 		
 		return expire.getTime() - now.getTime();
 	}
+	
+
+
 }
