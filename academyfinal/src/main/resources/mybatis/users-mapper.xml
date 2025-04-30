@@ -21,8 +21,17 @@
   </select>
   
   <!--상세 조회-->
-  <select id="find" resultType="UsersDto">
+  <select id="find" resultType="usersDto">
   	select * from users where users_id = #{usersId}
   </select>
   
+  <!-- 업데이트 -->
+  <update id="updatePw" parameterType="map">
+  update users set users_pw = #{usersPw} where users_id = #{usersId}
+  </update>
+  
+  <!-- 아이디로 이메일찾기 -->
+  <select id="findEmail" resultType="string">
+  	select users_email from users where users_id = #{usersId}
+  </select>
   </mapper>

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+  <mapper namespace="certPw">
+  	<insert id="add">
+  		insert into cert_pw(cert_pw_email, cert_pw_string)
+  		values(#{certPwEmail}, #{certPwString})
+  	</insert>
+  	
+  	<delete id="delete">
+  		delete from cert_pw where cert_pw_email =#{certPwEmail}
+  	</delete>
+  	
+  	<select id="findString" resultType="certPwDto">
+  		select * from cert_pw where cert_pw_email =#{certPwEmail}
+  	</select>
+	
+  </mapper>
