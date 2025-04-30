@@ -11,7 +11,9 @@ import org.springframework.stereotype.Service;
 
 import com.hiki.academyfinal.configuration.CertProperties;
 import com.hiki.academyfinal.dao.CertDao;
+import com.hiki.academyfinal.dao.CertPwDao;
 import com.hiki.academyfinal.dto.CertDto;
+import com.hiki.academyfinal.dto.CertPwDto;
 import com.hiki.academyfinal.util.RandomGenerator;
 
 @Service
@@ -29,6 +31,9 @@ public class CertService {
 	@Autowired
 	private CertProperties certProperties;
 	
+	@Autowired
+	private CertPwDao certPwDao;
+	
 	public void sendMail(String usersEmail) {
 		String number = randomGenerator.randomNumber(8);
 		SimpleMailMessage message = new SimpleMailMessage();
@@ -41,7 +46,6 @@ public class CertService {
 				.certEmail(usersEmail)
 				.certNumber(number)
 				.build());
-		
 	}
 	//시간차구하기 + 인증번호 꺼내서 equals확인
 	public boolean checkCert(CertDto certDto) {
@@ -71,5 +75,19 @@ public class CertService {
 	@Scheduled(cron = "0 0 * * * *")
 	public void work() {
 		certDao.clean(certProperties.getExpireMinutes(), certProperties.getExpireAccept());
+	}
+	
+	
+	//새 비밀번호 보내기
+	public void sendNewPw(CertPwDto certPwDto) {
+		String randomString = randomGenerator.randomString();
+		SimpleMailMessage message = new SimpleMailMessage();
+		message.setTo(certPwDto.getCertPwEmail());
+		message.setSubject("임시 비밀번호 입니다");
+		message.setText("비밀번호 : "+ randomString );
+		sender.send(message);
+		certPwDto.setCertPwString(randomString);
+
+		certPwDao.insert(certPwDto);
 	}
 }
