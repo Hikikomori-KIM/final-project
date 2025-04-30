@@ -66,6 +66,10 @@
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
 		</dependency>
+		<dependency>
+  <groupId>org.springframework.boot</groupId>
+  <artifactId>spring-boot-starter-websocket</artifactId>
+</dependency>
 		<!--ModelMapper쓰기위한 의존성-->
 		<dependency>
     <groupId>org.modelmapper</groupId>
