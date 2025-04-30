@@ -10,7 +10,6 @@ import com.hiki.academyfinal.vo.websocket.ChatResponseVO;
 import com.hiki.academyfinal.vo.websocket.MessageVO;
 import com.hiki.academyfinal.vo.websocket.SystemMessageVO;
 
-
 @Component
 public class MemberMessageConverter {
 

@@ -54,6 +54,6 @@ public class GroupChatController {
 				.build();
 		
 		// 최종 전송
-		messagingTemplate.convertAndSend("/contact/group/chat/" + roomNo, response);
+		messagingTemplate.convertAndSend("/chat/group/ask" + roomNo, response);
 	}
 }
