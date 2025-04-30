@@ -58,4 +58,15 @@ public class RoomRestController {
 			throw new TargetNotFoundException("소유자 불일치");
 		roomDao.delete(roomNo);
 	}
+	
+	@PostMapping("/enter/{roomNo}")
+	public void enter(@RequestHeader("Authorization") String bearerToken,
+			@PathVariable long roomNo) {
+		ClaimVO claimVO = tokenService.parseBearerToken(bearerToken);
+		boolean isEnter = roomDao.checkRoom(roomNo, claimVO.getUsersId());
+		if(isEnter == false) {
+			roomDao.enterRoom(roomNo, claimVO.getUsersId());
+		}
+	}
+	
 }

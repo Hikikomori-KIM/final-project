@@ -26,4 +26,16 @@
   		delete room where room_no = #{roomNo}
   	</delete>
   	
+  	<!--방 입장-->
+  	<insert id="enter">
+  		insert into room_user(room_no, users_id)
+  		values(#{roomNo}, #{usersId})
+  	</insert>
+  	
+  	<!--방 검사-->
+  	<select id="chek" resultType="int">
+  		select count(*) from room_user
+  		where room_no = #{roomNo} and users_id = #{usersId}
+  	</select>
+  	
   </mapper>

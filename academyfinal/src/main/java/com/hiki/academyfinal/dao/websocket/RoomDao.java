@@ -1,6 +1,8 @@
 package com.hiki.academyfinal.dao.websocket;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,5 +42,20 @@ public class RoomDao {
 	
 	public boolean delete(long roomNo) {
 		return sqlSession.delete("room.delete", roomNo) > 0;
+	}
+	
+	public void enterRoom(long roomNo, String usersId) {
+		Map<String, Object> params = new HashMap<>();
+		params.put("roomNo", roomNo);
+		params.put("usersId", usersId);
+		sqlSession.insert("room.enter", params);
+	}
+
+	public boolean checkRoom(long roomNo, String usersId) {
+		Map<String, Object> params = new HashMap<>();
+		params.put("roomNo", roomNo);
+		params.put("usersId", usersId);
+		int count = sqlSession.selectOne("room.check", params);
+		return count > 0;
 	}
 }

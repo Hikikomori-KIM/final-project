@@ -8,12 +8,10 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data @Builder @NoArgsConstructor @AllArgsConstructor
-public class ChatResponseVO implements MessageVO {
+public class SystemMessageVO implements MessageVO {
 	private Long messageNo;
-	private String usersId;
-	private String usersName;
-	private String usersType;
 	private String content;
-	private String type;
 	private LocalDateTime time;
+	@Builder.Default
+	private String type = "SYSTEM";
 }

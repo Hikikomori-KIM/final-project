@@ -6,8 +6,8 @@ import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import com.hiki.academyfinal.dto.MessageDto;
-import com.hiki.academyfinal.dto.MessageViewDto;
+import com.hiki.academyfinal.dto.websocket.MessageDto;
+import com.hiki.academyfinal.dto.websocket.MessageViewDto;
 import com.kh.spring12.dto.websocket.MemberMessageViewDto;
 
 @Repository

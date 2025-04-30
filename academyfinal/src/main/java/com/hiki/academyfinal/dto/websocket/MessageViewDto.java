@@ -1,4 +1,4 @@
-package com.hiki.academyfinal.dto;
+package com.hiki.academyfinal.dto.websocket;
 
 import java.sql.Timestamp;
 
