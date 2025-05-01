@@ -27,7 +27,9 @@ public class TokenRenewalInterceptor implements HandlerInterceptor{
 			}
 
 			String accessToken = request.getHeader("Authorization");
-			if(accessToken == null) return true;
+	        if (accessToken != null && accessToken.startsWith("Bearer ")) {
+	            accessToken = accessToken.substring(7);  // "Bearer " 제거
+	        }
 			
 			//시간계산이거어캐하는데
 			long ms = tokenService.getRemainTime(accessToken);

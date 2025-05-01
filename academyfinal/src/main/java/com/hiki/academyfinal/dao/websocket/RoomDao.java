@@ -16,17 +16,12 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Repository
 public class RoomDao {
-
-    private final EmailConfiguration emailConfiguration;
 	@Autowired
 	private SqlSession sqlSession;
 
-    RoomDao(EmailConfiguration emailConfiguration) {
-        this.emailConfiguration = emailConfiguration;
-    }
 	
 	public RoomDto insert(RoomDto roomDto) {
-		int roomNo = sqlSession.selectOne("room.sequence");
+		long roomNo = sqlSession.selectOne("room.sequence");
 		roomDto.setRoomNo(roomNo);
 		sqlSession.insert("room.create", roomDto);
 		return roomDto;
