@@ -9,6 +9,11 @@
   	<select id="sequence" resultType="long">
   		select room_seq.nextval from dual
   	</select>
+  	
+  	<select id="check">
+  		select * from room
+  		where room_no = #{roomNo} and users_id = #{usersId}
+  	</select>
   
 	<insert id="create">
 		insert into room(room_no, room_title, room_owner)
@@ -28,12 +33,12 @@
   	</delete>
 
  	<insert id="enter">
-	    insert into room_user(room_no, users_id)
+	    insert into room(room_no, users_id)
 	    values(#{roomNo}, #{usersId})
   	</insert>
 
 	<delete id="leave">
-		delete room_user 
+		delete room
 		where room_no = #{roomNo} and account_id = #{accountId} 
 	</delete>
   	  	
