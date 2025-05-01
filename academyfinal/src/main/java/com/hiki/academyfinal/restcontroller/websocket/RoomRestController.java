@@ -32,7 +32,7 @@ public class RoomRestController {
 	public void create(@RequestBody RoomDto roomDto,
 			@RequestHeader("Authorization")String bearerToken) {
 		ClaimVO claimVO = tokenService.parseBearerToken(bearerToken);
-		roomDto.setRoomOwner(claimVO.getUsersId()); // 소유자 설정
+		roomDto.setRoomOwner(claimVO.getUsersId());
 		roomDao.insert(roomDto);
 	}
 	
