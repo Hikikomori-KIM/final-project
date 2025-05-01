@@ -76,4 +76,11 @@ public class RoomRestController {
 		roomDao.leaveRoom(roomNo, claimVO.getUsersId());
 	}
 	
+	@GetMapping("/check/{roomNo}")
+	public boolean check(@PathVariable long roomNo,
+			@RequestHeader("Authorization") String bearerToken) {
+		ClaimVO claimVO = tokenService.parseBearerToken(bearerToken);
+		return roomDao.checkRoom(roomNo, claimVO.getUsersId());
+	}
+	
 }
