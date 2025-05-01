@@ -39,7 +39,7 @@
   	</update>
   	<!-- 주소하나삭제 -->
   	<delete id="deleteOne">
-  		delete from address_list where users_id = #{usersId} and address_list_no = #{addressListNo}
+  		delete from address_list where address_list_no = #{addressListNo}
   	</delete>
   	
   	<!-- 메인주소삭제 ( 나중에 dao편하게 작업용 ) -->

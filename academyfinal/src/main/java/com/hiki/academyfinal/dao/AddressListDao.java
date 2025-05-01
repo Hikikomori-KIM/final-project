@@ -48,11 +48,8 @@ private SqlSession sqlSession;
 	}
 	
 	//그냥주소한개삭제
-	public boolean delete(AddressListDto addressListDto) {
-		Map<String,Object> result = new HashMap<>();
-		result.put("usersId", addressListDto.getUsersId());
-		result.put("addressListNo", addressListDto.getAddressListNo());
-		return sqlSession.delete("addressList.deleteOne",result)>0;
+	public boolean delete(long addressListNo) {
+		return sqlSession.delete("addressList.deleteOne",addressListNo)>0;
 	}
 	
 	//그냥 단일조회1

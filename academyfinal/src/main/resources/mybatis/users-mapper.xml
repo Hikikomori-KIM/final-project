@@ -25,7 +25,7 @@
   	select * from users where users_id = #{usersId}
   </select>
   
-  <!-- 업데이트 -->
+  <!-- 비번업데이트 -->
   <update id="updatePw" parameterType="map">
   update users set users_pw = #{usersPw} where users_id = #{usersId}
   </update>
@@ -34,4 +34,10 @@
   <select id="findEmail" resultType="string">
   	select users_email from users where users_id = #{usersId}
   </select>
+  
+  <update id="update" >
+  	update users set users_name=#{usersName}, users_contact=#{usersContact},
+  	users_birth=#{usersBirth}, users_email=#{usersEmail} where users_id =#{usersId}
+  </update>
+  
   </mapper>
