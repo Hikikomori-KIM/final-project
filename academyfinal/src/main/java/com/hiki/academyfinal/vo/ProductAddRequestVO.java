@@ -1,6 +1,9 @@
-package com.hiki.academyfinal.dto;
+package com.hiki.academyfinal.vo;
 
 import java.util.List;
+
+import com.hiki.academyfinal.dto.VolumeDto;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -10,8 +13,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class ProductAddRequestDto {
-
+public class ProductAddRequestVO {
     // 🔸 Products
     private String productName;
     private String productDetail;
@@ -31,5 +33,5 @@ public class ProductAddRequestDto {
     private List<String> accords;
 
     // 🔸 Volume 리스트
-    private List<VolumeDto> volumes;
+    private List<VolumeInputVO> volumes;
 }
