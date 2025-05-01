@@ -16,8 +16,8 @@ public class MessageViewDto {
 	private String messageSender;
 	private String messageReceiver;
 	
-	private String senderName;
+	private String senderId;
 	private String senderType;
-	private String receiverName;
+	private String receiverId;
 	private String receiverType;
 }

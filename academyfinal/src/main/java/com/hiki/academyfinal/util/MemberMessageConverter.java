@@ -10,7 +10,6 @@ import com.hiki.academyfinal.vo.websocket.ChatResponseVO;
 import com.hiki.academyfinal.vo.websocket.MessageVO;
 import com.hiki.academyfinal.vo.websocket.SystemMessageVO;
 
-
 @Component
 public class MemberMessageConverter {
 
@@ -23,7 +22,7 @@ public class MemberMessageConverter {
 				convertList.add(ChatResponseVO.builder()
 							.messageNo(messageViewDto.getMessageNo())
 							.usersId(messageViewDto.getMessageSender())
-							.usersName(messageViewDto.getSenderName())
+							.usersName(messageViewDto.getSenderId())
 							.usersType(messageViewDto.getSenderType())
 							.type("CHAT")
 							.content(messageViewDto.getMessageContent())

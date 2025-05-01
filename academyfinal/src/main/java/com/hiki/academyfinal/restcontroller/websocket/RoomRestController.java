@@ -32,7 +32,7 @@ public class RoomRestController {
 	public void create(@RequestBody RoomDto roomDto,
 			@RequestHeader("Authorization")String bearerToken) {
 		ClaimVO claimVO = tokenService.parseBearerToken(bearerToken);
-		roomDto.setRoomOwner(claimVO.getUsersId()); // 소유자 설정
+		roomDto.setRoomOwner(claimVO.getUsersId());
 		roomDao.insert(roomDto);
 	}
 	
@@ -44,18 +44,16 @@ public class RoomRestController {
 	@GetMapping("/{roomNo}")
 	public RoomDto find(@PathVariable long roomNo) {
 		RoomDto roomDto = roomDao.selectOne(roomNo);
-		if(roomDto == null) throw new TargetNotFoundException("방 번호가 존재하지 않습니다");
+		if(roomDto == null) throw new TargetNotFoundException("방 번호 X");
 		return roomDto;
 	}
 	
 	@DeleteMapping("/{roomNo}")
 	public void delete(@PathVariable long roomNo,
-			@RequestHeader("Authorization")String bearerToken) {
+			@RequestHeader("Authorization") String bearerToken) {
 		ClaimVO claimVO = tokenService.parseBearerToken(bearerToken);
 		RoomDto roomDto = roomDao.selectOne(roomNo);
-		if(roomDto == null) throw new TargetNotFoundException("방 번호가 존재하지 않습니다");
-		if(roomDto.getRoomOwner().equals(claimVO.getUsersId()) == false)
-			throw new TargetNotFoundException("소유자 불일치");
+		if(roomDto == null) throw new TargetNotFoundException("방 번호 X");
 		roomDao.delete(roomNo);
 	}
 	
@@ -67,6 +65,15 @@ public class RoomRestController {
 		if(isEnter == false) {
 			roomDao.enterRoom(roomNo, claimVO.getUsersId());
 		}
+	}
+	
+	@DeleteMapping("/leave/{roomNo}")
+	public void leave(@PathVariable long roomNo, 
+						@RequestHeader("Authorization") String bearerToken) {
+		ClaimVO claimVO = tokenService.parseBearerToken(bearerToken);
+		boolean isEnter = roomDao.checkRoom(roomNo, claimVO.getUsersId());
+		if(isEnter == false) throw new TargetNotFoundException();
+		roomDao.leaveRoom(roomNo, claimVO.getUsersId());
 	}
 	
 }

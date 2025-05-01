@@ -21,57 +21,39 @@
 	</insert>
 	
 	<!-- 메시지 조회 -->
-	<!-- 관리자 채팅 목록 뷰 -->
-	<select id="listForAdmin" resultType="MessageViewDto">
-	    select mv.*, u.users_id, u.users_name
-	    from message_view mv
-	    join users u on (u.user_id = mv.message_sender or u.user_id = mv.message_receiver)
-	    where mv.message_type in ('CHAT', 'DM')
-	    and u.users_type = '관리자'  <!-- 관리자만 필터 -->
-	    order by mv.message_no asc
+	<select id="list" resultType="MessageViewDto">
+		select * from message_view
+		where message_type in ('CAHT', 'SYSTEM')
+		order by message_no asc
 	</select>
 	
-	<!-- 회원 채팅 목록 뷰 -->
-	<select id="listForUsers" resultType="MessageViewDto">
-	    select mv.*, u.users_id
-	    from message_view mv
-	    join users u on (u.user_id = mv.message_sender or u.user_id = mv.message_receiver)
-	    where mv.message_type in ('DM', 'SYSTEM')
-	    and (
-	        (mv.message_sender = #{userId} or mv.message_receiver = #{userId})
-	        or
-	        (mv.message_receiver = '관리자' 
-	            and mv.message_sender = #{userId}
-	            and u.users_id is not null)
-	    )
-	    and u.users_type = '일반회원'  <!-- 일반 회원만 필터 -->
-	    order by mv.message_no asc
+	<!--일정 개수만큼 메시지 조회-->
+	<select id="listByPaging" resultType="MessageViewDto">
+		select * from (
+			<include refid = "top-n-header"></include>
+			select * from message_view
+			where message_type in ('CHAT','SYSTEM')
+		)
+		<if test="messageNo != null">
+			<![CDATA[
+				and message_no < #{messageNo}
+			]]>
+		</if>
+		order by message_no desc
+		<include refid="top-n-footer"></include>
+		) order by message_no asc
 	</select>
 	
-	<!-- 일정 개수만큼만의 메시지를 조회 -->
-	<select id="listPaging" resultType="MessageViewDto">
-	    select * from (
-	        <include refid="top-n-header"></include>
-	        select * from message_view
-	        where 
-	            (
-	                message_type in ('CHAT', 'SYSTEM')
-	                or
-	                message_type = 'DM' 
-	                and
-	                (message_sender = #{userId} 
-	                or 
-	                message_receiver = #{userId})
-	            )
-	        <if test="messageNo != null">
-	            <![CDATA[
-	            and message_no < #{messageNo}
-	            ]]>
-	        </if>
-	        order by message_no desc
-	        <include refid="top-n-footer"></include>
-	    ) order by message_no asc
-	</select>	
+	<!--남은 데이터 개수 확인-->
+	<select id="cntByPaging" resultType="int">
+		select count(*) from message_view
+		where message_type in ('CHAT', 'SYSTEM')
+		<if test="messagNo != null">
+			<![CDATA[
+				and message_no < #{messageNo}
+			]]>
+		</if>
+	</select>
 	
 	<!-- Top N Query 템플릿 -->
 	<sql id="top-n-header">

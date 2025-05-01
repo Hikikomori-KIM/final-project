@@ -16,17 +16,12 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Repository
 public class RoomDao {
-
-    private final EmailConfiguration emailConfiguration;
 	@Autowired
 	private SqlSession sqlSession;
 
-    RoomDao(EmailConfiguration emailConfiguration) {
-        this.emailConfiguration = emailConfiguration;
-    }
 	
 	public RoomDto insert(RoomDto roomDto) {
-		int roomNo = sqlSession.selectOne("room.sequence");
+		long roomNo = sqlSession.selectOne("room.sequence");
 		roomDto.setRoomNo(roomNo);
 		sqlSession.insert("room.create", roomDto);
 		return roomDto;
@@ -57,5 +52,12 @@ public class RoomDao {
 		params.put("usersId", usersId);
 		int count = sqlSession.selectOne("room.check", params);
 		return count > 0;
+	}
+	
+	public boolean leaveRoom(long roomNo, String usersId) {
+		Map<String, Object> params = new HashMap<>();
+		params.put("roomNo", roomNo);
+		params.put("usersId", usersId);
+		return sqlSession.delete("room.leave", params) > 0;
 	}
 }
