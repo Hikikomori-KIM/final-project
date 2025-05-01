@@ -83,5 +83,10 @@ public class UsersDao {
 
 	    return sqlSession.update("users.updatePw", result) > 0;
 	}
+	
+	//업데이트(전체)
+	public boolean updateAll(UsersDto usersDto) {
+		return sqlSession.update("users.update", usersDto) >0;
+	}
 
 }

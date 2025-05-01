@@ -3,6 +3,7 @@ package com.hiki.academyfinal.restcontroller;
 import java.net.URISyntaxException;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -39,8 +40,9 @@ public class NaverLoginRestController {
 	@Autowired
 	private TokenService tokenService;
 	
-	
+	//얘도 리팩토링필요 ㅋㅋㅋ 여유있을때 서비스로 빼놓을게요 ^_^
 	@PostMapping("/")
+	@Transactional
 	public UsersLoginResponseVO response(@RequestBody NaverLoginInfoVO vo) throws URISyntaxException {
 		//백엔드로직
 		//1. 리엑트에서 네이버한테받아온 code와 개발자 id/pw로 accesstoken요청
@@ -84,9 +86,9 @@ public class NaverLoginRestController {
 		            	 usersDto.setUsersContact(withoutHyphens);
 		            	 usersDto.setUsersEmail(usersProfile.getResponse().getEmail());
 		            	 usersDto.setUsersProvider("naver");
-		            	 System.out.println("현재 provider 값: " + usersDto.getUsersProvider()); 
+//		            	 System.out.println("현재 provider 값: " + usersDto.getUsersProvider()); 
 		            	 usersDao.insertNaver(usersDto);
-		            	 System.out.println("인서트후 provider 값: " + usersDto.getUsersProvider()); 
+//		            	 System.out.println("인서트후 provider 값: " + usersDto.getUsersProvider()); 
 		            	 UsersDto findDto = usersDao.findId(usersDto);
 		            
 		            	  //후토큰발행
