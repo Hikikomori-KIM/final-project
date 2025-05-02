@@ -51,18 +51,12 @@ public class WebSocketEventHandler {
 			// access Token 추출
 			String accessToken = accessor.getFirstNativeHeader("accessToken");
 			log.debug("accessToken = {}", accessToken);
-			ClaimVO claimVO = tokenService.parseBearerToken(accessToken);
-
+			ClaimVO claimVO = tokenService.parseBearerToken(accessToken);	
 			messagingTemplate.convertAndSend(
 					"/private/group/chat/"+roomNo,
 					ActionVO.builder()
 						.usersId(claimVO.getUsersId())
-				.build());
-			
-			messagingTemplate.convertAndSend(
-					"/private/group/chat/"+roomNo,
-					ActionVO.builder()
-						.usersId(claimVO.getUsersId())
+						.type("ENTER")
 				.build()
 			);
 			// 세션 번호, 방 번호 기억
@@ -84,6 +78,7 @@ public class WebSocketEventHandler {
 			"/private/group/chat/"+roomNo, 
 			ActionVO.builder()
 				.usersId(usersId)
+				.type("LEAVE")
 			.build()
 		);
 	}

@@ -24,20 +24,35 @@
 	    from room
 	    order by room_no desc
 	</select>
+	
+	<!--방 입장-->
+	<insert id="enter">
+		insert into room_user(room_no, users_id)
+		values(#{roomNo}, #{usersId})
+	</insert>
   	
   	<!-- 상세 -->
   	<select id="find" resultType="RoomDto">
   		select * from room where room_no = #{roomNo}
   	</select>
-  	  	
-  	<!-- 삭제 -->
-  	<delete id="delete">
-    	delete from room where room_no = #{roomNo}
-	</delete>
   	
   	<select id="check" resultType="long">
 		select count(*) from room_user
 		where room_no = #{roomNo} and users_id = #{usersId}
 	</select>
+	
+	<!-- 방 나가기 -->
+	<delete id="leave">
+		delete from room where room_no = #{roomNo}
+		and (
+			exists (
+				select 1 from users
+				where users_id = #{usersId}
+					and users_type = '관리자'
+			)
+			or room_owner = #{usersId}
+		)
+	</delete>	
+	
   	  	
   </mapper>

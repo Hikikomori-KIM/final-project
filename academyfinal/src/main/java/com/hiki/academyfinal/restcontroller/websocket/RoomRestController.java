@@ -43,8 +43,12 @@ public class RoomRestController {
 	}
 	
 	@GetMapping("/") // 방 리스트업
-	public List<RoomDto> list() {
-		return roomDao.selectList();
+	public RoomDto list() {
+	    List<RoomDto> rooms = roomDao.selectList();
+	    if (rooms.size() != 1) {
+	        throw new TargetNotFoundException("방이 하나만 있어야 합니다. 현재 방 개수: " + rooms.size());
+	    }
+	    return rooms.get(0); // 방이 하나만 있으면 그 값을 반환
 	}
 	
 	@GetMapping("/{roomNo}")
@@ -54,17 +58,19 @@ public class RoomRestController {
 		return roomDto;
 	}
 	
-	@DeleteMapping("/{roomNo}")
-	public void delete(@PathVariable long roomNo,
+	@DeleteMapping("/leave/{roomNo}")
+	public void leave(@PathVariable long roomNo,
 			@RequestHeader("Authorization") String bearerToken) {
 		ClaimVO claimVO = tokenService.parseBearerToken(bearerToken);
+		
+	    System.out.println("usersId: " + claimVO.getUsersId()); // usersId 확인
+	    System.out.println("usersType: " + claimVO.getUsersType()); // usersType 확인
+		
 		RoomDto roomDto = roomDao.selectOne(roomNo);
 		if(roomDto == null) throw new TargetNotFoundException("방번호 오류");
-		System.out.println("usersType: " + claimVO.getUsersType());
-		System.out.println("user id: " + claimVO.getUsersId());
-		if (!roomDto.getRoomOwner().equals(claimVO.getUsersId()) || !claimVO.getUsersType().equals("관리자"))
-	        throw new TargetNotFoundException("삭제 권한 없음 (해당 고객 혹은 관리자 아님)");
-		roomDao.delete(roomNo);
+		if (!(roomDto.getRoomOwner().equals(claimVO.getUsersId()) || claimVO.getUsersType().equals("관리자")))
+		    throw new TargetNotFoundException("삭제 권한 없음 (해당 고객 혹은 관리자 아님)");
+		roomDao.leaveRoom(roomNo, claimVO.getUsersId());
 	}
 	
 	@PostMapping("/enter/{roomNo}")
@@ -75,15 +81,6 @@ public class RoomRestController {
 		if(isEnter == false) {
 			roomDao.enterRoom(roomNo, claimVO.getUsersId());
 		}
-	}
-	
-	@DeleteMapping("/leave/{roomNo}")
-	public void leave(@PathVariable long roomNo, 
-						@RequestHeader("Authorization") String bearerToken) {
-		ClaimVO claimVO = tokenService.parseBearerToken(bearerToken);
-		boolean isEnter = roomDao.checkRoom(roomNo, claimVO.getUsersId());
-		if(isEnter == false) throw new TargetNotFoundException();
-		roomDao.leaveRoom(roomNo, claimVO.getUsersId());
 	}
 	
 	@GetMapping("/check/{roomNo}")

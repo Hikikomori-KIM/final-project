@@ -33,12 +33,7 @@ public class RoomDao {
 	
 	public RoomDto selectOne(long roomNo) {
 		return sqlSession.selectOne("room.find", roomNo);
-	}
-	
-	public boolean delete(long roomNo) {
-		return sqlSession.delete("room.delete", roomNo) > 0;
-	} // 방 삭제 (관리자가 리스트에서 삭제 가능)
-	
+	}	
 	
 	public void enterRoom(long roomNo, String usersId) {
 		Map<String, Object> params = new HashMap<>();
@@ -51,7 +46,7 @@ public class RoomDao {
 		Map<String, Object> params = new HashMap<>();
 		params.put("roomNo", roomNo);
 		params.put("usersId", usersId);
-		int count = sqlSession.selectOne("room.check", params);
+		long count = sqlSession.selectOne("room.check", params);
 		return count > 0;
 	}
 	 
