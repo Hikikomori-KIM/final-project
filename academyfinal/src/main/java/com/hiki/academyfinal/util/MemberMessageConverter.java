@@ -13,6 +13,7 @@ import com.hiki.academyfinal.vo.websocket.SystemMessageVO;
 @Component
 public class MemberMessageConverter {
 
+	// 메시지 변환 (CHAT / SYSTEM)
 	public List<MessageVO> convertMessageFormat(List<MessageViewDto> list, String usersId) {
 		List<MessageVO> convertList = new ArrayList<>();
 		

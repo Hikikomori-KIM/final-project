@@ -19,6 +19,8 @@ import com.hiki.academyfinal.error.TargetNotFoundException;
 import com.hiki.academyfinal.service.TokenService;
 import com.hiki.academyfinal.vo.ClaimVO;
 
+import lombok.extern.slf4j.Slf4j;
+@Slf4j
 @CrossOrigin
 @RestController
 @RequestMapping("/api/room")
@@ -28,15 +30,19 @@ public class RoomRestController {
 	@Autowired
 	private TokenService tokenService;
 	
-	@PostMapping("/")
+	@PostMapping("/") // 방 생성
 	public void create(@RequestBody RoomDto roomDto,
-			@RequestHeader("Authorization")String bearerToken) {
+			@RequestHeader("Authorization") String bearerToken) {
 		ClaimVO claimVO = tokenService.parseBearerToken(bearerToken);
-		roomDto.setRoomOwner(claimVO.getUsersId());
+		String usersId = claimVO.getUsersId();
+		
+		roomDto.setRoomOwner(usersId); // 소유자 설정 (roomOwner = 문의고객 ID)
+		roomDto.setRoomTitle("[문의·상담] " + usersId);
+		
 		roomDao.insert(roomDto);
 	}
 	
-	@GetMapping("/")
+	@GetMapping("/") // 방 리스트업
 	public List<RoomDto> list() {
 		return roomDao.selectList();
 	}
@@ -44,7 +50,7 @@ public class RoomRestController {
 	@GetMapping("/{roomNo}")
 	public RoomDto find(@PathVariable long roomNo) {
 		RoomDto roomDto = roomDao.selectOne(roomNo);
-		if(roomDto == null) throw new TargetNotFoundException("방 번호 X");
+		if(roomDto == null) throw new TargetNotFoundException("방번호 오류");
 		return roomDto;
 	}
 	
@@ -53,7 +59,11 @@ public class RoomRestController {
 			@RequestHeader("Authorization") String bearerToken) {
 		ClaimVO claimVO = tokenService.parseBearerToken(bearerToken);
 		RoomDto roomDto = roomDao.selectOne(roomNo);
-		if(roomDto == null) throw new TargetNotFoundException("방 번호 X");
+		if(roomDto == null) throw new TargetNotFoundException("방번호 오류");
+		System.out.println("usersType: " + claimVO.getUsersType());
+		System.out.println("user id: " + claimVO.getUsersId());
+		if (!roomDto.getRoomOwner().equals(claimVO.getUsersId()) || !claimVO.getUsersType().equals("관리자"))
+	        throw new TargetNotFoundException("삭제 권한 없음 (해당 고객 혹은 관리자 아님)");
 		roomDao.delete(roomNo);
 	}
 	

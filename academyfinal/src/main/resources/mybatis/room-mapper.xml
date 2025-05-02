@@ -5,41 +5,39 @@
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
   
   <mapper namespace="room">
-
+  
+  	<!-- 등록 -->
   	<select id="sequence" resultType="long">
   		select room_seq.nextval from dual
   	</select>
+  	<insert id="create">
+  		insert into room(room_no, room_title, room_owner)
+  		values(#{roomNo}, #{roomTitle}, #{roomOwner})
+  	</insert>
   	
-  	<select id="check">
-  		select * from room
-  		where room_no = #{roomNo} and users_id = #{usersId}
-  	</select>
-  
-	<insert id="create">
-		insert into room(room_no, room_title, room_owner)
-	    values(#{roomNo}, #{roomTitle}, #{roomOwner})  	
-	</insert>
+  	<!-- 조회 -->
+	<select id="list" resultType="RoomDto">
+	    select 
+	        room_no as roomNo,
+	        room_title as roomTitle,
+	        room_owner as roomOwner
+	    from room
+	    order by room_no desc
+	</select>
   	
-  	<select id="list" resultType="RoomDto">
-  		select * from room order by room_no desc
-  	</select>
-  	
+  	<!-- 상세 -->
   	<select id="find" resultType="RoomDto">
   		select * from room where room_no = #{roomNo}
   	</select>
-  	
+  	  	
+  	<!-- 삭제 -->
   	<delete id="delete">
-  		delete room where room_no = #{roomNo}
-  	</delete>
-
- 	<insert id="enter">
-	    insert into room(room_no, users_id)
-	    values(#{roomNo}, #{usersId})
-  	</insert>
-
-	<delete id="leave">
-		delete room
-		where room_no = #{roomNo} and account_id = #{accountId} 
+    	delete from room where room_no = #{roomNo}
 	</delete>
+  	
+  	<select id="check" resultType="long">
+		select count(*) from room_user
+		where room_no = #{roomNo} and users_id = #{usersId}
+	</select>
   	  	
   </mapper>
