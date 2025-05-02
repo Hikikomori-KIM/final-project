@@ -54,7 +54,7 @@ public class RoomDao {
 		int count = sqlSession.selectOne("room.check", params);
 		return count > 0;
 	}
-	
+	 
 	public boolean leaveRoom(long roomNo, String usersId) {
 		Map<String, Object> params = new HashMap<>();
 		params.put("roomNo", roomNo);
