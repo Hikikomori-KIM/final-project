@@ -22,7 +22,8 @@
 <select id="list" resultType="ProductsDto">
   SELECT
     p.*,
-    a.attachment_no AS attachmentNo
+    a.attachment_no,
+    a.attachment_name
   FROM
     products p
   LEFT JOIN
@@ -32,7 +33,6 @@
   ORDER BY
     p.product_no ASC
 </select>
-
 
   <!-- 상품 단일조회 -->
   <select id="find" resultType="ProductsDto">

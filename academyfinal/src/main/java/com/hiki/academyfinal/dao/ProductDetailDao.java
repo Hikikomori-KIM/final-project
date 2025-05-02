@@ -24,4 +24,8 @@ public class ProductDetailDao {
     public List<VolumeDto> selectVolumes(int productNo) {
         return sqlSession.selectList("productDetail.selectVolumes", productNo);
     }
+// // 향 계열 이름 목록 조회
+//    public List<String> selectAccords(int productNo) {
+//        return sqlSession.selectList("productDetail.selectAccords", productNo);
+//    }
 }

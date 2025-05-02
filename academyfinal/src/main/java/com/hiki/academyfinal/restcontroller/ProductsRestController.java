@@ -62,7 +62,7 @@ public class ProductsRestController {
     }
 
     // 수정
-    @PatchMapping("/{productsNo}")
+    @PatchMapping("/edit/{productsNo}")
     public void edit(@PathVariable Integer productsNo, // 위 경로의 productsNo를 받아와라 
                      @RequestBody ProductsDto productsDto) { //프론트에서 보낸 JSON을 productsDto 객체로 바인딩해라 
         ProductsDto targetDto = productsDao.selectOne(productsNo); //productsNo 로 dao의 selectOne을 실행해서 targetDto에 넣어라(조회)
@@ -75,6 +75,7 @@ public class ProductsRestController {
     public ProductDetailVO getProductDetail(@PathVariable int productNo) { //위 경로에 productNo를 받아와라 반환타입은 ProductDetailVO 다 
     	ProductDetailVO detail = productDetailDao.selectDetail(productNo); //해당 productNo로 dao에 selectDetail에 넣어라 
         detail.setVolumes(productDetailDao.selectVolumes(productNo));//해당번호에 해당하는 용량들을 detail에 추가해라
+//        detail.setAccords(productDetailDao.selectAccords(productNo)); // ✅ 이 줄 추가
         return detail; //완성된 ProductDetailVO 객체를 넘겨줘라 
     }
     
