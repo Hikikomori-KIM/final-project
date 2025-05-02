@@ -22,14 +22,14 @@
   		select * from address_list where users_id = #{usersId} 
   	</select>
   	
-  	<!-- 메인 주소지 변경할때 default 'Y'있나 찾기 있으면 실패 /메인주소뭔지 찾기도가능 -->
-  	<select id="selectY" resultType="addressListDto">
+  	<!-- 메인 주소지 변경할때 default 'Y'있나 찾기 -->
+  	<select id="selectMain" resultType="addressListDto">
   		select * from address_list where users_id = #{usersId} and address_list_default = 'Y'
   	</select>
   	
   	<!-- 메인주소지로 업뎃 -->
   	<update id="updateMain">
-  		update address_list set address_default = 'Y' where address_list_no =#{addressListNo}
+  		update address_list set address_list_default = 'Y' where address_list_no =#{addressListNo}
   	</update>
   	
   	<!-- 수정은 전체수정만 가능하도록(주소api사용) -->
@@ -42,10 +42,10 @@
   		delete from address_list where address_list_no = #{addressListNo}
   	</delete>
   	
-  	<!-- 메인주소삭제 ( 나중에 dao편하게 작업용 ) -->
-  	<delete id="deleteMain">
-  		delete from address_list where users_id = #{usersId} and address_list_default = 'Y'
-  	</delete>
+	<!-- 메인주소를 일반주소로  -->
+	<update id="updateCommon">
+		update address_list set address_list_default = 'N' where address_list_no =#{addressListNo}
+	</update>
   	
   	<!-- 단일조회 (운영자나쓸듯) -->
   	<select id="selectOne"  resultType="addressListDto">
