@@ -94,4 +94,11 @@ public class MyPageRestController {
 			return ResponseEntity.ok("메인주소 변경!완료");
 		}
 	}
+	
+	@PostMapping("/insertAddress")
+	public void insertAddress(@RequestBody AddressListDto addressListDto) {
+		System.out.println(addressListDto);
+		addressListDto.setAddressListDefault("N");
+		addressListDao.insert(addressListDto);
+	}
 }
