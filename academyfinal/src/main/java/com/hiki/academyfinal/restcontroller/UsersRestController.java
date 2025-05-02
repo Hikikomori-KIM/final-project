@@ -6,6 +6,7 @@ import java.util.Map;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -108,6 +109,7 @@ public class UsersRestController {
 		}
 		
 		//새 비밀번호 보내기 //리팩토링필요 //기능확인은 ok 기능됨 //서비스로빼야됌
+		@Transactional
 		@PatchMapping("/password")
 		public ResponseEntity<String> password(@RequestBody UsersDto usersDto){
 			System.out.println("클라이언트에서 온값 : " + usersDto);

@@ -34,12 +34,12 @@ private SqlSession sqlSession;
 	
 	//대표주소있나 조회
 	public AddressListDto findMainAddress(String usersId) {
-		return sqlSession.selectOne("addressList.selectY",usersId);
+		return sqlSession.selectOne("addressList.selectMain",usersId);
 	}
 	
-	//대표주소삭제 
-	public boolean deleteMainAddress(String usersId) {
-		return sqlSession.delete("addressList.deleteMain", usersId)>0;
+	//메인주소를 일반주소로 바꿈
+	public boolean updateCommon(long addressListNo) {
+		return sqlSession.update("addressList.updateCommon", addressListNo)>0;
 	}
 
 	//메인주소로 업뎃
@@ -48,11 +48,8 @@ private SqlSession sqlSession;
 	}
 	
 	//그냥주소한개삭제
-	public boolean delete(AddressListDto addressListDto) {
-		Map<String,Object> result = new HashMap<>();
-		result.put("usersId", addressListDto.getUsersId());
-		result.put("addressListNo", addressListDto.getAddressListNo());
-		return sqlSession.delete("addressList.deleteOne",result)>0;
+	public boolean delete(long addressListNo) {
+		return sqlSession.delete("addressList.deleteOne",addressListNo)>0;
 	}
 	
 	//그냥 단일조회1

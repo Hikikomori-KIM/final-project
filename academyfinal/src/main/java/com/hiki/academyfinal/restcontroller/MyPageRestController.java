@@ -1,11 +1,16 @@
 package com.hiki.academyfinal.restcontroller;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -51,5 +56,42 @@ public class MyPageRestController {
 	public List<AddressListDto> addressList(@PathVariable String usersId) {
 		List<AddressListDto> addressListDtoList = addressListDao.myAddressList(usersId);
 		return addressListDtoList;
+	}
+	
+	//본인정보수정
+	@PostMapping("/{usersId}")
+	public void update(@RequestBody UsersDto usersDto) {
+		UsersDto findDto = usersDao.findId(usersDto.getUsersId());
+		usersDao.updateAll(usersDto);
+		findDto.setUsersPw(null); //혹시몰라서비번 없앰
+	}
+	
+	//주소1개삭제
+	@DeleteMapping("/address/{addressListNo}")
+	public ResponseEntity<String> delete(@PathVariable long addressListNo) {
+		addressListDao.delete(addressListNo);
+		return ResponseEntity.ok("삭제완료");
+	}
+	
+	//메인주소가 있다면 메인주소 기본으로돌리고 요청한주소 메인으로변경
+	@PostMapping("/mainAddress/{addressListNo}")
+	public ResponseEntity<String> mainUpdate(@PathVariable long addressListNo ,  @RequestBody Map<String, String> requestData){
+		//메인주소 찾음
+		String usersId = requestData.get("usersId");
+		AddressListDto findMain = addressListDao.findMainAddress(usersId);
+		System.out.println("유저아이디넘어오나" +usersId);
+		System.out.println("메인주소 찾기 " +findMain);
+		System.out.println("바꿀 주소 " +addressListNo);
+		//메인주소없으면 그냥 메인으로 올려줌 
+		if(findMain == null) {
+			addressListDao.updateMain(addressListNo);
+			return ResponseEntity.ok("메인주소 등록완료");
+		}
+		else{
+			//기본주소다운그레이드
+			addressListDao.updateCommon(findMain.getAddressListNo());
+			addressListDao.updateMain(addressListNo);
+			return ResponseEntity.ok("메인주소 변경!완료");
+		}
 	}
 }
