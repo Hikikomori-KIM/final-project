@@ -39,12 +39,15 @@ public class CartDao {
 		result.put("usersId",cartDto.getUsersId());
 		result.put("cartItemNo", cartDto.getCartItemNo());
 		CartDto findCart =  sqlSession.selectOne("cart.selectProduct",result);
+		System.out.println("cartDto:"+cartDto);
+		System.out.println("findCart:"+findCart);
 		if(findCart != null) {
 			int qty = cartDto.getCartQty() + findCart.getCartQty();
 			findCart.setCartQty(qty);
 			updateQty(findCart);
 		}
 		else {
+			System.out.println(cartDto);
 			insert(cartDto);
 		}
 	}
