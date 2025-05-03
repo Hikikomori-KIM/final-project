@@ -5,14 +5,30 @@
 
 <mapper namespace="cart">
 
-	<!-- 유저의 카트리스트 / 최신순 -->
-	<select id="list" resultType="cartDto">
-		select * from cart where users_id =#{usersId} order by cart_no desc
+	<!-- 유저의 카트리스트 / 최신순 --> <!-- orderby나뉠때 다시쿼리정리하러옴 -->
+	<select id="list" resultType="cartViewVO">
+		
+	select * from(
+	   select rownum rn, TMP.* from(     
+		select c.*, p.*
+			from cart c
+			left outer join product_detail_view p
+			ON c.cart_item_no = p.product_no
+			WHERE c.users_id = #{usersId}
+			order by c.cart_no desc;
+	   )TMP
+	) where rn between #{start} and #{end};
+
 	</select>
 	
 	<!-- 카트 1개조회 (디테일) -->
-	<select id="selectOne" resultType="cartDto">
-		select * from cart where users_id = #{usersId} and cart_no=#{cartNo}
+	<select id="selectOne" resultType="cartViewVO">
+		select c.*, p.*
+		from cart c
+		left outer join product_detail_view p
+		ON c.cart_item_no = p.product_no
+		WHERE c.users_id = #{usersId} and c.cart_item_no =#{cartItemNo}
+		order by c.cart_no desc;
 	</select>	
 
 	<!-- 같은이름의 아이템이 들어올수 있으니 insert시 조회해봐야함-->
