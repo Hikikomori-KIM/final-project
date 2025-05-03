@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd"> 
+
+<mapper namespace="cart">
+
+	<!-- 유저의 카트리스트 / 최신순 -->
+	<select id="list" resultType="cartDto">
+		select * from cart where users_id =#{usersId} order by cart_no desc
+	</select>
+	
+	<!-- 카트 1개조회 (디테일) -->
+	<select id="selectOne" resultType="cartDto">
+		select * from cart where users_id = #{usersId} and cart_no=#{cartNo}
+	</select>	
+
+	<!-- 같은이름의 아이템이 들어올수 있으니 insert시 조회해봐야함-->
+	<select id="selectProduct" resultType="cartDto">
+		select * from cart where cart_item_no =#{cartItemNo} and users_id=#{usersId}
+	</select>
+	
+	<!-- 있으면 수량만바꿔주기 -->
+	<update id="qtyUp">
+		update cart set cart_qty =#{cartQty} where users_id=#{usersId} and cart_no=#{cartNo}
+	</update>
+	
+	<!-- 기본인서트 -->
+	<insert id="createCart">
+		insert into cart(cart_no, cart_item_no, users_id, cart_qty)
+		values(#{cartNo}, #{cartItemNo}, #{usersId}, #{cartQty})
+	</insert>
+	
+	<!-- 시퀀스 -->
+	<select id="sequence" resultType="Long">
+		select cart_seq.nextval from dual
+	</select>
+	
+	<!-- 단일삭제 -->
+	<delete id="delete">
+		delete from cart where users_id=#{usersId} and cart_no = #{cartNo}
+	</delete>
+	
+	<!-- 여러개삭제-->
+<!-- 	<delete id="deleteList"> -->
+<!--     DELETE FROM cart -->
+<!--     WHERE cart_no IN -->
+<!--     <foreach collection="cartNoList" item="cartNo" open="(" close=")" separator=","> -->
+<!--         #{cartNo} -->
+<!--     </foreach> -->
+<!-- 	</delete> -->
+</mapper>
