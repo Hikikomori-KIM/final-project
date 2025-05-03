@@ -56,4 +56,9 @@ private SqlSession sqlSession;
 	public AddressListDto findOne(long addressListNo) {
 	    return sqlSession.selectOne("addressList.selectOne", addressListNo);
 	}
+	
+	//카운트
+	public int listCount(String usersId) {
+		return sqlSession.selectOne("addressList.count",usersId);
+	}
 }

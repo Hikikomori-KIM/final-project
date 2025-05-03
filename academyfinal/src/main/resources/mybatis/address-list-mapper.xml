@@ -51,5 +51,9 @@
   	<select id="selectOne"  resultType="addressListDto">
   		select * from address_list where address_list_no = #{addressListNo} and users_id =#{usersId}
   	</select>
+  	<!-- 주소카운트 -->
+  	<select id="count" resultType="int">
+  		select count(*) from address_list where users_id =#{usersId}
+  	</select>
   	
   </mapper>

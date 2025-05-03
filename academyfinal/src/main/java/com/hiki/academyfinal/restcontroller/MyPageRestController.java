@@ -1,5 +1,6 @@
 package com.hiki.academyfinal.restcontroller;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -52,11 +53,16 @@ public class MyPageRestController {
 			return builder.build();
 	}
 
-	//주소리스트조회 (전체)
+	//주소리스트조회 (전체) + 카운트추가
 	@GetMapping("/address/{usersId}")
-	public List<AddressListDto> addressList(@PathVariable String usersId) {
+	public Map<String,Object> addressList(@PathVariable String usersId) {
+		Map<String,Object>result = new HashMap<>();
 		List<AddressListDto> addressListDtoList = addressListDao.myAddressList(usersId);
-		return addressListDtoList;
+		int count = addressListDao.listCount(usersId);
+		result.put("addressListDtoList", addressListDtoList);
+		result.put("count", count);
+		
+		return result;
 	}
 	
 	//본인정보수정
@@ -100,6 +106,8 @@ public class MyPageRestController {
 	@PostMapping("/insertAddress")
 	public void insertAddress(@RequestBody AddressListDto addressListDto) {
 //		System.out.println(addressListDto);
+		int count = addressListDao.listCount(addressListDto.getUsersId());
+		if(count >=5) throw new TargetNotFoundException("주소개수초과") ;
 		addressListDto.setAddressListDefault("N");
 		addressListDao.insert(addressListDto);
 	}
