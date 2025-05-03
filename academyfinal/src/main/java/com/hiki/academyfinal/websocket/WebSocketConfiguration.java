@@ -22,6 +22,6 @@ public class WebSocketConfiguration implements WebSocketMessageBrokerConfigurer 
 	public void registerStompEndpoints(StompEndpointRegistry registry) {
 		registry.addEndpoint("/ws") // 웹소켓 연결 생성 주소 (접속 주소)
 			.setAllowedOriginPatterns("*") // 허용가능한 클라이언트 주소 패턴 (= CORS)
-			.withSockJS(); // ws를 http처럼 쓸 수 있도록 함
+			.withSockJS(); // ws를 http처럼 쓸 수 있도록 함 
 	}
 }
