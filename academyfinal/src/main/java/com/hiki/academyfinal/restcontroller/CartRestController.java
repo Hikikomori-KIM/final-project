@@ -17,18 +17,5 @@ import com.hiki.academyfinal.error.TargetNotFoundException;
 @RestController
 @RequestMapping("/api/cart")
 public class CartRestController {
-	@Autowired
-	private CartDao cartDao;
-	
-	@GetMapping("/")
-	public List<CartDto> list() {
-		return cartDao.SelectList();
-	}
-	
-	@GetMapping("/{cartItemsNo}")
-	public CartDto find(@PathVariable long cartItemsNo) {
-		CartDto cartDto = cartDao.selectOne(cartItemsNo);
-		if(cartDto == null) throw new TargetNotFoundException();
-		return cartDto;
-	}
+
 }
