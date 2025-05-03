@@ -17,7 +17,7 @@
 			WHERE c.users_id = #{usersId}
 			order by c.cart_no desc;
 	   )TMP
-	) where rn between #{start} and #{end};
+	) where rn between #{start} and #{end}
 
 	</select>
 	
