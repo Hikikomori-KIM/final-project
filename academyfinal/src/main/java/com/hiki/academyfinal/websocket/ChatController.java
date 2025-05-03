@@ -30,7 +30,7 @@ public class ChatController {
 	@Autowired
 	private UsersDao usersDao;
 	
-	@MessageMapping("/group/{roomNo}")
+	@MessageMapping("/group/chat/{roomNo}")
 	public void chat(@DestinationVariable long roomNo,
 			Message<ChatVO> message) {
 		// 헤더 분석

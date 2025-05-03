@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.hiki.academyfinal.dao.websocket.RoomDao;
+import com.hiki.academyfinal.dto.websocket.MessageDto;
 import com.hiki.academyfinal.dto.websocket.RoomDto;
 import com.hiki.academyfinal.error.TargetNotFoundException;
 import com.hiki.academyfinal.service.TokenService;
@@ -43,14 +44,10 @@ public class RoomRestController {
 	}
 	
 	@GetMapping("/") // 방 리스트업
-	public RoomDto list() {
-	    List<RoomDto> rooms = roomDao.selectList();
-	    if (rooms.size() != 1) {
-	        throw new TargetNotFoundException("방이 하나만 있어야 합니다. 현재 방 개수: " + rooms.size());
-	    }
-	    return rooms.get(0); // 방이 하나만 있으면 그 값을 반환
+	public List<RoomDto> list() {
+	    return roomDao.selectList();
 	}
-	
+
 	@GetMapping("/{roomNo}")
 	public RoomDto find(@PathVariable long roomNo) {
 		RoomDto roomDto = roomDao.selectOne(roomNo);
@@ -85,9 +82,11 @@ public class RoomRestController {
 	
 	@GetMapping("/check/{roomNo}")
 	public boolean check(@PathVariable long roomNo,
-			@RequestHeader("Authorization") String bearerToken) {
-		ClaimVO claimVO = tokenService.parseBearerToken(bearerToken);
-		return roomDao.checkRoom(roomNo, claimVO.getUsersId());
+	                     @RequestHeader("Authorization") String bearerToken) {
+	    ClaimVO claimVO = tokenService.parseBearerToken(bearerToken);
+	    RoomDto roomDto = roomDao.selectOne(roomNo);
+	    return roomDto.getRoomOwner().equals(claimVO.getUsersId()) || claimVO.getUsersType().equals("관리자");
+	    // return roomDao.checkRoom(roomNo, claimVO.getUsersId());
+	    // 이전코드: roomOwner와 usersId만 비교하므로 usersType의 비교는 되고 있지 않음 (최종 수정 완)
 	}
-	
 }

@@ -3,7 +3,7 @@
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="message">
+<mapper namespace="messageList">
 
 	<!-- 등록 -->
 	<select id="sequence" resultType="long">
@@ -31,17 +31,16 @@
 	<select id="listByPaging" resultType="MessageViewDto">
 		select * from (
 			<include refid = "top-n-header"></include>
-			select * from message_view
-			where message_type in ('CHAT','SYSTEM')
-		)
-		<if test="messageNo != null">
-			<![CDATA[
-				and message_no < #{messageNo}
-			]]>
-		</if>
-		order by message_no desc
-		<include refid="top-n-footer"></include>
-		) order by message_no asc
+				select * from message_view
+				where message_type in ('CHAT','SYSTEM')
+				<if test="messageNo != null">
+					<![CDATA[
+						and message_no < #{messageNo}
+					]]>
+				</if>
+				order by message_no desc
+			<include refid="top-n-footer"></include>
+		 ) order by message_no asc
 	</select>
 	
 	<!--남은 데이터 개수 확인-->
