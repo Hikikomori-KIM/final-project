@@ -15,4 +15,6 @@ public class ProductDetailViewDao {
 	public ProductDetailViewDto productInfo(long productNo) {
 		return sqlSession.selectOne("productDetailView.selectOne", productNo);
 	}
+	
+
 }

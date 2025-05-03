@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.hiki.academyfinal.dto.CartDto;
+import com.hiki.academyfinal.vo.CartViewVO;
 
 @Repository
 public class CartDao {
@@ -21,23 +22,34 @@ public class CartDao {
 	}
 	
 	//본인 카트1개조회(디테일)
-	public CartDto selectOne(String usersId, Long cartNo) {
+	public CartViewVO selectOne(String usersId, Long cartNo) {
 		Map<String,Object>result = new HashMap<>();
 		result.put("usersId", usersId);
 		result.put("cartNo", cartNo);
 		return sqlSession.selectOne("cart.selectOne", result);
 	}	
 	//오버로딩
-	public CartDto selectOne(CartDto cartDto) {
+	public CartViewVO selectOne(CartDto cartDto) {
 		return sqlSession.selectOne("cart.selectOne", cartDto);
 	}
 	
-	//insert전에 중복조회 //필여하면오버로딩
-	public boolean duplication(String usersId, Long cartItemNo) {
+	//insert전에 중복조회 후 qty변경 or create
+	public void duplicationAndCreate(CartDto cartDto) {
 		Map<String,Object> result = new HashMap<>();
-		result.put("usersId",usersId);
-		result.put("cartItemNo", cartItemNo);
-		return sqlSession.selectOne("cart.selectProduct",result);
+		result.put("usersId",cartDto.getUsersId());
+		result.put("cartItemNo", cartDto.getCartItemNo());
+		CartDto findCart =  sqlSession.selectOne("cart.selectProduct",result);
+		System.out.println("cartDto:"+cartDto);
+		System.out.println("findCart:"+findCart);
+		if(findCart != null) {
+			int qty = cartDto.getCartQty() + findCart.getCartQty();
+			findCart.setCartQty(qty);
+			updateQty(findCart);
+		}
+		else {
+			System.out.println(cartDto);
+			insert(cartDto);
+		}
 	}
 	
 	//중복이라면 qty만바꿔주기
