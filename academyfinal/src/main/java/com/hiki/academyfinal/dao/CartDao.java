@@ -10,6 +10,7 @@ import org.springframework.stereotype.Repository;
 
 import com.hiki.academyfinal.dto.CartDto;
 import com.hiki.academyfinal.vo.CartViewVO;
+import com.hiki.academyfinal.vo.PageVO;
 
 @Repository
 public class CartDao {
@@ -17,8 +18,14 @@ public class CartDao {
 	private SqlSession sqlSession;
 	
 	//본인 카트리스트
-	public List<CartDto> SelectList(String usersId) {
-		return sqlSession.selectList("cart.list", usersId);
+	public List<CartViewVO> SelectList(String usersId, PageVO pageVO) {
+		Map<String,Object> result = new HashMap<>();
+		result.put("usersId", usersId);
+		result.put("start", pageVO.getStart());
+		result.put("end", pageVO.getEnd());
+		  System.out.println("usersId: " + usersId); 
+		   System.out.println("PageVO: " + pageVO);  
+		return sqlSession.selectList("cart.list", result);
 	}
 	
 	//본인 카트1개조회(디테일)
