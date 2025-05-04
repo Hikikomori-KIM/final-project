@@ -30,5 +30,10 @@ public class CartViewVO extends PageVO{
 	private String imageType;
 	private String imageSize;
 	private String imageUrl;
+	
+	//볼륨
+	private int volumeNo; //시퀀스
+	private String volumeMl; //ex: 50ml
+	private int volumeStock; // 각 용량별 재고
 
 }

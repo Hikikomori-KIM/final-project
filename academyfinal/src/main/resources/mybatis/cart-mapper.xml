@@ -8,16 +8,53 @@
 	<!-- 유저의 카트리스트 / 최신순 --> <!-- orderby나뉠때 다시쿼리정리하러옴 -->
 	<select id="list" resultType="cartViewVO">
 		
-	select * from(
-	   select rownum rn, TMP.* from(     
-		select c.*, p.*
-			from cart c
-			left outer join product_detail_view p
-			ON c.cart_item_no = p.product_no
-			WHERE c.users_id = #{usersId}
-			order by c.cart_no desc;
-	   )TMP
-	) where rn between #{start} and #{end}
+<!-- 	select * from( -->
+<!-- 	   select rownum rn, TMP.* from(      -->
+<!-- 		select c.*, p.* -->
+<!-- 			from cart c -->
+<!-- 			left outer join product_detail_view p -->
+<!-- 			ON c.cart_item_no = p.product_no -->
+<!-- 			WHERE c.users_id = #{usersId} -->
+<!-- 			order by c.cart_no desc -->
+<!-- 	   )TMP -->
+<!-- 	) where rn between #{start} and #{end} -->
+
+<!--  볼륨추가로 조인함  -->
+select * from(
+select rownum rn, TMP.* from(  
+	select 
+    c.cart_no as cartNo, 
+    c.cart_item_no as cartItemNo, 
+    c.users_id as usersId, 
+    c.cart_qty as cartQty,
+    p.product_no as productNo, 
+    p.product_name as productName, 
+    p.product_detail as productDetail, 
+    p.product_price as productPrice, 
+    p.strength as strength, 
+    p.brand_no as brandNo, 
+    p.category_no as categoryNo, 
+    p.product_description_html as productDescriptionHtml, 
+    p.brand_name as brandName, 
+    p.top_note as topNote, 
+    p.middle_note as middleNote, 
+    p.base_note as baseNote, 
+    p.image_name as imageName, 
+    p.image_type as imageType, 
+    p.image_size as imageSize, 
+    p.image_url as imageUrl,
+    v.volume_no as volumeNo, 
+    v.volume_ml as volumeMl, 
+    v.volume_stock as volumeStock
+	from cart c
+	left outer join product_detail_view p
+	    ON c.cart_item_no = p.product_no
+	left outer join volume v  
+	    ON p.product_no = v.product_no  
+	WHERE c.users_id = #{usersId}
+	order by c.cart_no desc
+	  )TMP
+	  	) where rn between #{start} and #{end} 
 
 	</select>
 	

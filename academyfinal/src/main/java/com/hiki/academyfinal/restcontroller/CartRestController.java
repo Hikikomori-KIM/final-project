@@ -1,5 +1,7 @@
 package com.hiki.academyfinal.restcontroller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -14,6 +16,8 @@ import com.hiki.academyfinal.dao.CartDao;
 import com.hiki.academyfinal.dao.ProductDetailViewDao;
 import com.hiki.academyfinal.dto.CartDto;
 import com.hiki.academyfinal.dto.ProductDetailViewDto;
+import com.hiki.academyfinal.vo.CartViewVO;
+import com.hiki.academyfinal.vo.PageVO;
 
 @CrossOrigin
 @RestController
@@ -38,5 +42,11 @@ public class CartRestController {
 		//중복조회후 중복시 qtyUp / 아닐시 create
 		cartDao.duplicationAndCreate(cartDto);
 		return ResponseEntity.ok("가벼운 restcontroller^^");
+	}
+	
+	@GetMapping("/list/{usersId}")
+	public List<CartViewVO> cartList(@PathVariable String usersId, PageVO pageVO ) {
+		List<CartViewVO> cart = cartDao.SelectList(usersId,pageVO);
+		return cart;
 	}
 }
