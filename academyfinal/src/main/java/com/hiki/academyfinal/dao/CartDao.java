@@ -41,7 +41,8 @@ public class CartDao {
 	}
 	
 	//insert전에 중복조회 후 qty변경 or create
-	public void duplicationAndCreate(CartDto cartDto) {
+	public void duplicationAndCreate(List<CartDto> cartList) {
+		for(CartDto cartDto : cartList) {
 		Map<String,Object> result = new HashMap<>();
 		result.put("usersId",cartDto.getUsersId());
 		result.put("cartItemNo", cartDto.getCartItemNo());
@@ -57,6 +58,7 @@ public class CartDao {
 		else {
 //			System.out.println(cartDto);
 			insert(cartDto);
+		}
 		}
 	}
 	

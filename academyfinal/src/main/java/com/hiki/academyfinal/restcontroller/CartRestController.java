@@ -38,9 +38,10 @@ public class CartRestController {
 	}
 	//카트추가
 	@PostMapping("/insert")
-	public ResponseEntity<String> createCart(@RequestBody CartDto cartDto) {
+	public ResponseEntity<String> createCart(@RequestBody List<CartDto> cartList) {
 		//중복조회후 중복시 qtyUp / 아닐시 create
-		cartDao.duplicationAndCreate(cartDto);
+		System.out.println(cartList);
+		cartDao.duplicationAndCreate(cartList);
 		return ResponseEntity.ok("가벼운 restcontroller^^");
 	}
 	
