@@ -100,9 +100,10 @@ public class CartDao {
 	}
 	
 	//여러개삭제 쿼리공부중
-//	public boolean deleteMultiple(String usersId, List<Long> cartNoList) {
-//	    Map<String, Object> params = new HashMap<>();
-//	    params.put("cartNoList", cartNoList);
-//	    return sqlSession.delete("cart.deleteList", params) > 0;
-//	}
+	public void deleteMultiple(String usersId, List<Long> cartNoList) {
+	    Map<String, Object> result = new HashMap<>();
+	    result.put("cartNoList", cartNoList);
+	    result.put("usersId", usersId);
+	    sqlSession.delete("cart.deleteList", result);
+	}
 }

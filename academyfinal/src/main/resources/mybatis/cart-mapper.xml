@@ -87,11 +87,16 @@
 		select count(*) from cart where users_id=#{usersId}
 	</select>
 	<!-- 여러개삭제-->
-<!-- 	<delete id="deleteList"> -->
-<!--     DELETE FROM cart -->
-<!--     WHERE cart_no IN -->
-<!--     <foreach collection="cartNoList" item="cartNo" open="(" close=")" separator=","> -->
-<!--         #{cartNo} -->
-<!--     </foreach> -->
-<!-- 	</delete> -->
+	<delete id="deleteList">
+    DELETE FROM cart
+    WHERE cart_no IN
+    <foreach collection="cartNoList" item="cartNo" open="(" close=")" separator=",">
+        #{cartNo}
+    </foreach>
+    and users_id = #{usersId}
+	</delete>
+	<!-- 결과임 ex)-->
+	<!-- DELETE FROM cart -->
+	<!-- WHERE cart_no IN (2, 3, 5) -->
+	<!-- AND users_id = 101 -->
 </mapper>
