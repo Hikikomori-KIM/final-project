@@ -86,6 +86,10 @@ public class CartDao {
 	public boolean deleteOne(String usersId, Long cartNo) {
 		return sqlSession.delete("cart.delete",cartNo) >0;
 	}
+	//상품이 삭제될때 장바구니 속 상품까지 삭제하는 메서드
+	public void deleteByProductNo(int productNo) {
+	    sqlSession.delete("cart.deleteByProductNo", productNo);
+	}
 	
 	//여러개삭제 쿼리공부중
 //	public boolean deleteMultiple(String usersId, List<Long> cartNoList) {

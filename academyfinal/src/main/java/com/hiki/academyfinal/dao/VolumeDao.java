@@ -27,4 +27,7 @@ public class VolumeDao {
 	public List<VolumeDto> selectVolumes(int productNo) {
 	    return sqlSession.selectList("volume.selectVolumes", productNo);
 	}
+	public void updateVolume(VolumeDto volumeDto) {
+		sqlSession.update("volume.updateVolume", volumeDto);
+	}
 }
