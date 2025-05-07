@@ -39,7 +39,7 @@ public class ProductService {
 	@Autowired
 	private ReviewsDao reviewsDao;
 	@Autowired
-	private CartItemDao cartItemDao;
+	private CartDao cartDao;
 
 	/**
 	 * 전체 상품 목록 조회 (ProductListVO 기준, accordNo/categoryNo 필터 적용 가능)
