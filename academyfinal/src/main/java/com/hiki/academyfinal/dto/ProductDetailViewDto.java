@@ -19,9 +19,13 @@ public class ProductDetailViewDto {
 	private String topNote;
 	private String middleNote;
 	private String baseNote;
-	private String imageName;
-	private String imageType;
-	private String imageSize;
+	private String attachmentName;
+	private String attachmentType;
+	private String attachmentSize;
 	private String imageUrl;
+	private int volumeNo;
+	private String volumeMl;
+	private int volumeStock;
+	private int volumePrice;
 
 }
