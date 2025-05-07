@@ -19,6 +19,7 @@ public class ProductAddRequestVO {
     private String productDetail;
     private Integer productPrice;
     private Integer discountRate;
+    private Integer discountedPrice;
     private Integer brandNo;
     private String strength;
 

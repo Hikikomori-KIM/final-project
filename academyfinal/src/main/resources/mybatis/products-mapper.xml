@@ -9,12 +9,12 @@
 	<insert id="add">
 		INSERT INTO products (
 		product_no, product_name,
-		product_detail,
+		product_detail, discounted_price,
 		product_price, discount_rate, product_stock, product_created_at,
 		category_no, brand_no, strength, product_description_html
 		) VALUES (
 		#{productNo}, #{productName}, #{productDetail},
-		#{productPrice}, #{discountRate},
+		#{productPrice}, #{discountRate}, #{discountedPrice},
 		#{productStock}, SYSDATE,
 		#{categoryNo}, #{brandNo}, #{strength},
 		#{productDescriptionHtml}
@@ -29,6 +29,7 @@
 		p.product_name AS productName,
 		p.product_price AS productPrice,
 		p.discount_rate AS discountRate,
+		p.discounted_price AS discountedPrice,
 		p.strength AS strength,
 		b.brand_name AS brand,
 		a.attachment_no AS attachmentNo
@@ -75,6 +76,7 @@
 		product_detail = #{productDetail},
 		product_price = #{productPrice},
 		discount_rate = #{discountRate},
+		discounted_price = #{discountedPrice},
 		product_stock = #{productStock},
 		strength = #{strength},
 		category_no =
