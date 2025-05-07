@@ -5,41 +5,68 @@
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
   
   <mapper namespace="room">
-
+  
+  	<!-- 등록 -->
   	<select id="sequence" resultType="long">
   		select room_seq.nextval from dual
   	</select>
+  	<insert id="create">
+  		insert into room(room_no, room_title, room_owner)
+  		values(#{roomNo}, #{roomTitle}, #{roomOwner})
+  	</insert>
   	
-  	<select id="check">
-  		select * from room
-  		where room_no = #{roomNo} and users_id = #{usersId}
-  	</select>
-  
-	<insert id="create">
-		insert into room(room_no, room_title, room_owner)
-	    values(#{roomNo}, #{roomTitle}, #{roomOwner})  	
+  	<!-- 조회 -->
+	<select id="list" resultType="RoomDto">
+	    select 
+	        room_no as roomNo,
+	        room_title as roomTitle,
+	        room_owner as roomOwner
+	    from room
+	    order by room_no desc
+	</select>
+	
+	<!--방 입장-->
+	<insert id="enter" parameterType="map">
+	  insert into room_user(room_no, users_id)
+	  select #{roomNo}, #{usersId}
+	  from dual
+	  where not exists (
+	    select 1 from room_user
+	    where room_no = #{roomNo}
+	    and users_id = #{usersId}
+	  )
 	</insert>
+
   	
-  	<select id="list" resultType="RoomDto">
-  		select * from room order by room_no desc
-  	</select>
-  	
+  	<!-- 상세 -->
   	<select id="find" resultType="RoomDto">
   		select * from room where room_no = #{roomNo}
   	</select>
   	
-  	<delete id="delete">
-  		delete room where room_no = #{roomNo}
-  	</delete>
+  	<!-- 
+		roomOwner와 현재 접속한 usersId가 동일해야 방에 입장이 가능하도록 로직 구현,
+		but, 둘이 동일함에도 입장이 불가능한 현상 발생
+		→ usersId가 char로 선언되었기 때문에, 뒤의 공백값까지 인식해서
+		같은 값으로 인식을 못한거였음 : trim으로 자르는 것 필요함 (최종 수정)
+  	 -->
+	<select id="check" resultType="long">
+	  SELECT count(*) FROM room
+	  WHERE room_no = #{roomNo}
+	  AND TRIM(room_owner) = #{usersId}
+	</select>
 
- 	<insert id="enter">
-	    insert into room(room_no, users_id)
-	    values(#{roomNo}, #{usersId})
-  	</insert>
-
+	<!-- 방 나가기 -->
 	<delete id="leave">
-		delete room
-		where room_no = #{roomNo} and account_id = #{accountId} 
-	</delete>
+		delete from room where room_no = #{roomNo}
+		and (
+			exists (
+				select 1 from users
+				where users_id = #{usersId}
+					and users_type = '관리자'
+			)
+			or room_owner = #{usersId}
+		)
+	</delete>	
+	
   	  	
   </mapper>

@@ -1,4 +1,6 @@
-package com.hiki.academyfinal.dto.websocket;
+package com.hiki.academyfinal.vo.websocket;
+
+import java.util.List;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -6,8 +8,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data @Builder @NoArgsConstructor @AllArgsConstructor
-public class RoomDto {
-	private Long roomNo;
-	private String roomTitle;
-	private String roomOwner;
+public class MessageListVO {
+	private boolean last;
+	private List<MessageVO> list;
 }

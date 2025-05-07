@@ -21,7 +21,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Controller
-public class GroupChatController {
+public class ChatController {
 	
 	@Autowired
 	private SimpMessagingTemplate messagingTemplate;
@@ -30,7 +30,7 @@ public class GroupChatController {
 	@Autowired
 	private UsersDao usersDao;
 	
-	@MessageMapping("/group/{roomNo}")
+	@MessageMapping("/group/chat/{roomNo}")
 	public void chat(@DestinationVariable long roomNo,
 			Message<ChatVO> message) {
 		// 헤더 분석
@@ -54,6 +54,6 @@ public class GroupChatController {
 				.build();
 		
 		// 최종 전송
-		messagingTemplate.convertAndSend("/chat/group/ask" + roomNo, response);
+		messagingTemplate.convertAndSend("/private/group/chat/" + roomNo, response);
 	}
 }

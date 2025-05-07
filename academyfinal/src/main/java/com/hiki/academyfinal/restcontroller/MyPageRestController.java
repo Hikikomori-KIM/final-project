@@ -1,8 +1,10 @@
 package com.hiki.academyfinal.restcontroller;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -51,19 +53,25 @@ public class MyPageRestController {
 			return builder.build();
 	}
 
-	//주소리스트조회 (전체)
+	//주소리스트조회 (전체) + 카운트추가
 	@GetMapping("/address/{usersId}")
-	public List<AddressListDto> addressList(@PathVariable String usersId) {
+	public Map<String,Object> addressList(@PathVariable String usersId) {
+		Map<String,Object>result = new HashMap<>();
 		List<AddressListDto> addressListDtoList = addressListDao.myAddressList(usersId);
-		return addressListDtoList;
+		int count = addressListDao.listCount(usersId);
+		result.put("addressListDtoList", addressListDtoList);
+		result.put("count", count);
+		
+		return result;
 	}
 	
 	//본인정보수정
 	@PostMapping("/{usersId}")
-	public void update(@RequestBody UsersDto usersDto) {
+	public UsersDto update(@RequestBody UsersDto usersDto) {
 		UsersDto findDto = usersDao.findId(usersDto.getUsersId());
 		usersDao.updateAll(usersDto);
 		findDto.setUsersPw(null); //혹시몰라서비번 없앰
+		return findDto;
 	}
 	
 	//주소1개삭제
@@ -79,9 +87,9 @@ public class MyPageRestController {
 		//메인주소 찾음
 		String usersId = requestData.get("usersId");
 		AddressListDto findMain = addressListDao.findMainAddress(usersId);
-		System.out.println("유저아이디넘어오나" +usersId);
-		System.out.println("메인주소 찾기 " +findMain);
-		System.out.println("바꿀 주소 " +addressListNo);
+//		System.out.println("유저아이디넘어오나" +usersId);
+//		System.out.println("메인주소 찾기 " +findMain);
+//		System.out.println("바꿀 주소 " +addressListNo);
 		//메인주소없으면 그냥 메인으로 올려줌 
 		if(findMain == null) {
 			addressListDao.updateMain(addressListNo);
@@ -94,4 +102,23 @@ public class MyPageRestController {
 			return ResponseEntity.ok("메인주소 변경!완료");
 		}
 	}
+	//주소추가
+	@PostMapping("/insertAddress")
+	public void insertAddress(@RequestBody AddressListDto addressListDto) {
+//		System.out.println(addressListDto);
+		int count = addressListDao.listCount(addressListDto.getUsersId());
+		if(count >=5) throw new TargetNotFoundException("주소개수초과") ;
+		addressListDto.setAddressListDefault("N");
+		addressListDao.insert(addressListDto);
+	}
+	//주소수정
+	@PostMapping("/updateAllAddress")
+	public ResponseEntity<String> updataAddress(@RequestBody AddressListDto addressListDto){
+		ModelMapper mapper = new ModelMapper();
+		AddressListDto addressDto = mapper.map(addressListDto, AddressListDto.class);
+		addressListDao.update(addressDto);
+		System.out.println(addressDto);
+		return ResponseEntity.ok("주소변경완료");
+	}
+	
 }

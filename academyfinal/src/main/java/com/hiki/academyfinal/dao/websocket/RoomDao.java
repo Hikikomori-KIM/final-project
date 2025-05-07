@@ -25,19 +25,15 @@ public class RoomDao {
 		roomDto.setRoomNo(roomNo);
 		sqlSession.insert("room.create", roomDto);
 		return roomDto;
-	}
+	} // 방 생성 (고객이 생성 가능))
 	
 	public List<RoomDto> selectList() {
 		return sqlSession.selectList("room.list");
-	}
+	} // 방 리스트 (관리자 창에서 list-up)
 	
 	public RoomDto selectOne(long roomNo) {
 		return sqlSession.selectOne("room.find", roomNo);
-	}
-	
-	public boolean delete(long roomNo) {
-		return sqlSession.delete("room.delete", roomNo) > 0;
-	}
+	}	
 	
 	public void enterRoom(long roomNo, String usersId) {
 		Map<String, Object> params = new HashMap<>();
@@ -50,10 +46,10 @@ public class RoomDao {
 		Map<String, Object> params = new HashMap<>();
 		params.put("roomNo", roomNo);
 		params.put("usersId", usersId);
-		int count = sqlSession.selectOne("room.check", params);
+		long count = sqlSession.selectOne("room.check", params);
 		return count > 0;
 	}
-	
+	 
 	public boolean leaveRoom(long roomNo, String usersId) {
 		Map<String, Object> params = new HashMap<>();
 		params.put("roomNo", roomNo);

@@ -19,7 +19,7 @@
   	
   	<!--본인 주소지 조회 (전체)-->
   	<select id="selectAddressList" resultType="addressListDto">
-  		select * from address_list where users_id = #{usersId} 
+  		select * from address_list where users_id = #{usersId} order by address_list_no asc
   	</select>
   	
   	<!-- 메인 주소지 변경할때 default 'Y'있나 찾기 -->
@@ -50,6 +50,10 @@
   	<!-- 단일조회 (운영자나쓸듯) -->
   	<select id="selectOne"  resultType="addressListDto">
   		select * from address_list where address_list_no = #{addressListNo} and users_id =#{usersId}
+  	</select>
+  	<!-- 주소카운트 -->
+  	<select id="count" resultType="int">
+  		select count(*) from address_list where users_id =#{usersId}
   	</select>
   	
   </mapper>

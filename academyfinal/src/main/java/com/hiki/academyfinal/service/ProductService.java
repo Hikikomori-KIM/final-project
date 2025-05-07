@@ -102,7 +102,7 @@ public class ProductService {
             try {
                 attachmentDao.insert(attachDto);
                 attachmentService.save(image, attachNo);
-                productImgDao.insert(productNo, attachNo);
+                productImgDao.insert(productNo, attachNo,"main");
             } catch (Exception e) {
                 log.error("이미지 등록 실패", e);
                 throw new RuntimeException("파일 저장 실패", e);
