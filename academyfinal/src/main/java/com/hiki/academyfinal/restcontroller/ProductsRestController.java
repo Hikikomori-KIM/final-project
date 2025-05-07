@@ -54,7 +54,6 @@ public class ProductsRestController {
 		return productsDto;
 	}
 
-
 	// 상품 상세 정보 + 용량 + 향계열
 	@GetMapping("/detail/{productNo}")
 	public ProductDetailVO getProductDetail(@PathVariable int productNo) {
@@ -96,7 +95,7 @@ public class ProductsRestController {
 
 	@GetMapping("/category/{categoryNo}")
 	public List<ProductListVO> getByCategory(@PathVariable int categoryNo) {
-	    return productService.getProductListByCategory(categoryNo);
+		return productService.getProductListByCategory(categoryNo);
 	}
 
 	// 상품 수정 (상품 기본 정보 + 용량 정보 수정)
@@ -110,7 +109,7 @@ public class ProductsRestController {
 
 		// (2) 상품 기본 정보 수정
 		ProductsDto updateDto = ProductsDto.builder().productNo(productsNo).productName(VO.getProductName())
-				.productDetail(VO.getProductDetail()).productPrice(VO.getProductPrice()).brandNo(VO.getBrandNo())
+				.productDetail(VO.getProductDetail()).productPrice(VO.getProductPrice()).discountRate(VO.getDiscountRate()).brandNo(VO.getBrandNo())
 				.strength(VO.getStrength()).categoryNo(VO.getCategoryNo())
 				.productDescriptionHtml(VO.getProductDescriptionHtml()).build();
 		productsDao.update(updateDto);

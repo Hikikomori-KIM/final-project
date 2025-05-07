@@ -120,7 +120,7 @@ public class ProductService {
 		productImgDao.deleteByProductNo(productNo);
 		perfumeDetailsDao.deleteByProductNo(productNo);
 		reviewsDao.deleteByProductNo(productNo);
-		cartItemDao.deleteByProductNo(productNo);
+		cartDao.deleteByProductNo(productNo);
 		productsDao.delete(productNo);
 	}
 
