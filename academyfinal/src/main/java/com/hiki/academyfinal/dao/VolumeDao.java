@@ -1,5 +1,7 @@
 package com.hiki.academyfinal.dao;
 
+import java.util.List;
+
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -17,5 +19,12 @@ public class VolumeDao {
 	
 	public void insert(VolumeDto volumeDto) {
 		sqlSession.insert("volume.add",volumeDto);
+	}
+
+	public void deleteByProductNo(int productNo) {
+		sqlSession.delete("volume.deleteByProductNo",productNo);
+	}
+	public List<VolumeDto> selectVolumes(int productNo) {
+	    return sqlSession.selectList("volume.selectVolumes", productNo);
 	}
 }

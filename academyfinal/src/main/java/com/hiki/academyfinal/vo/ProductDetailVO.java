@@ -20,6 +20,8 @@ public class ProductDetailVO {
     private String productDetail;
     private int productPrice;
     private String strength;
+    private String brandNo;
+    private String categoryNo;
     private String brandName;
     private String topNote;
     private String middleNote;
@@ -37,4 +39,6 @@ public class ProductDetailVO {
     private List<VolumeDto> volumes;
     
     private String imageUrl; // url
+    
+    private String productDescriptionHtml;
 }

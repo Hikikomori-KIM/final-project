@@ -34,4 +34,6 @@ public class ProductAddRequestVO {
 
     // 🔸 Volume 리스트
     private List<VolumeInputVO> volumes;
+    
+    private String productDescriptionHtml; //html 상세 설명 저장용
 }

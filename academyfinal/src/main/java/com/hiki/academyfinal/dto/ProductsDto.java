@@ -14,6 +14,7 @@ public class ProductsDto {
     private Integer productPrice;         
     private Integer productStock;
     private Timestamp productCreatedAt;
+    
 
     private int categoryNo;           // FK
     private int brandNo;              // ✅ 브랜드 이름(X) → 브랜드 번호(FK)
@@ -22,5 +23,7 @@ public class ProductsDto {
     private Integer attachmentNo; // ✅ 추가
     
     private String imageUrl; //이미지 경로
+    
+    private String productDescriptionHtml; //html 상세 설명 저장용
     
 }
