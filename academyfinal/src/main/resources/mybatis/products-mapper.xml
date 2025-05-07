@@ -7,18 +7,19 @@
 
 	<!-- 상품 추가 -->
 	<insert id="add">
-		INSERT INTO products (
+	INSERT INTO products (
 		product_no, product_name,
-		product_detail, discounted_price,
-		product_price, discount_rate, product_stock, product_created_at,
+		product_detail, product_price,
+		discount_rate, discounted_price,
+		product_stock, product_created_at,
 		category_no, brand_no, strength, product_description_html
-		) VALUES (
+	) VALUES (
 		#{productNo}, #{productName}, #{productDetail},
 		#{productPrice}, #{discountRate}, #{discountedPrice},
 		#{productStock}, SYSDATE,
 		#{categoryNo}, #{brandNo}, #{strength},
 		#{productDescriptionHtml}
-		)
+	)
 	</insert>
 
 	<!-- 상품 리스트 조회 (동적 필터링: accordNo, categoryNo) -->

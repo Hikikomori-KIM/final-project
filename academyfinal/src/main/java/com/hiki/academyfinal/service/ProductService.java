@@ -64,7 +64,8 @@ public class ProductService {
 		// [1] 상품 정보 등록
 		int productNo = productsDao.sequence();
 		ProductsDto productsDto = ProductsDto.builder().productNo(productNo).productName(VO.getProductName())
-				.productDetail(VO.getProductDetail()).productPrice(VO.getProductPrice()).brandNo(VO.getBrandNo())
+				.productDetail(VO.getProductDetail()).productPrice(VO.getProductPrice()).discountRate(VO.getDiscountRate())
+				.discountedPrice(VO.getDiscountedPrice()).brandNo(VO.getBrandNo())
 				.strength(VO.getStrength()).categoryNo(VO.getCategoryNo()).productStock(0)
 				.productDescriptionHtml(VO.getProductDescriptionHtml()).build();
 		productsDao.insert(productsDto);
