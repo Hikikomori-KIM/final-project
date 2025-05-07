@@ -38,7 +38,7 @@ LEFT OUTER JOIN product_detail_view p
   ON c.cart_item_no = p.product_no
 LEFT OUTER JOIN volume v
   ON c.volume_no = v.volume_no AND c.cart_item_no = v.product_no
-WHERE c.users_id = 'siwoosiwoo'
+WHERE c.users_id = #{usersId}
 ORDER BY c.cart_no DESC
 
 	   )TMP
