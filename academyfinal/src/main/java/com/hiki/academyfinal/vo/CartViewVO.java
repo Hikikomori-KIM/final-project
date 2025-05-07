@@ -12,7 +12,8 @@ public class CartViewVO extends PageVO{
 	private Long cartItemNo;
 	private String usersId;
 	private int cartQty;	//default 1설정해놔서 Integer안씀
-
+	private Long volumeNo;
+	
 	//productView
 	private long productNo;
 	private String productName;
@@ -26,14 +27,11 @@ public class CartViewVO extends PageVO{
 	private String topNote;
 	private String middleNote;
 	private String baseNote;
-	private String imageName;
-	private String imageType;
-	private String imageSize;
+	private String attachmentName;
+	private String attachmentType;
+	private String attachmentSize;
 	private String imageUrl;
-	
-	//볼륨
-	private int volumeNo; //시퀀스
-	private String volumeMl; //ex: 50ml
-	private int volumeStock; // 각 용량별 재고
-
+	private String volumeMl;
+	private int volumeStock;
+	private int volumePrice;
 }
