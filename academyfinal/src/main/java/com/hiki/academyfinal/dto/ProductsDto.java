@@ -11,7 +11,8 @@ public class ProductsDto {
     private int productNo;             
     private String productName;
     private String productDetail;
-    private Integer productPrice;         
+    private Integer productPrice;
+    private Integer discountRate;
     private Integer productStock;
     private Timestamp productCreatedAt;
     
