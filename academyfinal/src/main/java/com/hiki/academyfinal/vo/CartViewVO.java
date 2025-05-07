@@ -36,4 +36,8 @@ public class CartViewVO extends PageVO{
 	private String volumeMl;
 	private int volumeStock;
 	private int volumePrice;
+	
+	//페이징용 카운트
+	private int count;
+	
 }
