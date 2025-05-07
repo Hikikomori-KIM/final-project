@@ -127,23 +127,23 @@ public class KakaoPayService {
 											KakaoPayReadyVO readyVO,
 											List<KakaoPayBuyVO> buyList) {
 		//buy 등록
-		long buyNo = buyDao.addBuy(BuyDto.builder()
-					.buyOwner(approveVO.getPartnerUserId())//주문자
-					.buyTid(approveVO.getTid())//거래번호
-					.buyName(readyVO.getItemName())//구매상품명
-					.buyTotal(readyVO.getTotalAmount())//구매금액
-				.build());
+//		long buyNo = buyDao.addBuy(BuyDto.builder()
+//					.buyOwner(approveVO.getPartnerUserId())//주문자
+//					.buyTid(approveVO.getTid())//거래번호
+//					.buyName(readyVO.getItemName())//구매상품명
+//					.buyTotal(readyVO.getTotalAmount())//구매금액
+//				.build());
 		
 		//buy_detail 등록
 		for(KakaoPayBuyVO buyVO : buyList) {
-			ItemDto itemDto = itemDao.selectOne(buyVO.getItemNo());
-			buyDao.addBuyDetail(BuyDetailDto.builder()
-						.buyDetailOrigin(buyNo)//구매대표번호
-						.buyDetailItem(buyVO.getItemNo())//구매상품번호
-						.buyDetailName(itemDto.getItemName())//구매상품명
-						.buyDetailPrice(itemDto.getRealPrice())//구매상품가격(개당)
-						.buyDetailQty(buyVO.getQty())//구매상품개수
-					.build());
+//			ItemDto itemDto = itemDao.selectOne(buyVO.getItemNo());
+//			buyDao.addBuyDetail(BuyDetailDto.builder()
+//						.buyDetailOrigin(buyNo)//구매대표번호
+//						.buyDetailItem(buyVO.getItemNo())//구매상품번호
+//						.buyDetailName(itemDto.getItemName())//구매상품명
+//						.buyDetailPrice(itemDto.getRealPrice())//구매상품가격(개당)
+//						.buyDetailQty(buyVO.getQty())//구매상품개수
+//					.build());
 		}
 	}
 }
