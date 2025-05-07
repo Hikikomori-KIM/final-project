@@ -6,6 +6,6 @@ import lombok.NoArgsConstructor;
 
 @Data  @AllArgsConstructor @NoArgsConstructor
 public class PageVO {
-	private int start;
-	private int end;
+	protected int start;
+	protected int end;
 }

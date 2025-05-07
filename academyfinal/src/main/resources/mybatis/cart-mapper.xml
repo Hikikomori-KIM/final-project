@@ -33,13 +33,13 @@
        v.volume_ml, 
        v.volume_stock, 
        v.volume_price
-FROM cart c
-LEFT OUTER JOIN product_detail_view p 
-  ON c.cart_item_no = p.product_no
-LEFT OUTER JOIN volume v
-  ON c.volume_no = v.volume_no AND c.cart_item_no = v.product_no
-WHERE c.users_id = #{usersId}
-ORDER BY c.cart_no DESC
+		FROM cart c
+		LEFT OUTER JOIN product_detail_view p 
+		  ON c.cart_item_no = p.product_no
+		LEFT OUTER JOIN volume v
+		  ON c.volume_no = v.volume_no AND c.cart_item_no = v.product_no
+		WHERE c.users_id = #{usersId}
+		ORDER BY c.cart_no DESC
 
 	   )TMP
 	) where rn between #{start} and #{end}
@@ -83,6 +83,9 @@ ORDER BY c.cart_no DESC
 		delete from cart where users_id=#{usersId} and cart_no = #{cartNo}
 	</delete>
 	
+	<select id="count" resultType="int">
+		select count(*) from cart where users_id=#{usersId}
+	</select>
 	<!-- 여러개삭제-->
 <!-- 	<delete id="deleteList"> -->
 <!--     DELETE FROM cart -->
