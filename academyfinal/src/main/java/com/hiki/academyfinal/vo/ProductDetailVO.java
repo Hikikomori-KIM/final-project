@@ -20,6 +20,7 @@ public class ProductDetailVO {
     private String productDetail;
     private int productPrice;
     private int dicountRate;
+    private int discountedPrice;
     private String strength;
     private String brandNo;
     private String categoryNo;
