@@ -7,11 +7,12 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data @AllArgsConstructor @NoArgsConstructor @Builder
-public class ProductsDto {
+public class ProductsDto { 
     private int productNo;             
     private String productName;
     private String productDetail;
-    private Integer productPrice;         
+    private Integer productPrice;
+    private Integer discountRate;
     private Integer productStock;
     private Timestamp productCreatedAt;
     
