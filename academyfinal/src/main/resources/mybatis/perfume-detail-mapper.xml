@@ -18,4 +18,9 @@
     select perfume_seq.nextval from dual
   </select>
   
+	<delete id="deleteByProductNo" parameterType="int">
+		DELETE FROM perfumedetails
+		WHERE product_no = #{productNo}
+	</delete>
+  
   </mapper>

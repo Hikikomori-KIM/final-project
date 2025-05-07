@@ -135,6 +135,7 @@ public class KakaoPayService {
 //				.build());
 		
 		//buy_detail 등록
+
 //		for(KakaoPayBuyVO buyVO : buyList) {
 //			ItemDto itemDto = itemDao.selectOne(buyVO.getItemNo());
 //			buyDao.addBuyDetail(BuyDetailDto.builder()
@@ -145,5 +146,17 @@ public class KakaoPayService {
 //						.buyDetailQty(buyVO.getQty())//구매상품개수
 //					.build());
 //		}
+
+		for(KakaoPayBuyVO buyVO : buyList) {
+//			ItemDto itemDto = itemDao.selectOne(buyVO.getItemNo());
+//			buyDao.addBuyDetail(BuyDetailDto.builder()
+//						.buyDetailOrigin(buyNo)//구매대표번호
+//						.buyDetailItem(buyVO.getItemNo())//구매상품번호
+//						.buyDetailName(itemDto.getItemName())//구매상품명
+//						.buyDetailPrice(itemDto.getRealPrice())//구매상품가격(개당)
+//						.buyDetailQty(buyVO.getQty())//구매상품개수
+//					.build());
+		}
+
 	}
 }

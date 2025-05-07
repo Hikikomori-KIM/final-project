@@ -2,16 +2,34 @@
 <!DOCTYPE mapper
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
-  
-  <mapper namespace="volume">
-  	<insert id="add">
-  		insert into volume ( 
-  			volume_no, product_no, volume_ml, volume_stock
-  		) values (
-  			#{volumeNo}, #{productNo}, #{volumeMl}, #{volumeStock} 
-  		)
- 	</insert>
- 	<select id="sequence" resultType="int">
- 		select volume_seq.nextval from dual
- 	</select>
-  </mapper>
+
+<mapper namespace="volume">
+
+	<insert id="add">
+		insert into volume (
+		volume_no, product_no, volume_ml, volume_stock, volume_price
+		) values (
+		#{volumeNo}, #{productNo}, #{volumeMl}, #{volumeStock}, #{volumePrice}
+		)
+	</insert>
+	<select id="sequence" resultType="int">
+		select volume_seq.nextval from dual
+	</select>
+
+	<delete id="deleteByProductNo">
+		delete from volume where product_no = #{productNo}
+	</delete>
+
+	<select id="selectVolumes" parameterType="int"
+		resultType="VolumeDto">
+		SELECT
+		volume_no AS volumeNo,
+		product_no AS productNo,
+		volume_ml AS volumeMl,
+		volume_stock AS volumeStock,
+		volume_price AS volumePrice
+		FROM volume
+		WHERE product_no = #{productNo}
+	</select>
+
+</mapper>

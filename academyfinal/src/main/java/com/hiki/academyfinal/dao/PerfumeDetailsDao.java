@@ -21,6 +21,9 @@ public class PerfumeDetailsDao {
 		sqlSession.insert("perfumeDetails.add",perfumeDetailsDto);
 	}
 	
+	public void deleteByProductNo(int productNo) {
+		sqlSession.delete("perfumeDetails.deleteByProductNo",productNo);
+	}
 	
 	
 	

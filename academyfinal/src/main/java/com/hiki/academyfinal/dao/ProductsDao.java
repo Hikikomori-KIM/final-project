@@ -1,26 +1,34 @@
 package com.hiki.academyfinal.dao;
 
 import java.util.List;
+import java.util.Map;
+
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import com.hiki.academyfinal.dto.ProductsDto;
+import com.hiki.academyfinal.vo.ProductListVO;
 
 @Repository
 public class ProductsDao {
     @Autowired
     private SqlSession sqlSession;
 
-    public List<ProductsDto> selectList() {
-        return sqlSession.selectList("products.list");
+ // ✅ VO 기반으로 경량 리스트 조회 (null-safe 방식으로 변경)
+    public List<ProductListVO> selectListVO(Integer accordNo, Integer categoryNo) {
+        Map<String, Object> param = new java.util.HashMap<>();
+        if (accordNo != null) param.put("accordNo", accordNo);
+        if (categoryNo != null) param.put("categoryNo", categoryNo);
+        return sqlSession.selectList("products.listVO", param);
     }
+
 
     public ProductsDto selectOne(int productNo) {
         return sqlSession.selectOne("products.find", productNo);
     }
 
-    public void insert(ProductsDto dto) { // ✅ void로 변경
-        sqlSession.insert("products.add", dto); // ✅ insert만 수행
+    public void insert(ProductsDto dto) {
+        sqlSession.insert("products.add", dto);
     }
 
     public int delete(Integer productNo) {
@@ -34,10 +42,22 @@ public class ProductsDao {
     public int sequence() {
         return sqlSession.selectOne("products.sequence");
     }
- // 향 계열별 상품 조회 추가
-    public List<ProductsDto> selectByAccord(int accordNo) {
-        return sqlSession.selectList("products.selectByAccord", accordNo);
+
+    // ✅ HTML 저장 (쿼리 ID 수정)
+    public void updateProductHtml(int productNo, String html) {
+        sqlSession.update("products.updateProductHtml", Map.of(
+            "productNo", productNo,
+            "html", html
+        ));
+    }
+
+    public String findProductHtml(int productNo) {
+        return sqlSession.selectOne("products.findProductHtml", productNo);
     }
     
-    
+ // 🔥 카테고리별 상품 목록 조회
+    public List<ProductListVO> selectByCategory(int categoryNo) {
+        return sqlSession.selectList("products.listVO", Map.of("categoryNo", categoryNo));
+    }
+
 }
