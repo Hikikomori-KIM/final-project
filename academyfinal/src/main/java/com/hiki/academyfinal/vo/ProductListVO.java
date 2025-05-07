@@ -13,6 +13,7 @@ public class ProductListVO {
     private int productNo;
     private String productName;
     private int productPrice;
+    private int discountRate;
     private String strength;
     private String brand;
     private Integer attachmentNo; // ✅ 꼭 필요함!
