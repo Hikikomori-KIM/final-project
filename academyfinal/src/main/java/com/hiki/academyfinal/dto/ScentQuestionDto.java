@@ -6,10 +6,9 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data @Builder @AllArgsConstructor @NoArgsConstructor
-public class CartDto {
-	private Long cartNo;
-	private Long cartItemNo;
-	private String usersId;
-	private int cartQty;	//default 1설정해놔서 Integer안씀
-	private Long volumeNo;
+public class ScentQuestionDto {
+	
+	private int scentQuestionNo;
+	private String scentQeustionContent;
+
 }

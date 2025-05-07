@@ -10,11 +10,11 @@
 		INSERT INTO products (
 		product_no, product_name,
 		product_detail,
-		product_price, product_stock, product_created_at,
+		product_price, discount_rate, product_stock, product_created_at,
 		category_no, brand_no, strength, product_description_html
 		) VALUES (
 		#{productNo}, #{productName}, #{productDetail},
-		#{productPrice},
+		#{productPrice}, #{discountRate},
 		#{productStock}, SYSDATE,
 		#{categoryNo}, #{brandNo}, #{strength},
 		#{productDescriptionHtml}
@@ -28,6 +28,7 @@
 		p.product_no AS productNo,
 		p.product_name AS productName,
 		p.product_price AS productPrice,
+		p.discount_rate AS discountRate,
 		p.strength AS strength,
 		b.brand_name AS brand,
 		a.attachment_no AS attachmentNo
@@ -38,7 +39,7 @@
 		<where>
 			<if test="accordNo != null">
 				p.product_no IN (
-				SELECT product_no FROM productaccord WHERE accord_no = #{accordNo}
+				SELECT product_no FROM productAccord WHERE accord_no = #{accordNo}
 				)
 			</if>
 			<if test="categoryNo != null">
@@ -73,6 +74,7 @@
 		product_name = #{productName},
 		product_detail = #{productDetail},
 		product_price = #{productPrice},
+		discount_rate = #{discountRate},
 		product_stock = #{productStock},
 		strength = #{strength},
 		category_no =

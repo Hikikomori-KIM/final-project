@@ -45,16 +45,17 @@ public class CartDao {
 		Map<String,Object> result = new HashMap<>();
 		result.put("usersId",cartDto.getUsersId());
 		result.put("cartItemNo", cartDto.getCartItemNo());
+		result.put("volumeNo", cartDto.getVolumeNo());
 		CartDto findCart =  sqlSession.selectOne("cart.selectProduct",result);
-		System.out.println("cartDto:"+cartDto);
-		System.out.println("findCart:"+findCart);
+//		System.out.println("cartDto:"+cartDto);
+//		System.out.println("findCart:"+findCart);
 		if(findCart != null) {
 			int qty = cartDto.getCartQty() + findCart.getCartQty();
 			findCart.setCartQty(qty);
 			updateQty(findCart);
 		}
 		else {
-			System.out.println(cartDto);
+//			System.out.println(cartDto);
 			insert(cartDto);
 		}
 	}
