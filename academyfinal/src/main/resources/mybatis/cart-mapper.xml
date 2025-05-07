@@ -10,12 +10,37 @@
 		
 	select * from(
 	   select rownum rn, TMP.* from(     
-		select c.*, p.*
-			from cart c
-			left outer join product_detail_view p
-			ON c.cart_item_no = p.product_no
-			WHERE c.users_id = #{usersId}
-			order by c.cart_no desc
+		SELECT DISTINCT c.cart_no, 
+       c.cart_item_no, 
+       c.users_id, 
+       c.cart_qty,
+       c.volume_no AS cart_volume_no,
+       p.product_no AS p_product_no,
+       p.product_name, 
+       p.product_detail, 
+       p.product_price, 
+       p.strength, 
+       p.brand_name, 
+       p.top_note,
+       p.middle_note, 
+       p.base_note, 
+       p.attachment_name, 
+       p.attachment_type, 
+       p.attachment_size, 
+       p.image_url, 
+       v.volume_no AS v_volume_no,
+       v.product_no AS v_product_no,
+       v.volume_ml, 
+       v.volume_stock, 
+       v.volume_price
+FROM cart c
+LEFT OUTER JOIN product_detail_view p 
+  ON c.cart_item_no = p.product_no
+LEFT OUTER JOIN volume v
+  ON c.volume_no = v.volume_no AND c.cart_item_no = v.product_no
+WHERE c.users_id = 'siwoosiwoo'
+ORDER BY c.cart_no DESC
+
 	   )TMP
 	) where rn between #{start} and #{end}
 
@@ -34,7 +59,7 @@
 
 	<!-- 같은이름의 아이템이 들어올수 있으니 insert시 조회해봐야함-->
 	<select id="selectProduct" resultType="cartDto">
-		select * from cart where cart_item_no =#{cartItemNo} and users_id=#{usersId}
+		select * from cart where cart_item_no =#{cartItemNo} and users_id=#{usersId} and volume_no =#{volumeNo}
 	</select>
 	
 	<!-- 있으면 수량만바꿔주기 -->
