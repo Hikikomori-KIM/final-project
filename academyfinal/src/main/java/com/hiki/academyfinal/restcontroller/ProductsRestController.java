@@ -54,15 +54,6 @@ public class ProductsRestController {
 		return productsDto;
 	}
 
-	// 상품 수정
-	@PatchMapping("/edit/{productsNo}")
-	public void edit(@PathVariable Integer productsNo, @RequestBody ProductsDto productsDto) {
-		ProductsDto targetDto = productsDao.selectOne(productsNo);
-		if (targetDto == null)
-			throw new TargetNotFoundException();
-		productsDto.setProductNo(productsNo);
-		productsDao.update(productsDto);
-	}
 
 	// 상품 상세 정보 + 용량 + 향계열
 	@GetMapping("/detail/{productNo}")
@@ -105,6 +96,28 @@ public class ProductsRestController {
 
 	@GetMapping("/category/{categoryNo}")
 	public List<ProductListVO> getByCategory(@PathVariable int categoryNo) {
-		return productsDao.selectByCategory(categoryNo);
+	    return productService.getProductListByCategory(categoryNo);
+	}
+
+	// 상품 수정 (상품 기본 정보 + 용량 정보 수정)
+	@PatchMapping("/edit/{productsNo}")
+	public ResponseEntity<?> edit(@PathVariable Integer productsNo, @RequestBody ProductAddRequestVO VO) {
+
+		// (1) 기존 상품 존재 여부 확인
+		ProductsDto targetDto = productsDao.selectOne(productsNo);
+		if (targetDto == null)
+			throw new TargetNotFoundException();
+
+		// (2) 상품 기본 정보 수정
+		ProductsDto updateDto = ProductsDto.builder().productNo(productsNo).productName(VO.getProductName())
+				.productDetail(VO.getProductDetail()).productPrice(VO.getProductPrice()).brandNo(VO.getBrandNo())
+				.strength(VO.getStrength()).categoryNo(VO.getCategoryNo())
+				.productDescriptionHtml(VO.getProductDescriptionHtml()).build();
+		productsDao.update(updateDto);
+
+		// (3) 용량 정보 수정
+		productService.updateVolumes(productsNo, VO.getVolumes());
+
+		return ResponseEntity.ok("상품 수정 완료");
 	}
 }

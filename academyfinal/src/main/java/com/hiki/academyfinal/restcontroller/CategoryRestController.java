@@ -27,12 +27,16 @@ public class CategoryRestController {
     	return categoryDao.selectList();
     }
     //카테고리 수정
-	/*
-	 * @PutMapping("/api/categories/{categoryNo}") public void
-	 * updateCategory(@PathVariable int categoryNo, @RequestBody CategoryDto dto) {
-	 * dto.setCategoryNo(categoryNo); categoryDao.update(dto); }
-	 */
-    
+    @PutMapping("/{categoryNo}")
+    public void updateCategory(@PathVariable int categoryNo, @RequestBody CategoryDto dto) {
+        dto.setCategoryNo(categoryNo); // URL로 받은 값 설정
+        categoryDao.update(dto);
+    }
+    //카테고리 삭제
+    @DeleteMapping("/{categoryNo}")
+    public void deleteCategory(@PathVariable int categoryNo) {
+        categoryDao.delete(categoryNo);
+    }
     
     
     
