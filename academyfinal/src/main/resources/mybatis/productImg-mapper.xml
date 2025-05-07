@@ -4,18 +4,39 @@
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="productImg">
-  
-  <insert id="add">
-    insert into product_img (
-      product_no, attachment_no
-    ) values (
-      #{productNo}, #{attachmentNo}
-    )
-  </insert>
-  <select id="findAttachmentNoByProductNo" parameterType="int" resultType="int">
-    SELECT attachment_no
-    FROM product_img
-    WHERE product_no = #{productNo}
-</select>
+
+	<insert id="add">
+		insert into product_img (
+		product_no, attachment_no
+		) values (
+		#{productNo}, #{attachmentNo}
+		)
+	</insert>
+	
+	<select id="findAttachmentNoByProductNo" parameterType="int"
+		resultType="int">
+		SELECT attachment_no
+		FROM product_img
+		WHERE product_no = #{productNo}
+	</select>
+	
+	<delete id="deleteByProductNo">
+		delete from product_Img where product_no = #{productNo}
+	</delete>
+
+	<select id="findAllByProductNo" resultType="int">
+		select
+			a.attachment_no,
+			a.attachment_name,
+			a.attachment_type,
+			a.attachment_size
+		from product_img pi
+		inner join attachment a on pi.attachment_no = a.attachment_no
+		where pi.product_no = #{productNo}
+	</select>
+
+
+
+
 
 </mapper>

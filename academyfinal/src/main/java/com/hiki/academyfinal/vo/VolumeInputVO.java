@@ -16,4 +16,5 @@ import lombok.NoArgsConstructor;
 public class VolumeInputVO {
 	private String volumeMl;
 	private int volumeStock;
+	private int volumePrice;
 }

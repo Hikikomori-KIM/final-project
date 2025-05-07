@@ -6,28 +6,22 @@
 <mapper namespace="productDetail">
 
 	<select id="selectDetail" resultType="ProductDetailVO">
-		select * from product_detail_view
+		select * from
+		product_detail_view
 		where product_no = #{productNo}
 	</select>
-	
+
 	<select id="selectAccords" resultType="string">
 		select a.accord_name
-		from product_accord pa
+		from
+		PRODUCTACCORD pa
 		join accords a on pa.accord_no = a.accord_no
-		where pa.product_no = #{productNo}
+		where
+		pa.product_no = #{productNo}
 	</select>
 
-	<select id="selectVolumes" parameterType="int"
-		resultType="VolumeDto">
-		SELECT
-		volume_no AS volumeNo,
-		product_no AS productNo,
-		volume_ml AS volumeMl,
-		volume_stock AS volumeStock
-		FROM volume
-		WHERE product_no = #{productNo}
-	</select>
-	
-	
+
+
+
 </mapper>
   

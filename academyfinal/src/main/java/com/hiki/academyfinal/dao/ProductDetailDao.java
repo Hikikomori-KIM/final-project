@@ -16,16 +16,21 @@ public class ProductDetailDao {
     private SqlSession sqlSession;
 
     // ✅ 단일 상세 정보 조회 (ProductDetailVO)
-    public ProductDetailVO selectDetail(int productNo) {
-        return sqlSession.selectOne("productDetail.selectDetail", productNo);
+    public List<ProductDetailVO> selectDetail(int productNo) {
+        return sqlSession.selectList("productDetail.selectDetail", productNo);
     }
 
     // ✅ 해당 상품의 용량 목록 조회 (VolumeDto List)
     public List<VolumeDto> selectVolumes(int productNo) {
-        return sqlSession.selectList("productDetail.selectVolumes", productNo);
+        return sqlSession.selectList("volume.selectVolumes", productNo);
     }
-// // 향 계열 이름 목록 조회
-//    public List<String> selectAccords(int productNo) {
-//        return sqlSession.selectList("productDetail.selectAccords", productNo);
-//    }
+ // 향 계열 이름 목록 조회
+    public List<String> selectAccords(int productNo) {
+        return sqlSession.selectList("productDetail.selectAccords", productNo);
+    }
+    //삭제
+    public void deleteByProductNo(int productNo) {
+    	sqlSession.delete("perfumeDetail.deleteByProductNo",productNo);
+    }
+    
 }

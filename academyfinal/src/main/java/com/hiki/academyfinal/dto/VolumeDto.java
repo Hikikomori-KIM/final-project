@@ -11,4 +11,5 @@ public class VolumeDto {
 	private int productNo; // fk
 	private String volumeMl; //ex: 50ml
 	private int volumeStock; // 각 용량별 재고
+	private Integer volumePrice; // 추가
 }
