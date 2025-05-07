@@ -62,4 +62,11 @@ public class CartRestController {
 	public void deleteOne(@RequestBody CartDto cartDto) {
 		cartDao.deleteOne(cartDto.getUsersId(), cartDto.getCartNo());
 	}
+	
+	@DeleteMapping("/deleteList")
+	public void deleteList(@RequestBody Map<String,Object> data) {
+		String usersId = data.get("usersId").toString();
+		List<Long> noList = (List<Long>) data.get("checkList");
+		cartDao.deleteMultiple(usersId, noList);
+	}
 }
