@@ -18,10 +18,17 @@ public class MessageDao {
 	private SqlSession sqlSession;
 	
 	public MessageDto add(MessageDto messageDto) {
-		long messageNo = sqlSession.selectOne("message.sequence");
+		long messageNo = sqlSession.selectOne("messageList.sequence");
 		messageDto.setMessageNo(messageNo);
 		sqlSession.insert("messageList.add", messageDto);
 		return messageDto;
+	}
+	
+	public List<MessageViewDto> listByRoom(long roomNo, long messageNo) {
+		Map<String, Object> params = new HashMap<>();
+		params.put("roomNo", roomNo);
+		params.put("messageNo", messageNo);
+		return sqlSession.selectList("messageList.listByRoom", params);
 	}
 	
 	public List<MessageViewDto> selectListByPaging(String usersId) {
@@ -49,4 +56,16 @@ public class MessageDao {
 		params.put("messageNo", messageNo);
 		return sqlSession.selectOne("messageList.cntByPaging", params);
 	}
+	
+	// message 테이블에 있는 RoomNo가 같은 메시지만 불러오도록 처리
+	public boolean checkMessageAccess(long messageNo, long roomNo, String usersId) {
+		Map<String, Object> params = new HashMap<>();
+		params.put("messageNo", messageNo);
+		params.put("roomNo", roomNo);
+		params.put("usersId", usersId);
+
+		long count = sqlSession.selectOne("messageList.check", params);
+		return count > 0;
+	}
+
 }

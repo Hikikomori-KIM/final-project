@@ -3,15 +3,18 @@ package com.hiki.academyfinal.restcontroller.websocket;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ResponseStatusException;
 
-import com.hiki.academyfinal.configuration.NaverLoginProperties;
 import com.hiki.academyfinal.dao.websocket.MessageDao;
+import com.hiki.academyfinal.dao.websocket.RoomDao;
 import com.hiki.academyfinal.dto.websocket.MessageViewDto;
 import com.hiki.academyfinal.service.TokenService;
 import com.hiki.academyfinal.util.MessageConverter;
@@ -30,6 +33,8 @@ public class MessageRestController {
 	private TokenService tokenService;
 	@Autowired
 	private MessageConverter messageConverter;
+	@Autowired
+	private RoomDao roomDao;
 	
 	@GetMapping("/")
 	public MessageListVO list(@RequestHeader(value="Authorization", required=false) String bearerToken) {
@@ -41,6 +46,29 @@ public class MessageRestController {
 		return MessageListVO.builder()
 					.last(last).list(convertList)
 				.build();
+	}
+	
+	@GetMapping("/room")
+	public MessageListVO listByRoomNoParam(
+	    @RequestHeader(value = "Authorization", required = false) String bearerToken,
+	    @RequestParam("roomNo") long roomNo) {
+		
+	    ClaimVO claimVO = tokenService.parseBearerToken(bearerToken);
+	    String usersId = claimVO.getUsersId();
+	    
+	    if(!"관리자".equals(claimVO.getUsersType()) ) { // 관리자인지 확인
+	    	if(!roomDao.checkRoom(roomNo, usersId)) { // 해당 방의 오너인지 확인
+	    		throw new ResponseStatusException(HttpStatus.FORBIDDEN, "해당 방에 참여하실 수 없습니다");
+	    	}	    	
+	    }
+	    // 참여자 메시지 호출
+	    List<MessageViewDto> list = messageDao.selectListByPaging(claimVO.getUsersId(), roomNo);
+	    List<MessageVO> convertList = messageConverter.convertMessageFormat(list, claimVO.getUsersId());
+	    
+	    return MessageListVO.builder()
+	            .last(true)
+	            .list(convertList)
+	            .build();
 	}
 	
 	@GetMapping("/{messageNo}")
@@ -55,7 +83,6 @@ public class MessageRestController {
 		return MessageListVO.builder()
 					.last(last).list(convertList)
 				.build();
-		
 	}
 	
 	@GetMapping("/room/{roomNo}")
@@ -71,4 +98,6 @@ public class MessageRestController {
 	            .list(convertList)
 	            .build();
 	}
+	
+	
 }

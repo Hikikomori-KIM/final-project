@@ -17,24 +17,18 @@
   	
   	<!-- 조회 -->
 	<select id="list" resultType="RoomDto">
-	    select 
-	        room_no as roomNo,
-	        room_title as roomTitle,
-	        room_owner as roomOwner
-	    from room
-	    order by room_no desc
+		select * from room order by room_no desc
 	</select>
 	
 	<!--방 입장-->
 	<insert id="enter" parameterType="map">
-	  insert into room_user(room_no, users_id)
-	  select #{roomNo}, #{usersId}
-	  from dual
-	  where not exists (
-	    select 1 from room_user
-	    where room_no = #{roomNo}
-	    and users_id = #{usersId}
-	  )
+		insert into room_user(room_no, users_id)
+		select #{roomNo}, #{usersId} from dual
+		where not exists (
+			select 1 from room_user
+			where room_no = #{roomNo}
+			and users_id = #{usersId}
+		)
 	</insert>
 
   	

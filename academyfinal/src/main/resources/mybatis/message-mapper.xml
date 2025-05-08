@@ -12,11 +12,11 @@
 	<insert id="add">
 		insert into message(
 			message_no, message_type, message_content,
-			message_time, message_sender, message_receiver
+			message_time, message_sender, message_receiver, room_no
 		)
 		values(
 			#{messageNo}, #{messageType}, #{messageContent},
-			#{messageTime}, #{messageSender}, #{messageReceiver}
+			#{messageTime}, #{messageSender}, #{messageReceiver}, #{roomNo}
 		)
 	</insert>
 	
@@ -27,20 +27,56 @@
 		order by message_no asc
 	</select>
 	
-	<!--일정 개수만큼 메시지 조회-->
-	<select id="listByPaging" resultType="MessageViewDto">
+	<select id="check" parameterType="map" resultType="long">
+	  SELECT count(*)
+	  FROM message_view
+	  WHERE message_no = #{messageNo}
+	    AND room_no = #{roomNo}
+	    AND EXISTS (
+	      SELECT 1 FROM room
+	      WHERE room_no = #{roomNo}
+	        AND (TRIM(room_owner) = #{usersId} OR TRIM(room_partner) = #{usersId})
+	    )
+	</select>
+
+	
+	<!-- 특정 방 번호의 채팅 메시지를 messageNo 기준으로 페이징 조회 -->
+	<select id="listByRoom" resultType="MessageViewDto" parameterType="map">
 		select * from (
-			<include refid = "top-n-header"></include>
-				select * from message_view
+			<include refid="top-n-header"/>
+				select * 
+				from message_view
 				where message_type in ('CHAT','SYSTEM')
+				<if test="roomNo != null">
+					and room_no = #{roomNo}
+				</if>
 				<if test="messageNo != null">
 					<![CDATA[
 						and message_no < #{messageNo}
 					]]>
 				</if>
 				order by message_no desc
-			<include refid="top-n-footer"></include>
-		 ) order by message_no asc
+			<include refid="top-n-footer"/>
+		) order by message_no asc
+	</select>
+	
+	<!--일정 개수만큼 메시지 조회-->
+	<select id="listByPaging" resultType="MessageViewDto" parameterType="map">
+		select * from (
+			<include refid="top-n-header"/>
+				select * from message_view
+				where message_type in ('CHAT','SYSTEM')
+				<if test="roomNo != null">
+					and room_no = #{roomNo}
+				</if>
+				<if test="messageNo != null">
+					<![CDATA[
+						and message_no < #{messageNo}
+					]]>
+				</if>
+				order by message_no desc
+			<include refid="top-n-footer"/>
+		) order by message_no asc
 	</select>
 	
 	<!--남은 데이터 개수 확인-->
