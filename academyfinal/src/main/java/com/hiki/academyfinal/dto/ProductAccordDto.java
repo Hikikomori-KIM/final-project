@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 
 @Data @NoArgsConstructor @AllArgsConstructor @Builder
 public class ProductAccordDto {
-	private int productNo;
+	private long productNo;
 	private int accordNo;
 	
 }

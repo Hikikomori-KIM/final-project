@@ -5,98 +5,113 @@
 
 <mapper namespace="cart">
 
-	<!-- 유저의 카트리스트 / 최신순 --> <!-- orderby나뉠때 다시쿼리정리하러옴 -->
-	<select id="list" resultType="cartViewVO">
-		
-	select * from(
-	   select rownum rn, TMP.* from(     
-		SELECT DISTINCT c.cart_no, 
-       c.cart_item_no, 
-       c.users_id, 
-       c.cart_qty,
-       c.volume_no AS cart_volume_no,
-       p.product_no AS p_product_no,
-       p.product_name, 
-       p.product_detail, 
-       p.product_price, 
-       p.strength, 
-       p.brand_name, 
-       p.top_note,
-       p.middle_note, 
-       p.base_note, 
-       p.attachment_name, 
-       p.attachment_type, 
-       p.attachment_size, 
-       p.image_url, 
-       v.volume_no AS v_volume_no,
-       v.product_no AS v_product_no,
-       v.volume_ml, 
-       v.volume_stock, 
-       v.volume_price
-		FROM cart c
-		LEFT OUTER JOIN product_detail_view p 
-		  ON c.cart_item_no = p.product_no
-		LEFT OUTER JOIN volume v
-		  ON c.volume_no = v.volume_no AND c.cart_item_no = v.product_no
-		WHERE c.users_id = #{usersId}
-		ORDER BY c.cart_no DESC
+  <!-- 유저의 카트리스트 / 최신순 -->
+  <select id="list" resultType="cartViewVO">
+    SELECT * FROM (
+      SELECT ROWNUM rn, TMP.* FROM (
+        SELECT DISTINCT 
+          c.cart_no, 
+          c.cart_item_no, 
+          c.users_id, 
+          c.cart_qty,
+          c.volume_no AS cart_volume_no,
+          p.product_no AS p_product_no,
+          p.product_name, 
+          p.product_detail, 
+          p.product_price, 
+          p.strength, 
+          p.brand_name, 
+          p.top_note,
+          p.middle_note, 
+          p.base_note, 
+          p.attachment_name, 
+          p.attachment_type, 
+          p.attachment_size, 
+          p.image_url, 
+          v.volume_no AS v_volume_no,
+          v.product_no AS v_product_no,
+          v.volume_ml, 
+          v.volume_stock, 
+          v.volume_price
+        FROM cart c
+        LEFT OUTER JOIN product_detail_view p 
+          ON c.cart_item_no = p.product_no
+        LEFT OUTER JOIN volume v
+          ON c.volume_no = v.volume_no AND c.cart_item_no = v.product_no
+        WHERE c.users_id = #{usersId}
+        ORDER BY c.cart_no DESC
+      ) TMP
+    ) 
+    WHERE rn BETWEEN #{start} AND #{end}
+  </select>
 
-	   )TMP
-	) where rn between #{start} and #{end}
+  <!-- 카트 1개 조회 (디테일) -->
+  <select id="selectOne" resultType="cartViewVO">
+    SELECT c.*, p.*
+    FROM cart c
+    LEFT OUTER JOIN product_detail_view p
+      ON c.cart_item_no = p.product_no
+    WHERE c.users_id = #{usersId} AND c.cart_item_no = #{cartItemNo}
+    ORDER BY c.cart_no DESC
+  </select>
 
+  <!-- 같은 제품이 장바구니에 있는지 확인 -->
+  <select id="selectProduct" resultType="cartDto">
+    SELECT * FROM cart 
+    WHERE cart_item_no = #{cartItemNo} 
+      AND users_id = #{usersId} 
+      AND volume_no = #{volumeNo}
+  </select>
 
-	</select>
-	
-	<!-- 카트 1개조회 (디테일) -->
-	<select id="selectOne" resultType="cartViewVO">
-		select c.*, p.*
-		from cart c
-		left outer join product_detail_view p
-		ON c.cart_item_no = p.product_no
-		WHERE c.users_id = #{usersId} and c.cart_item_no =#{cartItemNo}
-		order by c.cart_no desc;
-	</select>	
+  <!-- 수량 업데이트 -->
+  <update id="qtyUp">
+    UPDATE cart 
+    SET cart_qty = #{cartQty} 
+    WHERE users_id = #{usersId} AND cart_no = #{cartNo}
+  </update>
 
-	<!-- 같은이름의 아이템이 들어올수 있으니 insert시 조회해봐야함-->
-	<select id="selectProduct" resultType="cartDto">
-		select * from cart where cart_item_no =#{cartItemNo} and users_id=#{usersId} and volume_no =#{volumeNo}
-	</select>
-	
-	<!-- 있으면 수량만바꿔주기 -->
-	<update id="qtyUp">
-		update cart set cart_qty =#{cartQty} where users_id=#{usersId} and cart_no=#{cartNo}
-	</update>
-	
-	<!-- 기본인서트 -->
-	<insert id="createCart">
-		insert into cart(cart_no, cart_item_no, users_id, cart_qty, volume_no)
-		values(#{cartNo}, #{cartItemNo}, #{usersId}, #{cartQty}, #{volumeNo})
-	</insert>
-	
-	<!-- 시퀀스 -->
-	<select id="sequence" resultType="Long">
-		select cart_seq.nextval from dual
-	</select>
-	
-	<!-- 단일삭제 -->
-	<delete id="delete">
-		delete from cart where users_id=#{usersId} and cart_no = #{cartNo}
-	</delete>
-	
-	<select id="count" resultType="int">
-		select count(*) from cart where users_id=#{usersId}
-	</select>
-	<!-- 여러개삭제-->
-	<delete id="deleteList">
+  <!-- 기본 인서트 -->
+  <insert id="createCart">
+    INSERT INTO cart(cart_no, cart_item_no, users_id, cart_qty, volume_no)
+    VALUES(#{cartNo}, #{cartItemNo}, #{usersId}, #{cartQty}, #{volumeNo})
+  </insert>
+
+  <!-- 시퀀스 조회 -->
+  <select id="sequence" resultType="Long">
+    SELECT cart_seq.NEXTVAL FROM dual
+  </select>
+
+  <!-- 단일 삭제 -->
+  <delete id="delete">
+    DELETE FROM cart 
+    WHERE users_id = #{usersId} AND cart_no = #{cartNo}
+  </delete>
+
+  <!-- 상품 삭제 시 관련 장바구니 삭제 -->
+  <delete id="deleteByProductNo" parameterType="long">
+    DELETE FROM cart
+    WHERE cart_item_no = #{productNo}
+  </delete>
+
+  <!-- volume 삭제 시 관련 장바구니 삭제 -->
+  <delete id="deleteByVolumeNo">
+    DELETE FROM cart
+    WHERE volume_no = #{volumeNo}
+  </delete>
+
+  <!-- 유저 카트 수량 -->
+  <select id="count" resultType="int">
+    SELECT COUNT(*) FROM cart WHERE users_id = #{usersId}
+  </select>
+
+  <!-- 여러 개 삭제 -->
+  <delete id="deleteList">
     DELETE FROM cart
     WHERE cart_no IN
     <foreach collection="cartNoList" item="cartNo" open="(" close=")" separator=",">
-        #{cartNo}
+      #{cartNo}
     </foreach>
-    and users_id = #{usersId}
-	</delete>
-	<!-- 결과임 ex)-->
-	<!-- DELETE FROM cart -->
-	<!-- WHERE cart_no IN (2, 3, 5) -->
-	<!-- AND users_id = 101 -->
+    AND users_id = #{usersId}
+  </delete>
+
 </mapper>

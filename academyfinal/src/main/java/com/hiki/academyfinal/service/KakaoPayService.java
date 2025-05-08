@@ -141,7 +141,6 @@ public class KakaoPayService {
 						.payDetailOrigin(payNo)//구매대표번호
 						.payDetailItem(payVO.getProductNo())//구매상품번호
 						.payDetailName(productsDto.getProductName())//구매상품명
-						.payDetailPrice(productsDto.getProductStock())//구매상품가격(개당)
 						.payDetailQty(payVO.getQty())//구매상품개수
 					.build());
 		}

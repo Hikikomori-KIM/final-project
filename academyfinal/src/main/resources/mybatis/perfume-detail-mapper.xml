@@ -14,11 +14,11 @@
   		  )
   	</insert>
 
-  <select id="sequence" resultType="int"> <!-- ✅ 추가 -->
+  <select id="sequence" resultType="long"> <!-- ✅ 추가 -->
     select perfume_seq.nextval from dual
   </select>
   
-	<delete id="deleteByProductNo" parameterType="int">
+	<delete id="deleteByProductNo" parameterType="long">
 		DELETE FROM perfumedetails
 		WHERE product_no = #{productNo}
 	</delete>

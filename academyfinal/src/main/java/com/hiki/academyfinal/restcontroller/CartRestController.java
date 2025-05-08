@@ -35,7 +35,7 @@ public class CartRestController {
 	
 	//다이얼로그에서 아이템정보띄우기
 	@GetMapping("/{productNo}")
-	public ProductDetailViewDto itemInfo(@PathVariable int productNo) {
+	public ProductDetailViewDto itemInfo(@PathVariable long productNo) {
 		ProductDetailViewDto productDetailViewDto = producvtDetailViewDao.productInfo(productNo);
 		return productDetailViewDto;
 	}

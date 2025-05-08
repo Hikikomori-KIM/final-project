@@ -14,7 +14,6 @@ public class ProductsDto {
     private Integer productPrice;
     private Integer discountRate;
     private Integer discountedPrice;
-    private Integer productStock;
     private Timestamp productCreatedAt;
     
 

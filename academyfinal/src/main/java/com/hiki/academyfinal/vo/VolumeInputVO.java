@@ -17,4 +17,5 @@ public class VolumeInputVO {
 	private String volumeMl;
 	private int volumeStock;
 	private int volumePrice;
+	private Integer discountedVolumePrice;
 }

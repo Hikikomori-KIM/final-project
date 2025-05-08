@@ -6,7 +6,7 @@
 <mapper namespace="category">
 
   <!-- 🔹 시퀀스 미리 조회 -->
-  <select id="sequence" resultType="int">
+  <select id="sequence" resultType="long">
     SELECT categories_seq.NEXTVAL FROM dual
   </select>
 

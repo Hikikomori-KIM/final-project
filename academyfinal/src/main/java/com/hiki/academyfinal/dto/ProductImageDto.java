@@ -8,5 +8,5 @@ import lombok.NoArgsConstructor;
 @Data @NoArgsConstructor @AllArgsConstructor @Builder
 public class ProductImageDto {
 	private int attchmentNo;
-	private int productNo;
+	private long productNo;
 }

@@ -7,8 +7,8 @@ import lombok.NoArgsConstructor;
 
 @Data @AllArgsConstructor @NoArgsConstructor @Builder
 public class PerfumeDetailsDto {
-	private int perfumeNo;  //시퀀스
-	private int productNo;  //fk
+	private long perfumeNo;  //시퀀스
+	private long productNo;  //fk
 	private String topNote;
 	private String middleNote;
 	private String baseNote;

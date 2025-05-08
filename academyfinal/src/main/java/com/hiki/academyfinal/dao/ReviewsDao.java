@@ -10,7 +10,7 @@ public class ReviewsDao {
 	private SqlSession sqlSession;
 	
 	
-	public void deleteByProductNo(int productNo) {
+	public void deleteByProductNo(long productNo) {
 		sqlSession.delete("reviews.deleteByProductNo",productNo);
 	}
 	
