@@ -19,8 +19,8 @@ public class CartViewVO extends PageVO{
 	private String productName;
 	private String productDetail;
 	private int productPrice;
-	private int discountRate;
-	private int discountedPrice;
+//	private int discountRate;		//추가
+//	private int discountedPrice; 	//추가
 	private String strength;
 	private long brandNo;
 	private long categoryNo;

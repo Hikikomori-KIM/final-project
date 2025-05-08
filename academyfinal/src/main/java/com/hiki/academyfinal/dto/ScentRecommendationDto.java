@@ -10,4 +10,5 @@ public class ScentRecommendationDto {
 	private int scentRecommendationNo;
 	private int productNo;
 	private String scentRecommendationComment;
+	private String topScoreType;
 }
