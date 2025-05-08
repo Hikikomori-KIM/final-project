@@ -11,8 +11,8 @@ public class ProductDetailViewDto {
 	private String productName;
 	private String productDetail;
 	private int productPrice;
-//	private int discountRate;
-//	private int discountedPrice;
+	private int discountRate;
+	private int discountedPrice;
 	private String strength;
 	private long brandNo;
 	private long categoryNo;
@@ -29,5 +29,6 @@ public class ProductDetailViewDto {
 	private String volumeMl;
 	private int volumeStock;
 	private int volumePrice;
+	private int discountedVolumePrice;
 
 }
