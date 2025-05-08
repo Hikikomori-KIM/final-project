@@ -20,66 +20,83 @@ import com.hiki.academyfinal.vo.websocket.ActionVO;
 
 import lombok.extern.slf4j.Slf4j;
 
-@Slf4j @Service
+@Slf4j
+@Service
 public class WebSocketEventHandler {
-	
-	@Autowired
-	private SimpMessagingTemplate messagingTemplate; // 전송 도구
-	@Autowired
-	private TokenService tokenService;
-	@Autowired
-	private UsersDao usersDao;
-	@Autowired
-	private MessageDao messageDao;
-	
-	// 세션이 어느 방에 속해있는지 알기 위한 저장소
-	private Map<String, Long> roomSessions = Collections.synchronizedMap(new HashMap<>());
-	// 해당 세션의 사용자 ID를 저장
-	private Map<String, String> roomUsers = Collections.synchronizedMap(new HashMap<>());
-	
-	@EventListener
-	public void userSubscribe(SessionSubscribeEvent event) {
-		log.debug("채널 구독됨");
-		StompHeaderAccessor accessor = StompHeaderAccessor.wrap(event.getMessage());
-		log.debug("구독 채널 조회 = {}", accessor.getDestination());
-		if(accessor.getDestination() == null) return;
-		if(accessor.getDestination().startsWith("/private/group/chat/")) {
-			// roomNo 추출
-			int position = "/private/group/chat".length();
-			String roomStr = accessor.getDestination().substring(position);
-			long roomNo = Long.parseLong(roomStr);
-			// access Token 추출
-			String accessToken = accessor.getFirstNativeHeader("accessToken");
-			log.debug("accessToken = {}", accessToken);
-			ClaimVO claimVO = tokenService.parseBearerToken(accessToken);	
-			messagingTemplate.convertAndSend(
-					"/private/group/chat/"+roomNo,
-					ActionVO.builder()
-						.usersId(claimVO.getUsersId())
-						.type("ENTER")
-				.build()
-			);
-			// 세션 번호, 방 번호 기억
-			roomSessions.put(accessor.getSessionId(), roomNo);
-			roomUsers.put(accessor.getSessionId(), claimVO.getUsersId());
-		}
-	}
-	
-	@EventListener
-	public void userLeave(SessionDisconnectEvent event) {
-		StompHeaderAccessor accessor = StompHeaderAccessor.wrap(event.getMessage());
-		String sessionId = accessor.getSessionId(); // 웹소켓 세션 ID
-		Long roomNo = roomSessions.remove(sessionId);
-		String usersId = roomUsers.remove(sessionId);
-		if(roomNo == null) return;
-		if(usersId == null) return;
-		
-		messagingTemplate.convertAndSend(
-			"/private/group/chat/"+roomNo, 
-			ActionVO.builder()
-				.usersId(usersId)
-				.type("LEAVE")
-			.build()
-		);
-	}
+
+    @Autowired
+    private SimpMessagingTemplate messagingTemplate;
+    @Autowired
+    private TokenService tokenService;
+    @Autowired
+    private UsersDao usersDao;
+    @Autowired
+    private MessageDao messageDao;
+
+    // 세션 -> 방번호
+    private Map<String, Long> roomSessions = Collections.synchronizedMap(new HashMap<>());
+
+    // 세션 -> 사용자 ID
+    private Map<String, String> roomUsers = Collections.synchronizedMap(new HashMap<>());
+
+    @EventListener
+    public void userSubscribe(SessionSubscribeEvent event) {
+        log.debug("채널 구독됨");
+
+        StompHeaderAccessor accessor = StompHeaderAccessor.wrap(event.getMessage());
+        String destination = accessor.getDestination(); // 예: "/private/group/chat/62"
+        log.debug("구독 채널 조회 = {}", destination);
+
+        if (destination == null) return;
+        if (!destination.startsWith("/private/group/chat/")) return;
+
+        try {
+            // 채널에서 roomNo 추출
+            String roomNoStr = destination.substring(destination.lastIndexOf("/") + 1);
+            long roomNo = Long.parseLong(roomNoStr);
+
+            // 토큰 파싱
+            String accessToken = accessor.getFirstNativeHeader("accessToken");
+            log.debug("accessToken = {}", accessToken);
+
+            ClaimVO claimVO = tokenService.parseBearerToken(accessToken);
+            String usersId = claimVO.getUsersId();
+
+            // ENTER 메시지 전송
+            messagingTemplate.convertAndSend(
+                "/private/group/chat/" + roomNo,
+                ActionVO.builder()
+                    .type("ENTER")
+                    .usersId(usersId)
+                    .build()
+            );
+
+            // 세션 상태 저장
+            roomSessions.put(accessor.getSessionId(), roomNo);
+            roomUsers.put(accessor.getSessionId(), usersId);
+
+        } catch (Exception e) {
+            log.error("userSubscribe 처리 중 예외 발생", e);
+        }
+    }
+
+    @EventListener
+    public void userLeave(SessionDisconnectEvent event) {
+        StompHeaderAccessor accessor = StompHeaderAccessor.wrap(event.getMessage());
+        String sessionId = accessor.getSessionId();
+
+        Long roomNo = roomSessions.remove(sessionId);
+        String usersId = roomUsers.remove(sessionId);
+
+        if (roomNo == null || usersId == null) return;
+
+        // LEAVE 메시지 전송
+        messagingTemplate.convertAndSend(
+            "/private/group/chat/" + roomNo,
+            ActionVO.builder()
+                .type("LEAVE")
+                .usersId(usersId)
+                .build()
+        );
+    }
 }
