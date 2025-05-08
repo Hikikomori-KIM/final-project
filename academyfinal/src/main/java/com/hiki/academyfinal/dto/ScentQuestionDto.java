@@ -9,6 +9,6 @@ import lombok.NoArgsConstructor;
 public class ScentQuestionDto {
 	
 	private int scentQuestionNo;
-	private String scentQeustionContent;
+	private String scentQuestionContent;
 
 }

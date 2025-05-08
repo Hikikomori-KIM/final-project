@@ -11,8 +11,8 @@ public class ProductDetailViewDto {
 	private String productName;
 	private String productDetail;
 	private int productPrice;
-	private int discountRate;
-	private int discountedPrice;
+//	private int discountRate;
+//	private int discountedPrice;
 	private String strength;
 	private long brandNo;
 	private long categoryNo;
