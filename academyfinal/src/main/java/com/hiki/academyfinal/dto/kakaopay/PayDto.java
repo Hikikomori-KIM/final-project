@@ -8,11 +8,12 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data @Builder @NoArgsConstructor @AllArgsConstructor
-public class BuyDto {
-	private long buyNo;
-	private String buyOwner;
-	private String buyTid;
-	private long buyToal;
-	private long buyRemain;
-	private Timestamp buyTime;
+public class PayDto {
+	private long payNo;
+	private String payOwner;
+	private String payTid;
+	private String payName;
+	private long payTotal;
+	private long payRemain;
+	private Timestamp payTime;
 }
