@@ -16,4 +16,6 @@ public class ChatResponseVO implements MessageVO {
 	private String content;
 	private String type;
 	private LocalDateTime time;
+	
+	private Long roomNo;
 }

@@ -1,10 +1,13 @@
 package com.hiki.academyfinal.restcontroller;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -46,8 +49,24 @@ public class CartRestController {
 	}
 	
 	@GetMapping("/list/{usersId}")
-	public List<CartViewVO> cartList(@PathVariable String usersId, PageVO pageVO ) {
+	public Map<String, Object> cartList(@PathVariable String usersId, PageVO pageVO ) {
+		Map<String,Object> result = new HashMap<>();
 		List<CartViewVO> cart = cartDao.SelectList(usersId,pageVO);
-		return cart;
+		int count = cartDao.count(usersId);
+		result.put("cart", cart);
+		result.put("count", count);
+		return result;
+	}
+	
+	@DeleteMapping("/{cartNo}")
+	public void deleteOne(@RequestBody CartDto cartDto) {
+		cartDao.deleteOne(cartDto.getUsersId(), cartDto.getCartNo());
+	}
+	
+	@DeleteMapping("/deleteList")
+	public void deleteList(@RequestBody Map<String,Object> data) {
+		String usersId = data.get("usersId").toString();
+		List<Long> noList = (List<Long>) data.get("checkList");
+		cartDao.deleteMultiple(usersId, noList);
 	}
 }

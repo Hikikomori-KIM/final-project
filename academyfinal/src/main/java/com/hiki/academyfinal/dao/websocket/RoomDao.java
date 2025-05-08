@@ -18,7 +18,6 @@ import lombok.extern.slf4j.Slf4j;
 public class RoomDao {
 	@Autowired
 	private SqlSession sqlSession;
-
 	
 	public RoomDto insert(RoomDto roomDto) {
 		long roomNo = sqlSession.selectOne("room.sequence");

@@ -15,4 +15,6 @@ public class MessageDto {
 	private Timestamp messageTime;
 	private String messageSender;
 	private String messageReceiver;
+	
+	private long roomNo;
 }

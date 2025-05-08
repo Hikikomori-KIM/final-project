@@ -26,6 +26,10 @@ public class ProductsDao {
     public ProductsDto selectOne(long productNo) {
         return sqlSession.selectOne("products.find", productNo);
     }
+    
+    public ProductsDto selectOne(ProductsDto productsDto) {
+    	return sqlSession.selectOne("products.find", productsDto);
+    }
 
     public void insert(ProductsDto dto) {
         sqlSession.insert("products.add", dto);

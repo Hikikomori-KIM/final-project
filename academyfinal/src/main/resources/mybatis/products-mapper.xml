@@ -5,108 +5,100 @@
 
 <mapper namespace="products">
 
-	<!-- 상품 추가 -->
-	<insert id="add">
-		INSERT INTO products (
-		product_no, product_name,
-		product_detail, discounted_price,
-		product_price, discount_rate, product_created_at,
-		category_no, brand_no, strength, product_description_html
-		) VALUES (
-		#{productNo}, #{productName},
-		#{productDetail}, #{discountedPrice},
-		#{productPrice}, #{discountRate}, SYSDATE,
-		#{categoryNo}, #{brandNo}, #{strength}, #{productDescriptionHtml}
-		)
-	</insert>
+  <!-- 상품 추가 -->
+  <insert id="add">
+    INSERT INTO products (
+      product_no, product_name,
+      product_detail, product_price,
+      discount_rate, discounted_price,
+      product_created_at,
+      category_no, brand_no, strength, product_description_html
+    ) VALUES (
+      #{productNo}, #{productName}, #{productDetail},
+      #{productPrice}, #{discountRate}, #{discountedPrice},
+      SYSDATE,
+      #{categoryNo}, #{brandNo}, #{strength},
+      #{productDescriptionHtml}
+    )
+  </insert>
 
-	<!-- 상품 리스트 조회 (동적 필터링: accordNo, categoryNo) -->
-	<!-- 상품 리스트용 VO 조회 (간략 정보만) -->
-	<select id="listVO" resultType="ProductListVO">
-		SELECT
-		p.product_no AS productNo,
-		p.product_name AS productName,
-		p.product_price AS productPrice,
-		p.discount_rate AS discountRate,
-		p.discounted_price AS discountedPrice,
-		p.strength AS strength,
-		b.brand_name AS brand,
-		a.attachment_no AS attachmentNo
-		FROM products p
-		LEFT JOIN brands b ON p.brand_no = b.brand_no
-		LEFT JOIN product_img pi
-		ON p.product_no = pi.product_no AND pi.image_type = 'main'
-		LEFT JOIN
-		attachment a ON pi.attachment_no = a.attachment_no
-		<where>
-			<if test="accordNo != null">
-				p.product_no IN (
-				SELECT product_no FROM productAccord
-				WHERE accord_no = #{accordNo}
-				)
-			</if>
-			<if test="categoryNo != null">
-				<choose>
-					<when test="accordNo != null">
-						AND p.category_no = #{categoryNo}
-					</when>
-					<otherwise>
-						p.category_no = #{categoryNo}
-					</otherwise>
-				</choose>
-			</if>
-		</where>
-		ORDER BY p.product_no ASC
-	</select>
+  <!-- 상품 리스트 조회 (동적 필터링: accordNo, categoryNo) -->
+  <select id="listVO" resultType="ProductListVO">
+    SELECT
+      p.product_no AS productNo,
+      p.product_name AS productName,
+      p.product_price AS productPrice,
+      p.discount_rate AS discountRate,
+      p.discounted_price AS discountedPrice,
+      p.strength AS strength,
+      b.brand_name AS brand,
+      a.attachment_no AS attachmentNo
+    FROM products p
+    LEFT JOIN brands b ON p.brand_no = b.brand_no
+    LEFT JOIN product_img pi ON p.product_no = pi.product_no AND pi.image_type = 'main'
+    LEFT JOIN attachment a ON pi.attachment_no = a.attachment_no
+    <where>
+      <if test="accordNo != null">
+        p.product_no IN (
+          SELECT product_no FROM productAccord WHERE accord_no = #{accordNo}
+        )
+      </if>
+      <if test="categoryNo != null">
+        <choose>
+          <when test="accordNo != null">
+            AND p.category_no = #{categoryNo}
+          </when>
+          <otherwise>
+            p.category_no = #{categoryNo}
+          </otherwise>
+        </choose>
+      </if>
+    </where>
+    ORDER BY p.product_no ASC
+  </select>
 
+  <!-- 상품 단일 조회 -->
+  <select id="find" resultType="ProductsDto">
+    SELECT * FROM products WHERE product_no = #{productNo}
+  </select>
 
-	<!-- 상품 단일 조회 -->
-	<select id="find" resultType="ProductsDto">
-		SELECT * FROM products WHERE
-		product_no = #{productNo}
-	</select>
+  <!-- 상품 삭제 -->
+  <delete id="delete">
+    DELETE FROM products WHERE product_no = #{productNo}
+  </delete>
 
-	<!-- 상품 삭제 -->
-	<delete id="delete">
-		DELETE FROM products WHERE product_no = #{productNo}
-	</delete>
+  <!-- 상품 수정 -->
+  <update id="update">
+    UPDATE products SET
+      product_name = #{productName},
+      product_detail = #{productDetail},
+      product_price = #{productPrice},
+      discount_rate = #{discountRate},
+      discounted_price = #{discountedPrice},
+      strength = #{strength},
+      category_no = #{categoryNo},
+      brand_no = #{brandNo},
+      product_description_html = #{productDescriptionHtml}
+    WHERE product_no = #{productNo}
+  </update>
 
-	<!-- 상품 수정 -->
-	<update id="update">
-		UPDATE products SET
-		product_name = #{productName},
-		product_detail = #{productDetail},
-		product_price = #{productPrice},
-		discount_rate = #{discountRate},
-		discounted_price = #{discountedPrice},
-		strength = #{strength},
-		category_no =
-		#{categoryNo},
-		brand_no = #{brandNo},
-		product_description_html =
-		#{productDescriptionHtml}
-		WHERE product_no = #{productNo}
-	</update>
+  <!-- 상품 번호 시퀀스 -->
+  <select id="sequence" resultType="long">
+    SELECT products_seq.nextval FROM dual
+  </select>
 
-	<!-- 상품 번호 시퀀스 -->
-	<select id="sequence" resultType="long">
-		SELECT products_seq.nextval
-		FROM dual
-	</select>
+  <!-- 상품 상세 설명 HTML 저장 -->
+  <update id="updateProductHtml">
+    UPDATE products
+    SET product_description_html = #{html}
+    WHERE product_no = #{productNo}
+  </update>
 
-	<!-- 상품 상세 설명 HTML 저장 -->
-	<update id="updateProductHtml">
-		UPDATE products
-		SET product_description_html = #{html}
-		WHERE product_no = #{productNo}
-	</update>
-
-	<!-- 상품 상세 설명 HTML 불러오기 -->
-	<select id="findProductHtml" resultType="String">
-		SELECT
-		product_description_html
-		FROM products
-		WHERE product_no = #{productNo}
-	</select>
+  <!-- 상품 상세 설명 HTML 불러오기 -->
+  <select id="findProductHtml" resultType="String">
+    SELECT product_description_html
+    FROM products
+    WHERE product_no = #{productNo}
+  </select>
 
 </mapper>

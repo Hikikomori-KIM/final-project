@@ -24,11 +24,16 @@ public class CartDao {
 		result.put("start", pageVO.getStart());
 		result.put("end", pageVO.getEnd());
 		  System.out.println("usersId: " + usersId); 
-		   System.out.println("PageVO: " + pageVO);  
+		   System.out.println("PageVO: " + pageVO); 
 		return sqlSession.selectList("cart.list", result);
 	}
 	
-	//본인 카트1개조회(디테일)
+	//페이징위한 count
+	public int count(String usersId) {
+		return sqlSession.selectOne("cart.count",usersId);
+	}
+	
+	//본인 카트1개조회(디테일) 안씀ㅇ
 	public CartViewVO selectOne(String usersId, Long cartNo) {
 		Map<String,Object>result = new HashMap<>();
 		result.put("usersId", usersId);
@@ -84,9 +89,12 @@ public class CartDao {
 	
 	//단일삭제
 	public boolean deleteOne(String usersId, Long cartNo) {
-		return sqlSession.delete("cart.delete",cartNo) >0;
+		Map<String,Object> result = new HashMap<>();
+		result.put("usersId", usersId);
+		result.put("cartNo", cartNo);
+		return sqlSession.delete("cart.delete",result) >0;
 	}
-	//상품이 삭제될때 장바구니 속 상품까지 삭제하는 메서드
+	//상품이 삭제될때 장바구니 속 상품 삭제하는 메서드
 	public void deleteByProductNo(long productNo) {
 	    sqlSession.delete("cart.deleteByProductNo", productNo);
 	}
@@ -95,9 +103,10 @@ public class CartDao {
 	    sqlSession.delete("cart.deleteByVolumeNo", volumeNo);
 	}
 	//여러개삭제 쿼리공부중
-//	public boolean deleteMultiple(String usersId, List<Long> cartNoList) {
-//	    Map<String, Object> params = new HashMap<>();
-//	    params.put("cartNoList", cartNoList);
-//	    return sqlSession.delete("cart.deleteList", params) > 0;
-//	}
+	public void deleteMultiple(String usersId, List<Long> cartNoList) {
+	    Map<String, Object> result = new HashMap<>();
+	    result.put("cartNoList", cartNoList);
+	    result.put("usersId", usersId);
+	    sqlSession.delete("cart.deleteList", result);
+	}
 }
