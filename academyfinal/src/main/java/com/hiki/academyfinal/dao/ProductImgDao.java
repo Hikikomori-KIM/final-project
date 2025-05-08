@@ -11,7 +11,7 @@ public class ProductImgDao {
 	@Autowired
 	public SqlSession sqlSession;
 	
-	public void insert(int productNo,int attachmentNo,String imageType) {
+	public void insert(long productNo,int attachmentNo,String imageType) {
 		Map<String,Object> param = Map.of(
 				"productNo",productNo,
 				"attachmentNo",attachmentNo,
@@ -20,11 +20,11 @@ public class ProductImgDao {
 		sqlSession.insert("productImg.add",param);
 	}
 	
-	public Integer findAttachmentNoByProductNo(int productNo) {
+	public Integer findAttachmentNoByProductNo(long productNo) {
 	    return sqlSession.selectOne("productImg.findAttachmentNoByProductNo", productNo);
 	}
 	
-	public void deleteByProductNo(int productNo) {
+	public void deleteByProductNo(long productNo) {
 		sqlSession.delete("productImg.deleteByProductNo",productNo);
 	}
 }

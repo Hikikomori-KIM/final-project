@@ -5,45 +5,63 @@
 
 <mapper namespace="volume">
 
-	<insert id="add">
-		insert into volume (
-		volume_no, product_no, volume_ml,
-		volume_stock, volume_price
-		) values (
-		#{volumeNo}, #{productNo},
-		#{volumeMl}, #{volumeStock}, #{volumePrice}
-		)
-	</insert>
-	<select id="sequence" resultType="int">
-		select volume_seq.nextval from
-		dual
+	<!-- 시퀀스 조회 -->
+	<select id="sequence" resultType="long">
+		SELECT volume_seq.NEXTVAL FROM dual
 	</select>
 
-	<delete id="deleteByProductNo">
-		delete from volume where product_no = #{productNo}
+	<!-- 용량 등록 -->
+	<insert id="add" parameterType="VolumeDto">
+		INSERT INTO volume (
+		volume_no,
+		product_no,
+		volume_ml,
+		volume_stock,
+		volume_price,
+		discounted_volume_price <!-- ✅ 할인 가격 추가 -->
+		) VALUES (
+		#{volumeNo},
+		#{productNo},
+		#{volumeMl},
+		#{volumeStock},
+		#{volumePrice},
+		#{discountedVolumePrice} <!-- ✅ 매핑 추가 -->
+		)
+	</insert>
+
+	<!-- 특정 상품의 용량 전체 삭제 -->
+	<delete id="deleteByProductNo" parameterType="long">
+		DELETE FROM volume WHERE product_no = #{productNo}
 	</delete>
 
-	<select id="selectVolumes" parameterType="int"
+	<!-- 상품별 용량 목록 조회 -->
+	<select id="selectVolumes" parameterType="long"
 		resultType="VolumeDto">
 		SELECT
 		volume_no AS volumeNo,
 		product_no AS productNo,
 		volume_ml AS volumeMl,
 		volume_stock AS volumeStock,
-		volume_price AS
-		volumePrice
+		volume_price AS volumePrice,
+		discounted_volume_price AS discountedVolumePrice <!-- ✅ 조회 추가 -->
 		FROM volume
 		WHERE product_no = #{productNo}
 	</select>
-	
+
+	<!-- 용량 수정 -->
 	<update id="updateVolume" parameterType="VolumeDto">
 		UPDATE volume
 		SET
 		volume_stock = #{volumeStock},
-		volume_price = #{volumePrice}
+		volume_price = #{volumePrice},
+		discounted_volume_price = #{discountedVolumePrice} <!-- ✅ 수정 추가 -->
 		WHERE
 		product_no = #{productNo}
 		AND volume_ml = #{volumeMl}
 	</update>
-
+	
+	<select id="selectByProductNo" resultType="volumeDto">
+		SELECT * FROM volume WHERE product_no = #{productNo}
+	</select>
+	
 </mapper>

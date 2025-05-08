@@ -87,10 +87,13 @@ public class CartDao {
 		return sqlSession.delete("cart.delete",cartNo) >0;
 	}
 	//상품이 삭제될때 장바구니 속 상품까지 삭제하는 메서드
-	public void deleteByProductNo(int productNo) {
+	public void deleteByProductNo(long productNo) {
 	    sqlSession.delete("cart.deleteByProductNo", productNo);
 	}
-	
+	// ✅ volumeNo로 장바구니 항목 삭제
+	public void deleteByVolumeNo(long volumeNo) {
+	    sqlSession.delete("cart.deleteByVolumeNo", volumeNo);
+	}
 	//여러개삭제 쿼리공부중
 //	public boolean deleteMultiple(String usersId, List<Long> cartNoList) {
 //	    Map<String, Object> params = new HashMap<>();

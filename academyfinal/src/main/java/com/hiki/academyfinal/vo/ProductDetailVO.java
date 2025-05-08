@@ -15,7 +15,7 @@ import lombok.NoArgsConstructor;
 @Builder
 public class ProductDetailVO {
     // product_detail_view에서 가져오는 기본 정보
-    private int productNo;
+    private long productNo;
     private String productName;
     private String productDetail;
     private int productPrice;

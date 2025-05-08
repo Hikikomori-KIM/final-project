@@ -15,4 +15,7 @@ public class ProductAccordDao {
     public void insert(ProductAccordDto dto) {
         sqlSession.insert("productAccord.insert", dto);
     }
+    public void deleteByProductNo(long productNo) {
+        sqlSession.delete("productAccord.deleteByProductNo", productNo);
+    }
 }

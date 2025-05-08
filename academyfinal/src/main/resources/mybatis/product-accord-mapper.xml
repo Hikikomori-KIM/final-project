@@ -5,12 +5,17 @@
 
 <mapper namespace="productAccord">
 
-  <insert id="insert">
-    INSERT INTO ProductAccord (
-      product_accord_no, product_no, accord_no
-    ) VALUES (
-      product_accord_seq.nextval, #{productNo}, #{accordNo}
-    )
-  </insert>
-
+	<insert id="insert">
+		INSERT INTO ProductAccord (
+		product_accord_no, product_no, accord_no
+		) VALUES (
+		product_accord_seq.nextval, #{productNo}, #{accordNo}
+		)
+	</insert>
+	
+	<delete id="deleteByProductNo" parameterType="long">
+		DELETE FROM ProductAccord
+		WHERE product_no = #{productNo}
+	</delete>
+	
 </mapper>

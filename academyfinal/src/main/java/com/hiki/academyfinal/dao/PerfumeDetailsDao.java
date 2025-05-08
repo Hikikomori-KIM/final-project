@@ -12,7 +12,7 @@ public class PerfumeDetailsDao {
 	SqlSession sqlSession;
 	
 	//시퀀스 발급
-	public int sequence() {
+	public long sequence() {
 		return sqlSession.selectOne("perfumeDetails.sequence");
 	}
 	
@@ -21,7 +21,7 @@ public class PerfumeDetailsDao {
 		sqlSession.insert("perfumeDetails.add",perfumeDetailsDto);
 	}
 	
-	public void deleteByProductNo(int productNo) {
+	public void deleteByProductNo(long productNo) {
 		sqlSession.delete("perfumeDetails.deleteByProductNo",productNo);
 	}
 	

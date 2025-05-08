@@ -10,14 +10,13 @@
 		INSERT INTO products (
 		product_no, product_name,
 		product_detail, discounted_price,
-		product_price, discount_rate, product_stock, product_created_at,
+		product_price, discount_rate, product_created_at,
 		category_no, brand_no, strength, product_description_html
 		) VALUES (
-		#{productNo}, #{productName}, #{productDetail},
-		#{productPrice}, #{discountRate}, #{discountedPrice},
-		#{productStock}, SYSDATE,
-		#{categoryNo}, #{brandNo}, #{strength},
-		#{productDescriptionHtml}
+		#{productNo}, #{productName},
+		#{productDetail}, #{discountedPrice},
+		#{productPrice}, #{discountRate}, SYSDATE,
+		#{categoryNo}, #{brandNo}, #{strength}, #{productDescriptionHtml}
 		)
 	</insert>
 
@@ -35,12 +34,15 @@
 		a.attachment_no AS attachmentNo
 		FROM products p
 		LEFT JOIN brands b ON p.brand_no = b.brand_no
-		LEFT JOIN product_img pi ON p.product_no = pi.product_no AND pi.image_type = 'main'
-		LEFT JOIN attachment a ON pi.attachment_no = a.attachment_no
+		LEFT JOIN product_img pi
+		ON p.product_no = pi.product_no AND pi.image_type = 'main'
+		LEFT JOIN
+		attachment a ON pi.attachment_no = a.attachment_no
 		<where>
 			<if test="accordNo != null">
 				p.product_no IN (
-				SELECT product_no FROM productAccord WHERE accord_no = #{accordNo}
+				SELECT product_no FROM productAccord
+				WHERE accord_no = #{accordNo}
 				)
 			</if>
 			<if test="categoryNo != null">
@@ -77,7 +79,6 @@
 		product_price = #{productPrice},
 		discount_rate = #{discountRate},
 		discounted_price = #{discountedPrice},
-		product_stock = #{productStock},
 		strength = #{strength},
 		category_no =
 		#{categoryNo},
@@ -88,7 +89,7 @@
 	</update>
 
 	<!-- 상품 번호 시퀀스 -->
-	<select id="sequence" resultType="int">
+	<select id="sequence" resultType="long">
 		SELECT products_seq.nextval
 		FROM dual
 	</select>

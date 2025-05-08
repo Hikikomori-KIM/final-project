@@ -8,6 +8,6 @@ import lombok.NoArgsConstructor;
 @Data @Builder @AllArgsConstructor @NoArgsConstructor
 public class ScentRecommendationDto {
 	private int scentRecommendationNo;
-	private int productNo;
+	private long productNo;
 	private String scentRecommendationComment;
 }

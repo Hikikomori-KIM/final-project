@@ -7,31 +7,34 @@
 
 	<insert id="add">
 		insert into product_img (
-		product_no, attachment_no
+		product_no, attachment_no, image_type
 		) values (
-		#{productNo}, #{attachmentNo}
+		#{productNo}, #{attachmentNo}, #{imageType}
 		)
 	</insert>
-	
-	<select id="findAttachmentNoByProductNo" parameterType="int"
-		resultType="int">
+
+	<select id="findAttachmentNoByProductNo" parameterType="long"
+		resultType="long">
 		SELECT attachment_no
 		FROM product_img
-		WHERE product_no = #{productNo}
+		WHERE product_no =
+		#{productNo}
 	</select>
-	
+
 	<delete id="deleteByProductNo">
-		delete from product_Img where product_no = #{productNo}
+		delete from product_Img where product_no =
+		#{productNo}
 	</delete>
 
-	<select id="findAllByProductNo" resultType="int">
+	<select id="findAllByProductNo" resultType="long">
 		select
-			a.attachment_no,
-			a.attachment_name,
-			a.attachment_type,
-			a.attachment_size
+		a.attachment_no,
+		a.attachment_name,
+		a.attachment_type,
+		a.attachment_size
 		from product_img pi
-		inner join attachment a on pi.attachment_no = a.attachment_no
+		inner join attachment a on pi.attachment_no =
+		a.attachment_no
 		where pi.product_no = #{productNo}
 	</select>
 

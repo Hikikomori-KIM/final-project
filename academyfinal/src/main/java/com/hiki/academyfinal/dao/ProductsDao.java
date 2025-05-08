@@ -23,7 +23,7 @@ public class ProductsDao {
     }
 
 
-    public ProductsDto selectOne(int productNo) {
+    public ProductsDto selectOne(long productNo) {
         return sqlSession.selectOne("products.find", productNo);
     }
 
@@ -31,7 +31,7 @@ public class ProductsDao {
         sqlSession.insert("products.add", dto);
     }
 
-    public int delete(Integer productNo) {
+    public int delete(long productNo) {
         return sqlSession.delete("products.delete", productNo);
     }
 
@@ -44,14 +44,14 @@ public class ProductsDao {
     }
 
     // ✅ HTML 저장 (쿼리 ID 수정)
-    public void updateProductHtml(int productNo, String html) {
+    public void updateProductHtml(long productNo, String html) {
         sqlSession.update("products.updateProductHtml", Map.of(
             "productNo", productNo,
             "html", html
         ));
     }
 
-    public String findProductHtml(int productNo) {
+    public String findProductHtml(long productNo) {
         return sqlSession.selectOne("products.findProductHtml", productNo);
     }
     

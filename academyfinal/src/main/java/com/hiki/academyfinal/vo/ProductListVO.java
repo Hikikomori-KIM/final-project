@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ProductListVO {
-    private int productNo;
+    private long productNo;
     private String productName;
     private int productPrice;
     private int discountRate;

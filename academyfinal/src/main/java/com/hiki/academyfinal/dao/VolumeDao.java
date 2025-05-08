@@ -13,7 +13,7 @@ public class VolumeDao {
 	@Autowired
 	private SqlSession sqlSession;
 	
-	public int sequence() {
+	public long sequence() {
 		return sqlSession.selectOne("volume.sequence");
 	}
 	
@@ -21,13 +21,17 @@ public class VolumeDao {
 		sqlSession.insert("volume.add",volumeDto);
 	}
 
-	public void deleteByProductNo(int productNo) {
+	public void deleteByProductNo(long productNo) {
 		sqlSession.delete("volume.deleteByProductNo",productNo);
 	}
-	public List<VolumeDto> selectVolumes(int productNo) {
+	public List<VolumeDto> selectVolumes(long productNo) {
 	    return sqlSession.selectList("volume.selectVolumes", productNo);
 	}
 	public void updateVolume(VolumeDto volumeDto) {
 		sqlSession.update("volume.updateVolume", volumeDto);
+	}
+	//특정 상품번호에 연결된 기존의 모든 용량들을 가져오는 메서드
+	public List<VolumeDto> selectByProductNo(long productNo) {
+	    return sqlSession.selectList("volume.selectByProductNo", productNo);
 	}
 }

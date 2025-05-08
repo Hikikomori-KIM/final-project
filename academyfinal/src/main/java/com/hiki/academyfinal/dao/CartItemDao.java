@@ -11,7 +11,7 @@ public class CartItemDao {
 	
 	
 	
-	public void deleteByProductNo(int productNo) {
+	public void deleteByProductNo(long productNo) {
 		sqlSession.delete("cart_items.deleteByProductNo",productNo);
 	}
 }
