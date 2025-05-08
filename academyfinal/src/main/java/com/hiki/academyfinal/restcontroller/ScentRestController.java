@@ -30,6 +30,10 @@ public class ScentRestController {
 //		makeSurveyService.MakeSurvey(requestMakeSurveyVO);
 //		return ResponseEntity.ok("즐");
 //	}
+
+// //db 최대 31번접근  (실력맞춤 하위호환 최대질문지10개제한 선택5제한임)
+//	질문지 시퀀스 조회1번/ 질문지 insert 10번 /선택지 시퀀스 조회10번/선택지 insert 10번
+	//목표는 최대한구현 + db최소접근
 	@PostMapping("/make")
 	public ResponseEntity<String> scentSuvAdd(@RequestBody List<RequestMakeSurveyVO> requestList) {
 	    makeSurveyService.MakeSurvey(requestList);

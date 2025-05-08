@@ -16,20 +16,24 @@
 		select scent_choice_seq.nextval from dual
 	</select>
   
-  <!-- 인서트 한번에치기 디비횟수 절반 -->
+  <!-- 인서트 한번에치기 디비횟수 줄이겠다고 에러20벼ㅓㄴ터짐 -->
 	<insert id="addAll">
-	  insert all
-	    into scent_choice (scent_choice_no, scent_question_no, scent_choice_content, scent_choice_type, scent_choice_score) 
-	    values (#{scentChoiceNo}, #{scentQuestionNo}, #{scentChoiceContent}, #{scentChoiceType}, #{scentChoiceScore})
-	  <foreach collection="list" item="c" separator=";">
-	    into scent_choice (scent_choice_no, scent_question_no, scent_choice_content, scent_choice_type, scent_choice_score)
-	    values (#{c.scentChoiceNo}, #{c.scentQuestionNo}, #{c.scentChoiceContent}, #{c.scentChoiceType}, #{c.scentChoiceScore})
-	  </foreach>
-	  select 1 from dual
+		  insert all
+		  <foreach collection="list" item="c">
+		    into scent_choice (scent_choice_no, scent_question_no, scent_choice_content, scent_choice_type, scent_choice_score)
+		    values (#{c.scentChoiceNo}, #{c.scentQuestionNo}, #{c.scentChoiceContent}, #{c.scentChoiceType}, #{c.scentChoiceScore})
+		  </foreach>
+		  select 1 from dual
 	</insert>
+<!-- 시퀀스는 어레이배열로한번에뽑으면 중복될수있음 -->
+	<select id="sequenceList" resultType="int">
+	    <![CDATA[
+	        SELECT scent_choice_seq.nextval
+	        FROM dual
+	        CONNECT BY LEVEL <= #{count}
+	    ]]>
+	</select>
 
 
-  
-  
   </mapper>
   
