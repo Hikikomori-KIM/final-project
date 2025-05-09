@@ -59,24 +59,14 @@
 			<include refid="top-n-footer"/>
 		) order by message_no asc
 	</select>
+
 	
-	<!--일정 개수만큼 메시지 조회-->
-	<select id="listByPaging" resultType="MessageViewDto" parameterType="map">
-		select * from (
-			<include refid="top-n-header"/>
-				select * from message_view
-				where message_type in ('CHAT','SYSTEM')
-				<if test="roomNo != null">
-					and room_no = #{roomNo}
-				</if>
-				<if test="messageNo != null">
-					<![CDATA[
-						and message_no < #{messageNo}
-					]]>
-				</if>
-				order by message_no desc
-			<include refid="top-n-footer"/>
-		) order by message_no asc
+	<select id="listByPaging" resultType="MessageViewDto">
+	SELECT *
+    FROM message_view
+    WHERE (message_sender = #{usersId} OR message_receiver = #{usersId})
+      AND room_no = #{roomNo}
+    ORDER BY message_no ASC
 	</select>
 	
 	<!--남은 데이터 개수 확인-->
