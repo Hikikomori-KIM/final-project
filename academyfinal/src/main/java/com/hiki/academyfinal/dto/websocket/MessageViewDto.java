@@ -20,4 +20,6 @@ public class MessageViewDto {
 	private String senderType;
 	private String receiverId;
 	private String receiverType;
+	
+	private Long roomNo;
 }

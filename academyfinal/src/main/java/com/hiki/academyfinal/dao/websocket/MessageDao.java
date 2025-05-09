@@ -37,10 +37,10 @@ public class MessageDao {
 		return sqlSession.selectList("messageList.listByPaging", params);
 	}
 	
-	public List<MessageViewDto> selectListByPaging(String usersId, long messageNo) {
+	public List<MessageViewDto> selectListByPaging(String usersId, long roomNo) {
 		Map<String, Object> params = new HashMap<>();
 		params.put("usersId", usersId);
-		params.put("messageNo", messageNo);
+		params.put("roomNo", roomNo);
 		return sqlSession.selectList("messageList.listByPaging", params);
 	}
 	
