@@ -95,6 +95,7 @@ public class NaverLoginRestController {
 		            	  return UsersLoginResponseVO.builder()
 		      					.usersId(findDto.getUsersId())
 		      					.usersType(findDto.getUsersType())
+		      					.usersProvider(findDto.getUsersProvider())
 		      					.accessToken(tokenService.generateAccessToken(findDto))
 		      					.refreshToken(tokenService.generateRefreshToken(findDto))
 		      				.build();
@@ -104,6 +105,7 @@ public class NaverLoginRestController {
 		            	 return UsersLoginResponseVO.builder()
 			      					.usersId(usersDto.getUsersId())
 			      					.usersType(usersDto.getUsersType())
+			      					.usersProvider(usersDto.getUsersProvider())
 			      					.accessToken(tokenService.generateAccessToken(usersDto))
 			      					.refreshToken(tokenService.generateRefreshToken(usersDto))
 			      				.build();

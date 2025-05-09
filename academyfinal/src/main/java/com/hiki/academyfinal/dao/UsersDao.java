@@ -10,6 +10,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Repository;
 
 import com.hiki.academyfinal.dto.UsersDto;
+import com.hiki.academyfinal.error.TargetNotFoundException;
 
 @Repository
 public class UsersDao {
@@ -43,10 +44,7 @@ public class UsersDao {
 	//로그인
 	public UsersDto login(UsersDto usersDto) {
 		BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
-		System.out.println(usersDto.getUsersPw());
 		UsersDto findDto = findId(usersDto.getUsersId());
-		System.out.println("사용자입력값 : " +usersDto);
-		System.out.println("db값 : "+findDto);
 		if(findDto == null) return null;
 		boolean isValid = encoder.matches(usersDto.getUsersPw(), findDto.getUsersPw());
 		
@@ -88,5 +86,21 @@ public class UsersDao {
 	public boolean updateAll(UsersDto usersDto) {
 		return sqlSession.update("users.update", usersDto) >0;
 	}
-
+	//회원탈퇴
+	public boolean exit(UsersDto usersDto) {
+		BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+		UsersDto findDto = findId(usersDto.getUsersId());
+		if(findDto == null) {
+			throw new TargetNotFoundException("잘못된 회원정보");
+		}
+		boolean isValid = encoder.matches(usersDto.getUsersPw(), findDto.getUsersPw());
+		if(isValid) {
+			return sqlSession.delete("users.delete",usersDto.getUsersId())>0;
+		}
+		throw new TargetNotFoundException("비번틀림");
+	}
+	//네이버유저 걍지움
+	public boolean exitNaver(String usersId) {
+		return sqlSession.delete("users.delete",usersId)>0;
+	}
 }

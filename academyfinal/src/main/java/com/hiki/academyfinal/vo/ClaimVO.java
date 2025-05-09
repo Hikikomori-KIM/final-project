@@ -9,4 +9,5 @@ import lombok.NoArgsConstructor;
 public class ClaimVO {
 	private String usersId;
 	private String usersType;
+	private String usersProvider;
 }

@@ -40,4 +40,13 @@
   	users_birth=#{usersBirth}, users_email=#{usersEmail} where users_id =#{usersId}
   </update>
   
+  <delete id="delete">
+  	delete from users where users_id = #{usersId}
+  </delete>
+  
+  <!-- 네이버인지아닌지 ㅡㅡ -->
+  <select id="findNaver" resultType="string">
+  	select users_provider from users where users_id =#{usersId} 
+  </select>
+  
   </mapper>

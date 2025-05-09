@@ -41,6 +41,7 @@ public class TokenService {
 					.issuedAt(now)
 					.claim("usersId", usersDto.getUsersId())
 					.claim("usersType", usersDto.getUsersType())
+					.claim("usersProvider",usersDto.getUsersProvider())
 				.compact();
 	}
 		//토큰해석
@@ -55,6 +56,7 @@ public class TokenService {
 		return ClaimVO.builder()
 				.usersId((String) claims.get("usersId"))
 				.usersType((String) claims.get("usersType"))
+				.usersProvider((String) claims.get("usersProvider"))
 				.build();
 	}
 	
@@ -73,6 +75,7 @@ public class TokenService {
 			.issuedAt(now)
 			.claim("usersId", usersDto.getUsersId())
 			.claim("usersType",usersDto.getUsersType())
+			.claim("usersProvider",usersDto.getUsersProvider())
 		.compact();
 		
 		//db저장
@@ -118,12 +121,14 @@ public class TokenService {
 		return generateAccessToken(UsersDto.builder()
 					.usersId(claimVO.getUsersId())
 					.usersType(claimVO.getUsersType())
+					.usersProvider(claimVO.getUsersProvider())
 				.build());
 	}
 	public String generateRefreshToken(ClaimVO claimVO) {
 		return generateRefreshToken(UsersDto.builder()
 					.usersId(claimVO.getUsersId())
 					.usersType(claimVO.getUsersType())
+					.usersProvider(claimVO.getUsersProvider())
 				.build());
 	}
 
