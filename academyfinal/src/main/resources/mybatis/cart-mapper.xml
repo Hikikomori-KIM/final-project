@@ -33,7 +33,8 @@
           v.volume_ml, 
           v.volume_stock, 
           v.volume_price,
-          v.discounted_volume_price
+          v.discounted_volume_price,
+          v.volume_status
         FROM cart c
         LEFT OUTER JOIN product_detail_view p 
           ON c.cart_item_no = p.product_no

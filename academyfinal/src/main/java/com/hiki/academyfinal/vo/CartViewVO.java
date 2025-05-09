@@ -36,4 +36,6 @@ public class CartViewVO extends PageVO{
 	//페이징용 카운트
 	private int count;
 	
+	//용량상태
+	private String volumeStatus; // 'active', 'deleted', 'inactive'
 }
