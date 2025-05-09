@@ -90,7 +90,7 @@ public class MyPageRestController {
 //		System.out.println("유저아이디넘어오나" +usersId);
 //		System.out.println("메인주소 찾기 " +findMain);
 //		System.out.println("바꿀 주소 " +addressListNo);
-		//메인주소없으면 그냥 메인으로 올려줌 
+		//메인주소없으면 그냥 메인으로 올려줌  
 		if(findMain == null) {
 			addressListDao.updateMain(addressListNo);
 			return ResponseEntity.ok("메인주소 등록완료");
