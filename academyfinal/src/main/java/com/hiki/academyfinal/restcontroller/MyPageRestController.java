@@ -61,7 +61,6 @@ public class MyPageRestController {
 		int count = addressListDao.listCount(usersId);
 		result.put("addressListDtoList", addressListDtoList);
 		result.put("count", count);
-		
 		return result;
 	}
 	
@@ -119,6 +118,13 @@ public class MyPageRestController {
 		addressListDao.update(addressDto);
 		System.out.println(addressDto);
 		return ResponseEntity.ok("주소변경완료");
+	}
+	
+	// 메인 주소 호출 (주문/결제 단계에서 필요)
+	@GetMapping("/mainAddress/{usersId}")
+	public ResponseEntity<AddressListDto> getMainAddress(@PathVariable String usersId) {
+		AddressListDto mainAddress = addressListDao.selectMain(usersId);
+		return ResponseEntity.ok(mainAddress); // Spring에서 HTTP 응답을 생성할 때 자주 사용하는 방식
 	}
 	
 }
