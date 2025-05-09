@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -72,5 +73,13 @@ public class CartRestController {
 			throw new TargetNotFoundException("삭제할대상 없음");
 		}
 		cartDao.deleteMultiple(usersId, noList);
+	}
+	
+	@PostMapping("/updateQty")
+	public ResponseEntity<String> patchQty(@RequestBody List<CartDto>cartDtoList){
+		for(CartDto cartDto : cartDtoList) {
+			cartDao.updateQty(cartDto);
+		}
+		return ResponseEntity.ok("어됐다");
 	}
 }
