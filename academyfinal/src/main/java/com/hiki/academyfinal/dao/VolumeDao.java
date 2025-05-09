@@ -34,4 +34,28 @@ public class VolumeDao {
 	public List<VolumeDto> selectByProductNo(long productNo) {
 	    return sqlSession.selectList("volume.selectByProductNo", productNo);
 	}
+	// ✅ 기존 용량들 soft delete (volume_status = 'deleted')
+	public void markDeletedByProductNo(long productNo) {
+	    sqlSession.update("volume.markDeletedByProductNo", productNo);
+	}
+
+	// ✅ product_no와 volume_ml로 기존 데이터 존재 여부 확인
+	public VolumeDto findByProductNoAndMl(long productNo, String volumeMl) {
+	    return sqlSession.selectOne("volume.findByProductNoAndMl", 
+	        new java.util.HashMap<String, Object>() {{
+	            put("productNo", productNo);
+	            put("volumeMl", volumeMl);
+	        }}
+	    );
+	}
+
+	// ✅ volume 상태값 변경
+	public void updateVolumeStatus(long volumeNo, String status) {
+	    sqlSession.update("volume.updateVolumeStatus", 
+	        new java.util.HashMap<String, Object>() {{
+	            put("volumeNo", volumeNo);
+	            put("status", status);
+	        }}
+	    );
+	}
 }
