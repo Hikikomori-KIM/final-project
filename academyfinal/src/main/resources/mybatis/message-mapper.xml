@@ -59,6 +59,7 @@
 			<include refid="top-n-footer"/>
 		) order by message_no asc
 	</select>
+
 	
 	<select id="listByPaging" resultType="MessageViewDto">
 	SELECT *
