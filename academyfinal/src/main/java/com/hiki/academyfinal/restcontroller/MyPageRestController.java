@@ -110,7 +110,7 @@ public class MyPageRestController {
 		if(count >=5) throw new TargetNotFoundException("주소개수초과") ;
 		addressListDto.setAddressListDefault("N");
 		addressListDao.insert(addressListDto);
-	}
+	} 
 	//주소수정
 	@PostMapping("/updateAllAddress")
 	public ResponseEntity<String> updataAddress(@RequestBody AddressListDto addressListDto){
