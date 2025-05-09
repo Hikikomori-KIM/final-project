@@ -29,5 +29,6 @@ public class ProductDetailViewDto {
 	private String volumeMl;
 	private int volumeStock;
 	private int volumePrice;
+	private int discountedVolumePrice;
 
 }
