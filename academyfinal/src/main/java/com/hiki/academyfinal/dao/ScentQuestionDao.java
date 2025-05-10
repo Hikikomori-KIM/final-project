@@ -34,4 +34,12 @@ public class ScentQuestionDao {
 	public List<Integer> sequenceList(int size){
 		return sqlSession.selectList("scentQuestion.sequenceList",size);
 	}
+	
+	public boolean updateQuestion(ScentQuestionDto scentQuestionDto) {
+		return sqlSession.update("scentQuestion.update",scentQuestionDto) >0;
+	}
+	
+	public boolean deleteQuestion(int scentQuestionNo) {
+		return sqlSession.delete("scentQuestion.delete",scentQuestionNo)>0;
+	}
 }

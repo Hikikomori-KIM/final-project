@@ -6,16 +6,15 @@ import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import com.hiki.academyfinal.dto.ScentRecommendationDto;
+import com.hiki.academyfinal.dto.ScentListViewDto;
 
 @Repository
-public class ScentRecommendationDao {
+public class ScentListViewDao {
 
 	@Autowired
 	private SqlSession sqlSession;
-
-	public List<ScentRecommendationDto> list(){
-		return sqlSession.selectList("scentRecommendation.list");
-	}
 	
+	public List<ScentListViewDto> scentList(){
+		return sqlSession.selectList("scentListView.list");
+	}
 }
