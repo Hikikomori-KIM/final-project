@@ -5,12 +5,20 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.hiki.academyfinal.service.MakeSurveyService;
+import com.hiki.academyfinal.dao.ScentListViewDao;
+import com.hiki.academyfinal.dao.ScentRecommendationDao;
+import com.hiki.academyfinal.dto.ScentListViewDto;
+import com.hiki.academyfinal.dto.ScentRecommendationDto;
+import com.hiki.academyfinal.service.SurveyService;
 import com.hiki.academyfinal.vo.RequestMakeSurveyVO;
 
 
@@ -20,7 +28,13 @@ import com.hiki.academyfinal.vo.RequestMakeSurveyVO;
 public class ScentRestController {
 
 	@Autowired
-	private MakeSurveyService makeSurveyService;
+	private SurveyService surveyService;
+	
+	@Autowired
+	private ScentListViewDao scentListViewDao;
+	
+	@Autowired
+	private ScentRecommendationDao scentRecommendationDao;
 	
 //	@PostMapping("/make")
 //	public  ResponseEntity<String> scentSuvAdd(@RequestBody RequestMakeSurveyVO requestMakeSurveyVO) {
@@ -36,9 +50,30 @@ public class ScentRestController {
 	//목표는 최대한구현 + db최소접근
 	@PostMapping("/make")
 	public ResponseEntity<String> scentSuvAdd(@RequestBody List<RequestMakeSurveyVO> requestList) {
-	    makeSurveyService.MakeSurvey(requestList);
+	   surveyService.MakeSurvey(requestList);
 	    return ResponseEntity.ok("성공");
 	}
 
+	//관리자의 작성목록 
+	@GetMapping("/load")
+	public List<ScentListViewDto> listView(){
+		return scentListViewDao.scentList();
+	}
+	
+	//업데이트 view로받아서 쪼개서처리
+	@PutMapping("/update")
+	public ResponseEntity<String> updateSurvey(@RequestBody List<ScentListViewDto> scentListViewDto){
+		return surveyService.updateAll(scentListViewDto);
+	}
+	
+	@DeleteMapping("/delete/{scentQuestionNo}")
+	public void deleteQuestion(@PathVariable int scentQuestionNo) {
+		surveyService.deleteQuestion(scentQuestionNo);
+	}
+	//관리자 매칭리스트
+	@GetMapping("/list")
+	public List<ScentRecommendationDto> list(){
+		return scentRecommendationDao.list();
+	}
 	
 }
