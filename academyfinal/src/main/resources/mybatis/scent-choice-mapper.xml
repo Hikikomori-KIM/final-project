@@ -48,5 +48,7 @@
 	<select id="questionList" resultType="int">
 	select * from scent_choice where scent_question_no =#{scentQuestionNo}
 	</select>
+	
+	
   </mapper>
   

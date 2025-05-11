@@ -8,5 +8,16 @@
   <select id="list" resultType="scentRecommendationDto">
   	select * from scent_recommendation
   </select>
+  
+  <!-- 관리자가 설정하고싶은 아이템으로변경ㅋ -->
+  <update id="changeProduct">
+  	update scent_recommendation set product_no = #{productNo}
+  	where scent_recommendation_no = #{scentRecommendationNo}
+  </update>
+  
+  <update id="changeComment">
+  	update scent_recommendation set scent_recommendation_comment = #{scentRecommendationComment}
+  	where scent_recommendation_no =#{scentRecommendationNo}
+  </update>
   </mapper>
   

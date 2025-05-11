@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -14,8 +15,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.hiki.academyfinal.dao.ProductDetailViewDao;
 import com.hiki.academyfinal.dao.ScentListViewDao;
 import com.hiki.academyfinal.dao.ScentRecommendationDao;
+import com.hiki.academyfinal.dto.ProductDetailViewDto;
 import com.hiki.academyfinal.dto.ScentListViewDto;
 import com.hiki.academyfinal.dto.ScentRecommendationDto;
 import com.hiki.academyfinal.service.SurveyService;
@@ -35,6 +38,9 @@ public class ScentRestController {
 	
 	@Autowired
 	private ScentRecommendationDao scentRecommendationDao;
+	
+	@Autowired
+	private ProductDetailViewDao productDetailViewDao;
 	
 //	@PostMapping("/make")
 //	public  ResponseEntity<String> scentSuvAdd(@RequestBody RequestMakeSurveyVO requestMakeSurveyVO) {
@@ -74,6 +80,30 @@ public class ScentRestController {
 	@GetMapping("/list")
 	public List<ScentRecommendationDto> list(){
 		return scentRecommendationDao.list();
+	} 
+	//매칭 프로덕트리스트 보여주기(탑앤쿼리와 검색은 시간나면추가)이게ㅐ중요한게아님 유저가 선택하는거까지 가는게중요
+	@GetMapping("/productList")
+	public List<ProductDetailViewDto> productList(){
+		return productDetailViewDao.productList();
 	}
 	
+	//매칭 프로덕트 변경 아 실수했네 여기서하면안되는데..
+	@PatchMapping("/changeProduct/{productNo}")
+	public ResponseEntity<String> changeProduct(@PathVariable long productNo,@RequestBody ScentRecommendationDto scentRecommendationDto){
+		scentRecommendationDao.changeProduct(productNo, scentRecommendationDto.getScentRecommendationNo());
+		return ResponseEntity.ok("변경완료");
+	}
+	
+	@PatchMapping("/change/{scentRecommendationNo}")
+		public ResponseEntity<String> changeComment(@PathVariable int scentRecommendationNo, @RequestBody ScentRecommendationDto scentRecommendationDto){
+		scentRecommendationDao.changeComment(scentRecommendationNo, scentRecommendationDto.getScentRecommendationComment());
+		return ResponseEntity.ok("변경완료");	
+	}
+	
+	/////////////////////위에 관리자 밑엔 유저///////////////////////////
+	
+	@GetMapping("/surveyList")
+	public List<ScentListViewDto> surveyList(){
+		return scentListViewDao.scentList();
+	}
 }

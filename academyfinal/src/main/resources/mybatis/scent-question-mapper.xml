@@ -30,5 +30,6 @@
 	<delete id="delete">
 	delete from scent_question where scent_question_no =#{scentQuestionNo}
 	</delete>
+	
   </mapper>
   
