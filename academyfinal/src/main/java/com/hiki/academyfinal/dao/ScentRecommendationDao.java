@@ -1,6 +1,8 @@
 package com.hiki.academyfinal.dao;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,5 +19,18 @@ public class ScentRecommendationDao {
 	public List<ScentRecommendationDto> list(){
 		return sqlSession.selectList("scentRecommendation.list");
 	}
-	
+	//아이템만수정
+	public boolean changeProduct(long productNo, int scentRecommendationNo) {
+		Map<String,Object> result = new HashMap<>();
+		result.put("productNo", productNo);
+		result.put("scentRecommendationNo", scentRecommendationNo);
+		return sqlSession.update("scentRecommendation.changeProduct", result)>0;
+	}
+	//코멘트만수정 ㅋㅋ
+	public boolean changeComment(int scentRecommendationNo,String scentRecommendationComment) {
+		Map<String,Object> result = new HashMap<>();
+		result.put("scentRecommendationNo", scentRecommendationNo);
+		result.put("scentRecommendationComment", scentRecommendationComment);
+		return sqlSession.update("scentRecommendation.changeComment", result)>0;
+	}
 }

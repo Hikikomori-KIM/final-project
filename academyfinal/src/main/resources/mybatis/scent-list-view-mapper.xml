@@ -5,7 +5,8 @@
   <mapper namespace="scentListView">
  
 	 <select id="list" resultType="scentListViewDto">
-	 	select * from scent_list_view
+	 	select * from scent_list_view order by scent_question_no asc
 	 </select>
+	 
   </mapper>
   

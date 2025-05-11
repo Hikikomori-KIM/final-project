@@ -1,5 +1,7 @@
 package com.hiki.academyfinal.dao;
 
+import java.util.List;
+
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -16,5 +18,7 @@ public class ProductDetailViewDao {
 		return sqlSession.selectOne("productDetailView.selectOne", productNo);
 	}
 	
-
+	public List<ProductDetailViewDto> productList(){
+		return sqlSession.selectList("productDetailView.selectList");
+	}
 }
