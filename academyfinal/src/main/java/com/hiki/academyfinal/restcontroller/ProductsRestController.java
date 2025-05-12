@@ -10,6 +10,7 @@ import com.hiki.academyfinal.service.ProductService;
 import com.hiki.academyfinal.vo.ProductAddRequestVO;
 import com.hiki.academyfinal.vo.ProductDetailVO;
 import com.hiki.academyfinal.vo.ProductListVO;
+import com.hiki.academyfinal.vo.ProductSalesVO;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -113,5 +114,10 @@ public class ProductsRestController {
     @GetMapping("/category/{categoryNo}")
     public List<ProductListVO> getByCategory(@PathVariable int categoryNo) {
         return productService.getProductListByCategory(categoryNo);
+    }
+    //판매량 기준 전체상품 조회 
+    @GetMapping("/best")
+    public List<ProductSalesVO> getBestProducts(){
+    	return productsDao.selectBestProducts();
     }
 }

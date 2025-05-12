@@ -117,7 +117,8 @@ public class KakaoPayService {
 		body.put("cancel_amount", String.valueOf(vo.getCancelAmount()));
 		body.put("cancel_tax_free_amount", "0");
 		
-		HttpEntity entity = new HttpEntity(body, headers);
+		//HttpEntity entity = new HttpEntity(body, headers); 기존 코드
+		HttpEntity<Map<String, String>> entity = new HttpEntity<>(body, headers);//데이터 타입 지정해서 경고 푼 예시
 		
 		return restTemplate.postForObject(
 							uri, entity, KakaoPayCancelResponseVO.class);
@@ -139,7 +140,6 @@ public class KakaoPayService {
 			ProductsDto productsDto = productsDao.selectOne(payVO.getProductNo());
 			payDao.addPayDetail(PayDetailDto.builder()
 						.payDetailOrigin(payNo)//구매대표번호
-						.payDetailItem(payVO.getProductNo())//구매상품번호
 						.payDetailName(productsDto.getProductName())//구매상품명
 						.payDetailQty(payVO.getQty())//구매상품개수
 					.build());
@@ -150,7 +150,6 @@ public class KakaoPayService {
 			ProductsDto productsDto = productsDao.selectOne(payVO.getProductNo());
 			payDao.addPayDetail(PayDetailDto.builder()
 						.payDetailOrigin(payNo)//구매대표번호
-						.payDetailItem(payVO.getProductNo())//구매상품번호
 						.payDetailName(productsDto.getProductName())//구매상품명
 						.payDetailPrice(productsDto.getProductPrice())//구매상품가격(개당)
 						.payDetailQty(payVO.getQty())//구매상품개수
