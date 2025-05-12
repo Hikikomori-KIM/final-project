@@ -11,6 +11,7 @@ import org.springframework.stereotype.Repository;
 
 import com.hiki.academyfinal.dto.UsersDto;
 import com.hiki.academyfinal.error.TargetNotFoundException;
+import com.hiki.academyfinal.vo.UsersLoginVO;
 
 @Repository
 public class UsersDao {
@@ -80,6 +81,16 @@ public class UsersDao {
 	    result.put("usersPw", pwEncoder);
 
 	    return sqlSession.update("users.updatePw", result) > 0;
+	}
+	//비밀번호 수정 다르게..
+	public boolean updatePw(UsersLoginVO usersLoginVO) {
+		 if (usersLoginVO.getUsersId().isEmpty() || usersLoginVO.getUsersPw().isEmpty() ||
+				 usersLoginVO.getUsersId() == null || usersLoginVO.getUsersPw() == null) {
+		        throw new IllegalArgumentException("ID 또는 비밀번호가 null입니다.");
+		    }
+		 String pwEncoder = encoder.encode(usersLoginVO.getUsersPw());
+		 usersLoginVO.setUsersPw(pwEncoder);
+		 return sqlSession.update("users.updatePw",usersLoginVO) >0;
 	}
 	
 	//업데이트(전체)

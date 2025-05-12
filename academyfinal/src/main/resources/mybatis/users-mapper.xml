@@ -49,4 +49,37 @@
   	select users_provider from users where users_id =#{usersId} 
   </select>
   
+<!--   유저목록조회 -->
+    <select id="usersList" resultType="ManagementResponseVO">
+    SELECT * FROM (
+      SELECT ROWNUM rn, TMP.* FROM (
+        SELECT * from users
+        <include refid="where"></include>
+        order by users_name asc
+      ) TMP
+    ) 
+    WHERE rn BETWEEN #{start} AND #{end}
+  </select>
+  
+  <sql id="where">
+  	<where>
+  		<if test="usersId != null">
+  			and users_id = #{usersId}
+  		</if>
+  		<if test="usersName != null">
+  			and users_name=#{usersName}
+  		</if>
+  		<if test="usersEmail != null">
+  			and users_email =#{usersEmail}
+  		</if>
+  		<if test="usersProvider != null">
+  			and users_provider =#{usersProvider}
+  		</if>
+  	</where>
+  </sql>
+  
+    <select id="count" resultType="int">
+  	select count(*) from users
+  </select>
+  
   </mapper>

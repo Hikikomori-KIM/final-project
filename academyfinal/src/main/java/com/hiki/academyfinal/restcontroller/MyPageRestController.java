@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -22,6 +23,7 @@ import com.hiki.academyfinal.dto.AddressListDto;
 import com.hiki.academyfinal.dto.UsersDto;
 import com.hiki.academyfinal.error.TargetNotFoundException;
 import com.hiki.academyfinal.vo.MyPageVO;
+import com.hiki.academyfinal.vo.UsersLoginVO;
 
 @CrossOrigin
 @RestController
@@ -127,4 +129,10 @@ public class MyPageRestController {
 		return ResponseEntity.ok(mainAddress); // Spring에서 HTTP 응답을 생성할 때 자주 사용하는 방식
 	}
 	
+	//비밀번호 변경요청 (그냥 로그인vo맞아서 씀)
+	@PatchMapping("/editPw")
+	public ResponseEntity<String> updatePw(@RequestBody UsersLoginVO usersLoginVO){
+		usersDao.updatePw(usersLoginVO);
+		return ResponseEntity.ok("업데이트완료");
+	}
 }
