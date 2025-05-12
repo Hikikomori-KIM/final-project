@@ -120,5 +120,17 @@
 		set pay_remain = #{payRemain} 
 		where pay_no = #{payNo}
 	</update>
-
+	
+	<!-- 배송상태 조회 (관리자용) -->
+	<select id="findDeliveryStatus" resultType="String">
+		select delivery_status from pay where pay_no = #{payNo}
+	</select>
+	
+	<!-- 배송 상태 변경 (관리자용) -->
+	<select id="updateDeliveryStatus">
+		update pay
+		set delivery_status = #{status}
+		where pay_no = #{payNo}
+	</select>
+	
 </mapper>

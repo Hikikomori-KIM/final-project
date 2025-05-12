@@ -168,4 +168,5 @@ public class KakaoPayRestController {
 		String url = returnUrlMap.remove(partnerOrderId);
 		response.sendRedirect(url+"/fail");
 	}
+	
 }
