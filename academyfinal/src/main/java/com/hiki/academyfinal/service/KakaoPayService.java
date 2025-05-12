@@ -16,7 +16,8 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import com.hiki.academyfinal.configuration.KakaoPayProperties;
 import com.hiki.academyfinal.dao.PayDao;
 import com.hiki.academyfinal.dao.ProductsDao;
-import com.hiki.academyfinal.dto.ProductsDto;
+import com.hiki.academyfinal.dao.VolumeDao;
+import com.hiki.academyfinal.dto.VolumeDto;
 import com.hiki.academyfinal.dto.kakaopay.PayDetailDto;
 import com.hiki.academyfinal.dto.kakaopay.PayDto;
 import com.hiki.academyfinal.vo.kakaopay.KakaoPayApproveResponseVO;
@@ -40,23 +41,23 @@ public class KakaoPayService {
 	@Autowired
 	private PayDao payDao;
 	@Autowired
-	private ProductsDao productsDao;
+	private VolumeDao volumeDao;	
 	@Autowired
 	private RestTemplate restTemplate;
 	@Autowired
 	private HttpHeaders headers;
 	
-	//결제 준비(ready)
+	// 결제 준비(ready)
 	public KakaoPayReadyResponseVO ready(KakaoPayReadyVO vo) throws URISyntaxException {
 		//(2) 전송 주소 확인
-		URI uri = new URI("https://open-api.kakaopay.com/online/payment/ready");
+		URI uri = new URI("https://open-api.kakaopay.com/online/v1/payment/ready");
 		
 		//(4) 바디 설정
 		Map<String, String> body = new HashMap<>();
 		body.put("cid", kakaoPayProperties.getCid());
 		body.put("partner_order_id", vo.getPartnerOrderId());
 		body.put("partner_user_id", vo.getPartnerUserId());
-		body.put("item_name", vo.getItemName());
+		body.put("item_name", vo.getProductName());
 		body.put("quantity", "1");
 		body.put("total_amount", String.valueOf(vo.getTotalAmount()));
 		body.put("tax_free_amount", "0");
@@ -72,14 +73,14 @@ public class KakaoPayService {
 		
 		HttpEntity entity = new HttpEntity(body, headers);
 		
-		KakaoPayReadyResponseVO response = restTemplate.postForObject(
-												uri, entity, KakaoPayReadyResponseVO.class);
+		KakaoPayReadyResponseVO response = restTemplate.postForObject(uri, entity, KakaoPayReadyResponseVO.class);
 		
 		return response;
 	}
-	//결제 승인(approve)
+	
+	// 결제 승인(approve)
 	public KakaoPayApproveResponseVO approve(KakaoPayApproveVO vo) throws URISyntaxException{
-		URI uri = new URI("https://open-api.kakaopay.com/online/payment/approve");
+		URI uri = new URI("https://open-api.kakaopay.com/online/v1/payment/approve");
 		
 		Map<String, String> body = new HashMap<>();
 		body.put("cid", kakaoPayProperties.getCid());
@@ -89,14 +90,14 @@ public class KakaoPayService {
 		body.put("pg_token", vo.getPgToken());
 		
 		HttpEntity entity = new HttpEntity(body, headers);
-		KakaoPayApproveResponseVO response = 
-				restTemplate.postForObject(uri, entity, KakaoPayApproveResponseVO.class);
+		KakaoPayApproveResponseVO response = restTemplate.postForObject(uri, entity, KakaoPayApproveResponseVO.class);
 		
 		return response;
 	}
-	//결제 조회(order)
+	
+	// 결제 조회(order)
 	public KakaoPayOrderResponseVO order(KakaoPayOrderVO vo) throws URISyntaxException {
-		URI uri = new URI("https://open-api.kakaopay.com/online/payment/order");
+		URI uri = new URI("https://open-api.kakaopay.com/online/v1/payment/order");
 		
 		Map<String, String> body = new HashMap<>();
 		body.put("cid", kakaoPayProperties.getCid());
@@ -104,12 +105,11 @@ public class KakaoPayService {
 		
 		HttpEntity entity = new HttpEntity(body, headers);
 		
-		return restTemplate.postForObject(
-							uri, entity, KakaoPayOrderResponseVO.class);
+		return restTemplate.postForObject(uri, entity, KakaoPayOrderResponseVO.class);
 	}
-	//결제 취소(cancel)
+	// 결제 취소(cancel)
 	public KakaoPayCancelResponseVO cancel(KakaoPayCancelVO vo) throws URISyntaxException {
-		URI uri = new URI("https://open-api.kakaopay.com/online/payment/cancel");
+		URI uri = new URI("https://open-api.kakaopay.com/online/v1/payment/cancel");
 		
 		Map<String, String> body = new HashMap<>();
 		body.put("cid", kakaoPayProperties.getCid());
@@ -119,41 +119,30 @@ public class KakaoPayService {
 		
 		HttpEntity entity = new HttpEntity(body, headers);
 		
-		return restTemplate.postForObject(
-							uri, entity, KakaoPayCancelResponseVO.class);
+		return restTemplate.postForObject(uri, entity, KakaoPayCancelResponseVO.class);
 	}
 	
-	//결제DB에 등록
+	// 결제DB에 등록
 	public void insertDB(KakaoPayApproveVO approveVO, 
 											KakaoPayReadyVO readyVO,
 											List<KakaoPayPayVO> payList) {
 		// pay 등록
 		long payNo = payDao.addPay(PayDto.builder()
-					.payOwner(approveVO.getPartnerUserId())//주문자
-					.payTid(approveVO.getTid())//거래번호
-					.payName(readyVO.getItemName())//구매상품명
-					.payTotal(readyVO.getTotalAmount())//구매금액
+					.payOwner(approveVO.getPartnerUserId()) // 주문자
+					.payTid(approveVO.getTid()) // 거래번호
+					.payName(readyVO.getProductName()) // 구매상품명
+					.payTotal(readyVO.getTotalAmount()) // 구매금액
 				.build());
+				
 		// pay_detail 등록
 		for(KakaoPayPayVO payVO : payList) {
-			ProductsDto productsDto = productsDao.selectOne(payVO.getProductNo());
+			VolumeDto volumeDto = volumeDao.selectWithProductByVolumeNo(payVO.getVolumeNo());
 			payDao.addPayDetail(PayDetailDto.builder()
-						.payDetailOrigin(payNo)//구매대표번호
-						.payDetailItem(payVO.getProductNo())//구매상품번호
-						.payDetailName(productsDto.getProductName())//구매상품명
-						.payDetailQty(payVO.getQty())//구매상품개수
-					.build());
-		}
-		
-		// pay_detail 등록
-		for(KakaoPayPayVO payVO : payList) {
-			ProductsDto productsDto = productsDao.selectOne(payVO.getProductNo());
-			payDao.addPayDetail(PayDetailDto.builder()
-						.payDetailOrigin(payNo)//구매대표번호
-						.payDetailItem(payVO.getProductNo())//구매상품번호
-						.payDetailName(productsDto.getProductName())//구매상품명
-						.payDetailPrice(productsDto.getProductPrice())//구매상품가격(개당)
-						.payDetailQty(payVO.getQty())//구매상품개수
+						.payDetailOrigin(payNo) // 구매대표번호
+						.payDetailItem(payVO.getVolumeNo()) // 구매상품번호
+						.payDetailName(volumeDto.getProductName()) // 구매상품명
+						.payDetailPrice(volumeDto.getProductPrice()) // 구매상품가격 (개당)
+						.payDetailQty(payVO.getQty()) // 구매상품개수
 					.build());
 		}
 

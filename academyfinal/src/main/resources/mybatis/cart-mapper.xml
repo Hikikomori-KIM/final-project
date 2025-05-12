@@ -14,7 +14,7 @@
           c.cart_item_no, 
           c.users_id, 
           c.cart_qty,
-          c.volume_no AS cart_volume_no,
+          c.volume_no AS volumeNo,
           p.product_no AS p_product_no,
           p.product_name, 
           p.product_detail, 

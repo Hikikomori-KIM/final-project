@@ -118,5 +118,23 @@
 		WHERE product_no = #{productNo}
 		AND volume_ml = #{volumeMl}
 	</select>
+	
+	<!-- volumeNo를 통해서 조회 -->
+	<select id="selectByVolumeNo" resultType="VolumeDto">
+		select * from volume
+		where volume_no = #{volumeNo}
+	</select>
+	
+	<!-- volume v 에서 volume_no가 일치하는 레코드를 찾아서 해당 레코드의 product_no를 기준으로
+		product p 테이블에서 left join 후 product_name과 product_price를 같이 갖고옴 -->
+	<select id="selectWithProductByVolumeNo" resultType="VolumeDto">
+		select
+			v.*,
+			p.product_name as productName,
+			p.product_price as productPrice
+		from volume v
+		left join products p on v.product_no = p.product_no
+		where v.volume_no = #{volumeNo}
+	</select>
 
 </mapper>

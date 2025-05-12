@@ -58,4 +58,15 @@ public class VolumeDao {
 	        }}
 	    );
 	}
+	
+	// volumeNo로 조회하는 메서드 (결제 시 필요)
+	public VolumeDto selectByVolumeNo(long volumeNo) {
+	    return sqlSession.selectOne("volume.selectByVolumeNo", volumeNo);
+	}
+	
+	// 결제용 조인 쿼리 (결제 후 정보를 DB에 넘기는 용도)__productName, productPrice까지 조인
+	public VolumeDto selectWithProductByVolumeNo(long volumeNo) {
+		return sqlSession.selectOne("volume.selectWithProductByVolumeNo", volumeNo);
+	}
+
 }

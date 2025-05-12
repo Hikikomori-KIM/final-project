@@ -15,4 +15,7 @@ public class VolumeDto {
 	private Integer discountedVolumePrice; // 할인 가격
 
 	private String volumeStatus; // ✅ 상태값: active, inactive, deleted
+	
+	private String productName;
+	private Integer productPrice;
 }
