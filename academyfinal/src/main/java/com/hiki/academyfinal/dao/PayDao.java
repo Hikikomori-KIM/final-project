@@ -81,4 +81,16 @@ public class PayDao {
 		params.put("payRemain", payRemain);
 		return sqlSession.update("pay.updatePay", params) > 0;
 	}
+	
+	// 주문관리 페이지에서 관리자가 배송관련 변경이 가능하도록 구현
+	public String findDeliveryStatus(long payNo) {
+		return sqlSession.selectOne("pay.findDeliveryStatus", payNo);
+	}
+	public void updateDeliveryStatus(long payNo, String newStatus) {
+		Map<String, Object> params = new HashMap<>();
+		params.put("payNo", payNo);
+		params.put("status", newStatus);
+		sqlSession.update("pay.updateDeliveryStatus", params);
+	}
+	
 }
