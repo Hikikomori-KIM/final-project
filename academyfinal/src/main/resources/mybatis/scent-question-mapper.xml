@@ -21,5 +21,15 @@
 	        CONNECT BY LEVEL <= #{count}
 	    ]]>
 	</select>
+	
+	<update id="update">
+	update scent_question set scent_question_content =#{scentQuestionContent}
+	where scent_question_no =#{scentQuestionNo}
+	</update>
+	
+	<delete id="delete">
+	delete from scent_question where scent_question_no =#{scentQuestionNo}
+	</delete>
+	
   </mapper>
   

@@ -61,4 +61,8 @@ private SqlSession sqlSession;
 	public int listCount(String usersId) {
 		return sqlSession.selectOne("addressList.count",usersId);
 	}
+	
+	public AddressListDto selectMain(String usersId) {
+		return sqlSession.selectOne("addressList.selectMain", usersId);
+	}
 }

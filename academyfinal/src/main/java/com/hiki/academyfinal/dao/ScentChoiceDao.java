@@ -47,4 +47,17 @@ public class ScentChoiceDao {
 	public List<Integer> sequenceList(int size){
 		return sqlSession.selectList("scentChoice.sequenceList",size);
 	}
+	//단일..
+	public boolean updateChoice(ScentChoiceDto scentChoiceDto) {
+		return sqlSession.update("scentChoice.update",scentChoiceDto)>0;
+	}
+
+	//단일..
+	public boolean deleteChoice(int scentQuestionNo) {
+		return sqlSession.delete("scentChoice.delete",scentQuestionNo)>0;
+	}
+	//지우려면 찾아야하는 아이러니..
+	public List<Integer> questionNoList(int scentQuestionNo){
+		return sqlSession.selectList("scentChoice.questionList",scentQuestionNo);
+	}
 }

@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -72,12 +73,13 @@ public class UsersRestController {
 		//vo를 UsersDto에맞춰서 매핑함 
 		ModelMapper mapper = new ModelMapper();
 		UsersDto usersDto = mapper.map(vo, UsersDto.class);
-		System.out.println("입력된 비밀번호: " + usersDto.getUsersPw());
 		UsersDto findDto = usersDao.login(usersDto);
 		if(findDto == null) throw new TargetNotFoundException("아이디 또는 비밀번호 오류");
+//		System.out.println(findDto.getUsersProvider());
 		return UsersLoginResponseVO.builder()
 					.usersId(findDto.getUsersId())
 					.usersType(findDto.getUsersType())
+					.usersProvider(findDto.getUsersProvider())
 					.accessToken(tokenService.generateAccessToken(findDto))
 					.refreshToken(tokenService.generateRefreshToken(findDto))
 				.build();
@@ -98,11 +100,12 @@ public class UsersRestController {
 			boolean isValid = tokenService.checkBearerToken(claimVO, refreshToken);
 			if(isValid == false)
 				throw new TargetNotFoundException("정보 불일치");
-			
+	
 			//재발행해줌.
 			return UsersLoginResponseVO.builder()
 						.usersId(claimVO.getUsersId())
 						.usersType(claimVO.getUsersType())
+						.usersProvider(claimVO.getUsersProvider())
 						.accessToken(tokenService.generateAccessToken(claimVO))
 						.refreshToken(tokenService.generateRefreshToken(claimVO))
 					.build();
@@ -141,4 +144,16 @@ public class UsersRestController {
 			return ResponseEntity.ok("비밀번호 변경 완료");
 		}
 	
+		@DeleteMapping
+		public void exit(@RequestBody UsersLoginVO vo) {
+			ModelMapper mapper = new ModelMapper();
+			UsersDto usersDto = mapper.map(vo, UsersDto.class);
+			usersTokenDao.clean(vo.getUsersId());
+			usersDao.exit(usersDto);	
+		}
+		@DeleteMapping("/naver/{usersId}")
+		public void exitNaver(@PathVariable String usersId) {
+			usersTokenDao.clean(usersId);
+			usersDao.exitNaver(usersId);
+		}
 }

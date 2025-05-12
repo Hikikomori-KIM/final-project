@@ -34,6 +34,21 @@
 	    ]]>
 	</select>
 
+<update id="update">
+	update scent_choice set scent_choice_content =#{scentChoiceContent}, scent_choice_type=#{scentChoiceType},
+	scent_choice_score=#{scentChoiceScore}
+	where scent_choice_no = #{scentChoiceNo}
+</update>
 
+<!-- 퀘스챤no로지우기 -->
+	<delete id="delete">
+	 DELETE FROM scent_choice WHERE scent_question_no = #{scentQuestionNo}
+	</delete>
+	
+	<select id="questionList" resultType="int">
+	select * from scent_choice where scent_question_no =#{scentQuestionNo}
+	</select>
+	
+	
   </mapper>
   

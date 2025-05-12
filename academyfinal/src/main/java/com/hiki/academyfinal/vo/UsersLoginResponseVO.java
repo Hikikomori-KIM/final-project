@@ -11,6 +11,7 @@ import lombok.NoArgsConstructor;
 public class UsersLoginResponseVO {
 	private String usersId;
 	private String usersType;
+	private String usersProvider;
 	private String accessToken;
 	private String refreshToken;
 }

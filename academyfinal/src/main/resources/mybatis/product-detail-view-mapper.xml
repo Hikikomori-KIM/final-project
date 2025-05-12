@@ -10,5 +10,7 @@
   	select * from product_detail_view where product_no = #{productNo}
   </select>
   	
-
+<select id="selectList" resultType="productDetailViewDto">
+	select * from product_detail_view
+</select>
   </mapper>

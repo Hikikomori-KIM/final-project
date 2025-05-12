@@ -61,7 +61,6 @@ public class MyPageRestController {
 		int count = addressListDao.listCount(usersId);
 		result.put("addressListDtoList", addressListDtoList);
 		result.put("count", count);
-		
 		return result;
 	}
 	
@@ -90,7 +89,7 @@ public class MyPageRestController {
 //		System.out.println("유저아이디넘어오나" +usersId);
 //		System.out.println("메인주소 찾기 " +findMain);
 //		System.out.println("바꿀 주소 " +addressListNo);
-		//메인주소없으면 그냥 메인으로 올려줌 
+		//메인주소없으면 그냥 메인으로 올려줌  
 		if(findMain == null) {
 			addressListDao.updateMain(addressListNo);
 			return ResponseEntity.ok("메인주소 등록완료");
@@ -110,7 +109,7 @@ public class MyPageRestController {
 		if(count >=5) throw new TargetNotFoundException("주소개수초과") ;
 		addressListDto.setAddressListDefault("N");
 		addressListDao.insert(addressListDto);
-	}
+	} 
 	//주소수정
 	@PostMapping("/updateAllAddress")
 	public ResponseEntity<String> updataAddress(@RequestBody AddressListDto addressListDto){
@@ -119,6 +118,13 @@ public class MyPageRestController {
 		addressListDao.update(addressDto);
 		System.out.println(addressDto);
 		return ResponseEntity.ok("주소변경완료");
+	}
+	
+	// 메인 주소 호출 (주문/결제 단계에서 필요)
+	@GetMapping("/mainAddress/{usersId}")
+	public ResponseEntity<AddressListDto> getMainAddress(@PathVariable String usersId) {
+		AddressListDto mainAddress = addressListDao.selectMain(usersId);
+		return ResponseEntity.ok(mainAddress); // Spring에서 HTTP 응답을 생성할 때 자주 사용하는 방식
 	}
 	
 }
