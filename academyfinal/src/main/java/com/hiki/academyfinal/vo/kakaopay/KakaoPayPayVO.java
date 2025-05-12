@@ -1,5 +1,4 @@
 package com.hiki.academyfinal.vo.kakaopay;
-
 import lombok.Data;
 
 @Data

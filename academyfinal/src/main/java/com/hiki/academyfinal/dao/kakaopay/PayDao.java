@@ -1,4 +1,4 @@
-package com.hiki.academyfinal.dao;
+package com.hiki.academyfinal.dao.kakaopay;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -81,4 +81,20 @@ public class PayDao {
 		params.put("payRemain", payRemain);
 		return sqlSession.update("pay.updatePay", params) > 0;
 	}
+	
+	// 배송 과정 변경 기능 (관리자용)
+	public String findDeliveryStatus(long payNo) {
+		return sqlSession.selectOne("pay.findDeliveryStatus", payNo);
+	}
+	public void updateDeliveryStatus(long payNo, String newStatus) {
+		Map<String, Object> params = new HashMap<>();
+		params.put("payNo", payNo);
+		params.put("status", newStatus);
+		sqlSession.update("pay.updateDeliveryStatus", params);
+	}
+	// 주문관리 리스트 불러오기 (관리자용)
+	public List<Map<String, Object>> findDeliveryList() {
+		return sqlSession.selectList("pay.findDeliveryList");
+	}
+	
 }

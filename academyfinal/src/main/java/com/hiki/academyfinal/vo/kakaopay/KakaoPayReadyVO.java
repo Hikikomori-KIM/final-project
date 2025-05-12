@@ -10,6 +10,6 @@ import lombok.NoArgsConstructor;
 public class KakaoPayReadyVO {
 	private String partnerOrderId;
 	private String partnerUserId;
-	private String itemName;
+	private String productName;
 	private long totalAmount;
 }

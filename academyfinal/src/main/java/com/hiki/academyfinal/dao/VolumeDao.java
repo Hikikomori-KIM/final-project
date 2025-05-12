@@ -84,4 +84,22 @@ public class VolumeDao {
 
 	
 	
+	// volumeNo로 조회하는 메서드 (결제 시 필요)
+	public VolumeDto selectByVolumeNo(long volumeNo) {
+	    return sqlSession.selectOne("volume.selectByVolumeNo", volumeNo);
+	}
+	
+	// 결제용 조인 쿼리 (결제 후 정보를 DB에 넘기는 용도)__productName, productPrice까지 조인
+	public VolumeDto selectWithProductByVolumeNo(long volumeNo) {
+		return sqlSession.selectOne("volume.selectWithProductByVolumeNo", volumeNo);
+	}
+	
+	//재고 차감용 매서드
+	public void decreaseStock(long volumeNo, int qty) {
+	    Map<String, Object> param = new HashMap<>();
+	    param.put("volumeNo", volumeNo);
+	    param.put("qty", qty);
+	    sqlSession.update("volume.decreaseStock", param);
+	}
+
 }

@@ -19,9 +19,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.hiki.academyfinal.dao.PayDao;
+import com.hiki.academyfinal.dao.ProductsDao;
+import com.hiki.academyfinal.dao.VolumeDao;
+import com.hiki.academyfinal.dao.kakaopay.PayDao;
+import com.hiki.academyfinal.dto.ProductsDto;
+import com.hiki.academyfinal.dto.VolumeDto;
 import com.hiki.academyfinal.error.TargetNotFoundException;
 import com.hiki.academyfinal.service.KakaoPayService;
+import com.hiki.academyfinal.service.ProductService;
 import com.hiki.academyfinal.service.TokenService;
 import com.hiki.academyfinal.vo.ClaimVO;
 import com.hiki.academyfinal.vo.kakaopay.KakaoPayApproveResponseVO;
@@ -36,16 +41,19 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @CrossOrigin
 @RestController
-@RequestMapping("/api/pay")
+@RequestMapping("/api/purchase")
 public class KakaoPayRestController {
-//	@Autowired
-//	private ItemDao itemDao; 상품 dao autowired 필요
+
+    @Autowired
+	private ProductsDao productsDao;
+	@Autowired
+	private VolumeDao volumeDao;
+	@Autowired
+	private PayDao payDao;
 	@Autowired
 	private KakaoPayService kakaoPayService;
 	@Autowired
 	private TokenService tokenService;
-	@Autowired
-	private PayDao payDao;
 	
 	// Flash value를 저장하기 위한 저장소
 	private Map<String, KakaoPayApproveVO> flashMap = Collections.synchronizedMap(new HashMap<>()); // thread-safe
@@ -57,7 +65,10 @@ public class KakaoPayRestController {
 	private Map<String, List<KakaoPayPayVO>> payListMap = Collections.synchronizedMap(new HashMap<>()); //thread-safe
 	
 	// 결제준비 요청정보를 저장
-	private Map<String, KakaoPayReadyVO> readyMap = Collections.synchronizedMap(new HashMap<>()); //thread-safe
+	private Map<String, KakaoPayReadyVO> readyMap = Collections.synchronizedMap(new HashMap<>());
+
+    KakaoPayRestController(ProductService productService) {
+    } //thread-safe
 	
 	// 구매 요청 시 클라이언트가 {상품번호,수량}을 배열 형태로 전송
 	// - 클래스를 만들어서 받을 수 있도록 준비해야한다
@@ -74,11 +85,26 @@ public class KakaoPayRestController {
 		
 		ClaimVO claimVO = tokenService.parseBearerToken(bearerToken);
 		vo.setPartnerUserId(claimVO.getUsersId());
-		StringBuffer buffer = new StringBuffer();		
-		vo.setItemName(buffer.toString());
+		
+		VolumeDto firstVolume = volumeDao.selectByVolumeNo(payList.get(0).getVolumeNo());
+		if(firstVolume == null) throw new TargetNotFoundException("VolumeNo문제있삼");
+	
+		ProductsDto firstProduct = productsDao.selectOne(firstVolume.getProductNo());
+		if(firstProduct == null) throw new TargetNotFoundException("없는 상품");
+		
+		StringBuffer buffer = new StringBuffer();
+		buffer.append(firstProduct.getProductName());
+		if(payList.size() >= 2) {
+			buffer.append(" 외 " + (payList.size()-1) + "건");
+		}
+		vo.setProductName(buffer.toString());
+		
 		int totalAmount = 0;
 		for(KakaoPayPayVO payVO : payList) {
-
+		    VolumeDto volumeDto = volumeDao.selectByVolumeNo(payVO.getVolumeNo());
+		    if (volumeDto != null) {
+		        totalAmount += volumeDto.getDiscountedVolumePrice() * payVO.getQty();
+		    }
 		}
 		vo.setTotalAmount(totalAmount);
 		
@@ -99,8 +125,8 @@ public class KakaoPayRestController {
 	
 	@GetMapping("/pay/success/{partnerOrderId}")
 	public void success(@PathVariable String partnerOrderId,
-								@RequestParam("pg_token") String pgToken,
-								HttpServletResponse response) throws URISyntaxException, IOException {
+						@RequestParam("pg_token") String pgToken,
+						HttpServletResponse response) throws URISyntaxException, IOException {
 		KakaoPayApproveVO vo = flashMap.remove(partnerOrderId);
 		if(vo == null) throw new TargetNotFoundException("유효하지 않은 결제 정보");
 		
@@ -144,4 +170,19 @@ public class KakaoPayRestController {
 		String url = returnUrlMap.remove(partnerOrderId);
 		response.sendRedirect(url+"/fail");
 	}
+	
+	// 배송 과정 리스트 조회 (관리자용)
+	// * List<Map<String, Object>>
+	// - List : 여러 개의 데이터를 "순서대로 모은" 컬렉션 (배열과 유사)
+	// - Map<String, Object> : 한개의 row(행)을 컬럼명-값 형태로 표현
+	// : 굳이 DTO 클래스를 만들지 않아도 괜찮음
+	// : 컬럼 이름이 고정되어 있지 않거나 간단한 admin 페이지에서는 편리함
+	// : 유연하게 컬럼 추가 및 삭제가 가능함
+	// : react에서 axios로 받으면 JSON 형태로 오기 때문에 .map() 돌려서 사용 가능
+	// : 단, 타입 캐스팅이나 안정성 측면에서는 dto보다 덜 안전함
+	@GetMapping("/delivery-list")
+	public List<Map<String, Object>> getDeliveryList() {
+		return payDao.findDeliveryList();
+	}
+	
 }
