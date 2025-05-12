@@ -21,8 +21,7 @@ public class ProductsDao {
         if (categoryNo != null) param.put("categoryNo", categoryNo);
         return sqlSession.selectList("products.listVO", param);
     }
-
-
+    
     public ProductsDto selectOne(long productNo) {
         return sqlSession.selectOne("products.find", productNo);
     }
