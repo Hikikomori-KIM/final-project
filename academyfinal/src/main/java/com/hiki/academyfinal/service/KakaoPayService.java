@@ -14,9 +14,9 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.hiki.academyfinal.configuration.KakaoPayProperties;
-import com.hiki.academyfinal.dao.PayDao;
 import com.hiki.academyfinal.dao.ProductsDao;
 import com.hiki.academyfinal.dao.VolumeDao;
+import com.hiki.academyfinal.dao.kakaopay.PayDao;
 import com.hiki.academyfinal.dto.VolumeDto;
 import com.hiki.academyfinal.dto.kakaopay.PayDetailDto;
 import com.hiki.academyfinal.dto.kakaopay.PayDto;

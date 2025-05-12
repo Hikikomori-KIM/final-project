@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.hiki.academyfinal.dao.PayDao;
+import com.hiki.academyfinal.dao.kakaopay.PayDao;
 
 @RestController
 @RequestMapping("/api/admin/delivery")
