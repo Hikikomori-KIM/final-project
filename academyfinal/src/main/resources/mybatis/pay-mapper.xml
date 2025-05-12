@@ -133,4 +133,17 @@
 		where pay_no = #{payNo}
 	</select>
 	
+	<!-- 배송상태 리스트 조회 (관리자용)
+		* group by : 하나의 주문에 여러 항목이 있더라도 대표 상태 하나만 가져오기 위한 단순 처리 -->
+	<select id="findDeliveryList" resultType="map">
+		select
+			p.pay_no as payNo,
+			p.pay_owner as usersName,
+			pd.pay_detail_status as deliveryStatus
+		from pay p
+		left join pay_detail pd on p.pay_no = pd.pay_detail_origin
+		group by p.pay_no, p.pay_owner, pd_pay_detail_status
+		order by p.pay_no desc
+	</select>
+	
 </mapper>

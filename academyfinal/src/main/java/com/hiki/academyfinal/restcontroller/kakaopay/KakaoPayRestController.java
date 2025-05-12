@@ -19,9 +19,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.hiki.academyfinal.dao.PayDao;
 import com.hiki.academyfinal.dao.ProductsDao;
 import com.hiki.academyfinal.dao.VolumeDao;
+import com.hiki.academyfinal.dao.kakaopay.PayDao;
 import com.hiki.academyfinal.dto.ProductsDto;
 import com.hiki.academyfinal.dto.VolumeDto;
 import com.hiki.academyfinal.error.TargetNotFoundException;
@@ -48,6 +48,8 @@ public class KakaoPayRestController {
 	private ProductsDao productsDao;
 	@Autowired
 	private VolumeDao volumeDao;
+	@Autowired
+	private PayDao payDao;
 	@Autowired
 	private KakaoPayService kakaoPayService;
 	@Autowired
@@ -167,6 +169,20 @@ public class KakaoPayRestController {
 		
 		String url = returnUrlMap.remove(partnerOrderId);
 		response.sendRedirect(url+"/fail");
+	}
+	
+	// 배송 과정 리스트 조회 (관리자용)
+	// * List<Map<String, Object>>
+	// - List : 여러 개의 데이터를 "순서대로 모은" 컬렉션 (배열과 유사)
+	// - Map<String, Object> : 한개의 row(행)을 컬럼명-값 형태로 표현
+	// : 굳이 DTO 클래스를 만들지 않아도 괜찮음
+	// : 컬럼 이름이 고정되어 있지 않거나 간단한 admin 페이지에서는 편리함
+	// : 유연하게 컬럼 추가 및 삭제가 가능함
+	// : react에서 axios로 받으면 JSON 형태로 오기 때문에 .map() 돌려서 사용 가능
+	// : 단, 타입 캐스팅이나 안정성 측면에서는 dto보다 덜 안전함
+	@GetMapping("/delivery-list")
+	public List<Map<String, Object>> getDeliveryList() {
+		return payDao.findDeliveryList();
 	}
 	
 }
