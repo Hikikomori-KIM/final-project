@@ -11,7 +11,7 @@ public class ProductImgDao {
 	@Autowired
 	public SqlSession sqlSession;
 	
-	public void insert(long productNo,int attachmentNo,String imageType) {
+	public void insert(long productNo,long attachmentNo,String imageType) {
 		Map<String,Object> param = Map.of(
 				"productNo",productNo,
 				"attachmentNo",attachmentNo,

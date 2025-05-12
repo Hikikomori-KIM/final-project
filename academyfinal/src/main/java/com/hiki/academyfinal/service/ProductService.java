@@ -80,7 +80,7 @@ public class ProductService {
 				MultipartFile file = images.get(i);
 				String type = types.get(i);
 				if (file != null && !file.isEmpty()) {
-					int attachNo = attachmentDao.sequence();
+					long attachNo = attachmentDao.sequence();
 					AttachmentDto attachDto = AttachmentDto.builder().attachmentNo(attachNo)
 							.attachmentName(file.getOriginalFilename()).attachmentType(file.getContentType())
 							.attachmentSize(file.getSize()).build();
@@ -154,7 +154,7 @@ public class ProductService {
 		// 5. 이미지 수정
 		if (image != null && !image.isEmpty()) {
 			productImgDao.deleteByProductNo(productNo);
-			int attachNo = attachmentDao.sequence();
+			long attachNo = attachmentDao.sequence();
 			AttachmentDto attachDto = AttachmentDto.builder().attachmentNo(attachNo)
 					.attachmentName(image.getOriginalFilename()).attachmentType(image.getContentType())
 					.attachmentSize(image.getSize()).build();

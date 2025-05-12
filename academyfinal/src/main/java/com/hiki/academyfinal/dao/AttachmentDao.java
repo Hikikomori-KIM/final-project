@@ -11,7 +11,7 @@ public class AttachmentDao {
     @Autowired
     private SqlSession sqlSession;
     
-    public int sequence() {
+    public long sequence() {
         return sqlSession.selectOne("attachment.sequence");
     }
     
@@ -22,5 +22,9 @@ public class AttachmentDao {
     public AttachmentDto selectOne(int attachmentNo) {
         return sqlSession.selectOne("attachment.find", attachmentNo);
     }
+    public void delete(long attachmentNo) {
+        sqlSession.delete("attachment.delete", attachmentNo);
+    }
+
 }
 

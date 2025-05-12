@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="review">
+
+	<!-- 리뷰 등록 -->
+	<insert id="insertReview" parameterType="ReviewDto">
+		<!-- 1. 시퀀스 값 먼저 가져오기 -->
+		<selectKey keyProperty="reviewNo" resultType="long"
+			order="BEFORE">
+			SELECT reviews_seq.NEXTVAL FROM dual
+		</selectKey>
+
+		<!-- 2. 시퀀스로 가져온 값으로 insert 수행 -->
+		INSERT INTO reviews (
+		review_no, product_no, users_id,
+		review_rating, review_comment, review_created_at 
+		) VALUES (
+		#{reviewNo}, #{productNo}, #{usersId},
+		#{reviewRating}, #{reviewComment}, SYSTIMESTAMP
+		)
+	</insert>
+
+	<!-- 리뷰 이미지 등록 -->
+	<insert id="insertReviewImage">
+		INSERT INTO review_image (
+		review_image_no, review_no,
+		attachment_no
+		) VALUES (
+		review_image_seq.NEXTVAL, #{reviewNo},
+		#{attachmentNo}
+		)
+	</insert>
+
+	<!-- 리뷰 목록 -->
+	<select id="selectReviewList" resultType="ReviewDto">
+		SELECT r.*,
+		(SELECT
+		LISTAGG(ri.attachment_no, ',')
+		WITHIN GROUP (ORDER BY ri.attachment_no)
+		FROM review_image ri
+		WHERE ri.review_no = r.review_no) AS
+		attachmentNoList
+		FROM reviews r
+		WHERE product_no = #{productNo}
+		ORDER BY
+		review_created_at DESC
+	</select>
+
+	<select id="sequence" resultType="long">
+		SELECT reviews_seq.NEXTVAL FROM
+		dual
+	</select>
+	<!-- 특정 리뷰의 이미지 번호 리스트 조회 -->
+	<select id="selectAttachmentNosByReviewNo" resultType="long">
+		SELECT
+		attachment_no FROM review_image WHERE review_no = #{reviewNo}
+	</select>
+
+	<!-- 특정 리뷰의 이미지 연결 삭제 -->
+	<delete id="deleteReviewImagesByReviewNo">
+		DELETE FROM review_image WHERE review_no =
+		#{reviewNo}
+	</delete>
+
+	<!-- 리뷰 자체 삭제 -->
+	<delete id="deleteReviewByReviewNo">
+		DELETE FROM reviews WHERE review_no = #{reviewNo}
+	</delete>
+
+	<!-- 리뷰 삭제: 이미지 먼저 삭제 후 리뷰 삭제 -->
+	<delete id="adminDeleteReview">
+		BEGIN
+		DELETE FROM review_image WHERE review_no =
+		#{reviewNo};
+		DELETE FROM reviews WHERE review_no = #{reviewNo};
+		END;
+	</delete>
+
+
+</mapper>
