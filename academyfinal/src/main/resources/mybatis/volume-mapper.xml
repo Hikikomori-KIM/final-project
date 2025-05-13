@@ -136,5 +136,12 @@
 		left join products p on v.product_no = p.product_no
 		where v.volume_no = #{volumeNo}
 	</select>
+	
+	<!--용량 재고 차감용 매퍼-->
+	<update id="decreaseStock">
+	    UPDATE volume
+	    SET volume_stock = volume_stock - #{qty}
+	    WHERE volume_no = #{volumeNo}
+	</update>
 
 </mapper>

@@ -1,5 +1,6 @@
 package com.hiki.academyfinal.dao;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -66,5 +67,11 @@ public class ProductsDao {
     // 베스트 상품 목록 조회
 	public List<ProductSalesVO> selectBestProducts(){
 		return sqlSession.selectList("products.selectBestProducts");
+	}
+	public void updateMdPick(long productNo, String mdPick) {
+	    Map<String, Object> param = new HashMap<>();
+	    param.put("productNo", productNo);
+	    param.put("mdPick", mdPick);
+	    sqlSession.update("products.updateMdPick", param);
 	}
 }

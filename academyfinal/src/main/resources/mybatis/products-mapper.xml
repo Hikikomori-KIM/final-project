@@ -33,6 +33,7 @@
 		p.discount_rate AS discountRate,
 		p.discounted_price AS discountedPrice,
 		p.strength AS strength,
+		p.md_pick AS mdPick, <!-- ✅ 추가 -->
 		b.brand_name AS brand,
 		a.attachment_no AS attachmentNo
 		FROM products p
@@ -123,10 +124,16 @@
 		image_url,
 		total_sold_qty,
 		total_sales_amount
-		FROM product_sales_view
+		FROM
+		product_sales_view
 		ORDER BY total_sold_qty DESC
 	</select>
-
+	<!-- MD PICK 설정 변경 -->
+	<update id="updateMdPick">
+		UPDATE products
+		SET md_pick = #{mdPick}
+		WHERE product_no = #{productNo}
+	</update>
 
 
 </mapper>

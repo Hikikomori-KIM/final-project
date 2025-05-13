@@ -20,6 +20,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 
 @CrossOrigin
 @RestController
@@ -119,5 +120,14 @@ public class ProductsRestController {
     @GetMapping("/best")
     public List<ProductSalesVO> getBestProducts(){
     	return productsDao.selectBestProducts();
+    }
+    //MD픽 
+    @PatchMapping("/mdpick/{productNo}") // ✅ 기존: /products/{productNo}/md-pick
+    public ResponseEntity<?> updateMdPick(
+            @PathVariable long productNo,
+            @RequestBody Map<String, String> body) {
+        String mdPick = body.get("mdPick"); // 'Y' 또는 'N'
+        productsDao.updateMdPick(productNo, mdPick);
+        return ResponseEntity.ok().build();
     }
 }

@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -124,6 +125,7 @@ public class KakaoPayService {
 	}
 	
 	// 결제DB에 등록
+	@Transactional
 	public void insertDB(KakaoPayApproveVO approveVO, 
 											KakaoPayReadyVO readyVO,
 											List<KakaoPayPayVO> payList) {
@@ -147,6 +149,10 @@ public class KakaoPayService {
 		            .payDetailQty(payVO.getQty())                 // 수량
 		            .payDetailStatus("Y")                         // 상태 기본값
 		            .build());
+		    
+		    
+		    //재고 차감
+		    volumeDao.decreaseStock(volumeDto.getVolumeNo(), payVO.getQty());
 		}
 
 	}

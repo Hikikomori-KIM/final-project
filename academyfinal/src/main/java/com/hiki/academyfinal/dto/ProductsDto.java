@@ -27,4 +27,5 @@ public class ProductsDto {
     
     private String productDescriptionHtml; //html 상세 설명 저장용
     
+    private String mdPick; // "Y" 또는 "N"
 }
