@@ -1,5 +1,6 @@
 package com.hiki.academyfinal.dao;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -8,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import com.hiki.academyfinal.dto.ProductsDto;
 import com.hiki.academyfinal.vo.ProductListVO;
+import com.hiki.academyfinal.vo.ProductSalesVO;
 
 @Repository
 public class ProductsDao {
@@ -62,5 +64,14 @@ public class ProductsDao {
     public List<ProductListVO> selectByCategory(int categoryNo) {
         return sqlSession.selectList("products.listVO", Map.of("categoryNo", categoryNo));
     }
-
+    // 베스트 상품 목록 조회
+	public List<ProductSalesVO> selectBestProducts(){
+		return sqlSession.selectList("products.selectBestProducts");
+	}
+	public void updateMdPick(long productNo, String mdPick) {
+	    Map<String, Object> param = new HashMap<>();
+	    param.put("productNo", productNo);
+	    param.put("mdPick", mdPick);
+	    sqlSession.update("products.updateMdPick", param);
+	}
 }

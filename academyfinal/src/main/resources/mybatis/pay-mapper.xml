@@ -24,17 +24,20 @@
 		select pay_detail_seq.nextval from dual
 	</select>
 	<insert id="addPayDetail">
-		insert into pay_detail (
-			pay_detail_no, pay_detail_origin, pay_detail_item,
-			pay_detail_name, pay_detail_price, pay_detail_qty,
-			pay_detail_status
-		)
-		values (
-			#{payDetailNo}, #{payDetailOrigin}, #{payDetailItem},
-			#{payDetailName}, #{payDetailPrice}, #{payDetailQty},
-			'Y'
-		)		
+	    insert into pay_detail (
+	        pay_detail_no, pay_detail_origin,
+	        product_no, volume_no,
+	        pay_detail_name, pay_detail_price, pay_detail_qty,
+	        pay_detail_status
+	    )
+	    values (
+	        #{payDetailNo}, #{payDetailOrigin},
+	        #{productNo}, #{volumeNo},
+	        #{payDetailName}, #{payDetailPrice}, #{payDetailQty},
+	        'Y'
+	    )
 	</insert>
+
 	
 	<!-- 조회 -->
 	<select id="listPay" resultType="PayDto">
@@ -76,7 +79,8 @@
 						select="listPayDetail" column="pay_no">
 			<result column="pay_detail_no" property="payDetailNo"/>
 			<result column="pay_detail_origin" property="payDetailOrigin"/>
-			<result column="pay_detail_item" property="payDetailItem"/>
+			<result column="product_no" property="productNo"/>        <!-- ✅ 추가 -->
+ 		    <result column="volume_no" property="volumeNo"/>          <!-- ✅ 추가 -->
 			<result column="pay_detail_name" property="payDetailName"/>
 			<result column="pay_detail_price" property="payDetailPrice"/>
 			<result column="pay_detail_qty" property="payDetailQty"/>

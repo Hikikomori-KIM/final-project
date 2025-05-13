@@ -10,6 +10,7 @@ import com.hiki.academyfinal.service.ProductService;
 import com.hiki.academyfinal.vo.ProductAddRequestVO;
 import com.hiki.academyfinal.vo.ProductDetailVO;
 import com.hiki.academyfinal.vo.ProductListVO;
+import com.hiki.academyfinal.vo.ProductSalesVO;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -19,6 +20,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 
 @CrossOrigin
 @RestController
@@ -113,5 +115,19 @@ public class ProductsRestController {
     @GetMapping("/category/{categoryNo}")
     public List<ProductListVO> getByCategory(@PathVariable int categoryNo) {
         return productService.getProductListByCategory(categoryNo);
+    }
+    //판매량 기준 전체상품 조회 
+    @GetMapping("/best")
+    public List<ProductSalesVO> getBestProducts(){
+    	return productsDao.selectBestProducts();
+    }
+    //MD픽 
+    @PatchMapping("/mdpick/{productNo}") // ✅ 기존: /products/{productNo}/md-pick
+    public ResponseEntity<?> updateMdPick(
+            @PathVariable long productNo,
+            @RequestBody Map<String, String> body) {
+        String mdPick = body.get("mdPick"); // 'Y' 또는 'N'
+        productsDao.updateMdPick(productNo, mdPick);
+        return ResponseEntity.ok().build();
     }
 }

@@ -19,4 +19,5 @@ public class ProductListVO {
     private String brand;
     private Integer attachmentNo; // ✅ 꼭 필요함!
     private String imageUrl;
+    private String mdPick; // "Y" 또는 "N"
 }

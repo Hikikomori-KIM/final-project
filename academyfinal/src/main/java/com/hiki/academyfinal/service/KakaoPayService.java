@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -117,12 +118,14 @@ public class KakaoPayService {
 		body.put("cancel_amount", String.valueOf(vo.getCancelAmount()));
 		body.put("cancel_tax_free_amount", "0");
 		
-		HttpEntity entity = new HttpEntity(body, headers);
+		//HttpEntity entity = new HttpEntity(body, headers); 기존 코드
+		HttpEntity<Map<String, String>> entity = new HttpEntity<>(body, headers);//데이터 타입 지정해서 경고 푼 예시
 		
 		return restTemplate.postForObject(uri, entity, KakaoPayCancelResponseVO.class);
 	}
 	
 	// 결제DB에 등록
+	@Transactional
 	public void insertDB(KakaoPayApproveVO approveVO, 
 											KakaoPayReadyVO readyVO,
 											List<KakaoPayPayVO> payList) {
@@ -135,15 +138,21 @@ public class KakaoPayService {
 				.build());
 				
 		// pay_detail 등록
-		for(KakaoPayPayVO payVO : payList) {
-			VolumeDto volumeDto = volumeDao.selectWithProductByVolumeNo(payVO.getVolumeNo());
-			payDao.addPayDetail(PayDetailDto.builder()
-						.payDetailOrigin(payNo) // 구매대표번호
-						.payDetailItem(payVO.getVolumeNo()) // 구매상품번호
-						.payDetailName(volumeDto.getProductName()) // 구매상품명
-						.payDetailPrice(volumeDto.getProductPrice()) // 구매상품가격 (개당)
-						.payDetailQty(payVO.getQty()) // 구매상품개수
-					.build());
+		for (KakaoPayPayVO payVO : payList) {
+		    VolumeDto volumeDto = volumeDao.selectWithProductByVolumeNo(payVO.getVolumeNo());
+		    payDao.addPayDetail(PayDetailDto.builder()
+		            .payDetailOrigin(payNo)                       // 결제 번호
+		            .productNo(volumeDto.getProductNo())          // 상품 번호
+		            .volumeNo(volumeDto.getVolumeNo())            // 용량 번호
+		            .payDetailName(volumeDto.getProductName() + " " + volumeDto.getVolumeMl()) // 상품명 + 용량
+		            .payDetailPrice(volumeDto.getVolumePrice())   // 가격 (용량 기준)
+		            .payDetailQty(payVO.getQty())                 // 수량
+		            .payDetailStatus("Y")                         // 상태 기본값
+		            .build());
+		    
+		    
+		    //재고 차감
+		    volumeDao.decreaseStock(volumeDto.getVolumeNo(), payVO.getQty());
 		}
 
 	}
