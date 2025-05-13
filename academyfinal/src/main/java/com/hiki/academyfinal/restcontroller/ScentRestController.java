@@ -1,6 +1,8 @@
 package com.hiki.academyfinal.restcontroller;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -105,5 +107,16 @@ public class ScentRestController {
 	@GetMapping("/surveyList")
 	public List<ScentListViewDto> surveyList(){
 		return scentListViewDao.scentList();
+	}
+	
+	@GetMapping("/requestItem/{bestType}")
+	public Map<String, Object> response(@PathVariable String bestType) {
+		System.out.println(bestType);
+		ProductDetailViewDto product =scentRecommendationDao.product(bestType);
+		ScentRecommendationDto recommendationDto = scentRecommendationDao.dto(bestType);
+		Map<String,Object> result = new HashMap<>();
+		result.put("product",product);
+		result.put("recommendationDto", recommendationDto);
+		return result;
 	}
 }

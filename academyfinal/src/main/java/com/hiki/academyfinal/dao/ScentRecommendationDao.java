@@ -8,6 +8,7 @@ import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import com.hiki.academyfinal.dto.ProductDetailViewDto;
 import com.hiki.academyfinal.dto.ScentRecommendationDto;
 
 @Repository
@@ -32,5 +33,14 @@ public class ScentRecommendationDao {
 		result.put("scentRecommendationNo", scentRecommendationNo);
 		result.put("scentRecommendationComment", scentRecommendationComment);
 		return sqlSession.update("scentRecommendation.changeComment", result)>0;
+	}
+	
+	public ProductDetailViewDto product(String topScoreType) {
+		 int no = sqlSession.selectOne("scentRecommendation.findProduct",topScoreType);
+		return  sqlSession.selectOne("scentRecommendation.product",no);
+	}
+	
+	public ScentRecommendationDto dto(String topScoreType) {
+		return sqlSession.selectOne("scentRecommendation.finalData",topScoreType);
 	}
 }

@@ -19,5 +19,21 @@
   	update scent_recommendation set scent_recommendation_comment = #{scentRecommendationComment}
   	where scent_recommendation_no =#{scentRecommendationNo}
   </update>
+<!--   상품번호찾기 -->
+  <select id="findProduct"  resultType="int">
+  	select product_no from scent_recommendation where top_score_type=#{topScoreType}
+  </select>
+<!--   zzzzzzzzzzzz프로덕트no가 중복인ㅋㅋ -->
+ <select id="product" resultType="productDetailViewDto">
+  select * from (
+    select * from product_detail_view where product_no = #{productNo}
+  ) where rownum = 1
+</select>
+<!-- 이건 dto반환 -->
+<select id="finalData" resultType="scentRecommendationDto">
+	select * from scent_recommendation where top_score_type=#{topScoreType}
+</select>
+
+
   </mapper>
   
