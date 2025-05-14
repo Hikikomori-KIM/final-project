@@ -10,6 +10,7 @@ import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -24,6 +25,7 @@ import com.hiki.academyfinal.dao.VolumeDao;
 import com.hiki.academyfinal.dao.kakaopay.PayDao;
 import com.hiki.academyfinal.dto.ProductsDto;
 import com.hiki.academyfinal.dto.VolumeDto;
+import com.hiki.academyfinal.dto.kakaopay.PayDto;
 import com.hiki.academyfinal.error.TargetNotFoundException;
 import com.hiki.academyfinal.service.KakaoPayService;
 import com.hiki.academyfinal.service.ProductService;
@@ -31,6 +33,10 @@ import com.hiki.academyfinal.service.TokenService;
 import com.hiki.academyfinal.vo.ClaimVO;
 import com.hiki.academyfinal.vo.kakaopay.KakaoPayApproveResponseVO;
 import com.hiki.academyfinal.vo.kakaopay.KakaoPayApproveVO;
+import com.hiki.academyfinal.vo.kakaopay.KakaoPayCancelResponseVO;
+import com.hiki.academyfinal.vo.kakaopay.KakaoPayCancelVO;
+import com.hiki.academyfinal.vo.kakaopay.KakaoPayOrderResponseVO;
+import com.hiki.academyfinal.vo.kakaopay.KakaoPayOrderVO;
 import com.hiki.academyfinal.vo.kakaopay.KakaoPayPayVO;
 import com.hiki.academyfinal.vo.kakaopay.KakaoPayReadyResponseVO;
 import com.hiki.academyfinal.vo.kakaopay.KakaoPayReadyVO;
@@ -41,7 +47,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @CrossOrigin
 @RestController
-@RequestMapping("/api/purchase")
+@RequestMapping("/api/purchase/pay")
 public class KakaoPayRestController {
 
     @Autowired
@@ -72,7 +78,7 @@ public class KakaoPayRestController {
 	
 	// 구매 요청 시 클라이언트가 {상품번호,수량}을 배열 형태로 전송
 	// - 클래스를 만들어서 받을 수 있도록 준비해야한다
-	@PostMapping("/pay")
+	@PostMapping
 	public KakaoPayReadyResponseVO pay(
 			@RequestBody List<KakaoPayPayVO> payList,
 			@RequestHeader("Frontend-URL") String frontendUrl, 
@@ -123,7 +129,7 @@ public class KakaoPayRestController {
 		return response;
 	}
 	
-	@GetMapping("/pay/success/{partnerOrderId}")
+	@GetMapping("/success/{partnerOrderId}")
 	public void success(@PathVariable String partnerOrderId,
 						@RequestParam("pg_token") String pgToken,
 						HttpServletResponse response) throws URISyntaxException, IOException {
@@ -149,7 +155,7 @@ public class KakaoPayRestController {
 		response.sendRedirect(returnUrl + "/success");
 	}
 	
-	@GetMapping("/pay/cancel/{partnerOrderId}")
+	@GetMapping("/cancel/{partnerOrderId}")
 	public void cancel(@PathVariable String partnerOrderId, 
 			HttpServletResponse response) throws IOException {
 		flashMap.remove(partnerOrderId);
@@ -160,7 +166,7 @@ public class KakaoPayRestController {
 		response.sendRedirect(url+"/cancel");
 	}
 	
-	@GetMapping("/pay/fail/{partnerOrderId}")
+	@GetMapping("/fail/{partnerOrderId}")
 	public void fail(@PathVariable String partnerOrderId,
 			HttpServletResponse response) throws IOException {
 		flashMap.remove(partnerOrderId);
@@ -185,4 +191,56 @@ public class KakaoPayRestController {
 		return payDao.findDeliveryList();
 	}
 	
+	// 구매 내역 조회
+	@GetMapping("/listPay/{usersId}")
+	public List<PayDto> getPurchaseList(@PathVariable String usersId) {
+		return payDao.getPurchaseListByUserId(usersId);
+	}
+	
+	// 구매 상세 조회
+	@GetMapping("/listPay/detail/{payNo}")
+	public Map<String, Object> getPayDetail(@PathVariable long payNo) {
+	    Map<String, Object> result = new HashMap<>();
+	    result.put("payInfo", payDao.selectOne(payNo));
+	    result.put("productList", payDao.selectPayDetailList(payNo));
+	    return result;
+	}
+//	@GetMapping("/listPay/detail/{payNo}")
+//	public KakaoPayOrderResponseVO order(
+//			@PathVariable long payNo,
+//			@RequestHeader("Authorization") String bearerToken) throws URISyntaxException {
+//		ClaimVO claimVO = tokenService.parseBearerToken(bearerToken);
+//		PayDto payDto = payDao.selectOne(payNo);
+//		if(claimVO.getUsersId().equals(payDto.getPayOwner()) == false)
+//			throw new TargetNotFoundException();
+//		return kakaoPayService.order(KakaoPayOrderVO.builder()
+//					.tid(payDto.getPayTid())
+//				.build());
+//	}
+	
+	// 결제 취소하기 (전체취소)
+	@DeleteMapping("/cancelAll/{payNo}")
+	public void cancelAll(
+			@RequestHeader("Authorization") String bearerToken,
+			@PathVariable long payNo) throws URISyntaxException {
+		// 토큰 해석
+		ClaimVO claimVO = tokenService.parseBearerToken(bearerToken);
+		// 상세 조회
+		PayDto payDto = payDao.selectOne(payNo);
+		// 결제 내역이 없을 경우
+		if(payDto == null) throw new TargetNotFoundException();
+		// 본인 확인
+		if(payDto.getPayOwner().equals(claimVO.getUsersId()) == false)
+			throw new TargetNotFoundException();
+		// 카카오페이 취소 요청
+		KakaoPayCancelResponseVO response = kakaoPayService.cancel(
+				KakaoPayCancelVO.builder()
+					.tid(payDto.getPayTid())
+					.cancelAmount(payDto.getPayTotal())
+				.build()
+		);
+		payDao.updatePay(payNo, 0L);
+		payDao.cancelAll(payNo);
+	}
+
 }

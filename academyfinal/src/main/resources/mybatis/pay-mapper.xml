@@ -16,7 +16,7 @@
 		)
 		values(
 			#{payNo}, #{payOwner}, #{payTid},
-			#{payName}, #{payTotal}, #{payRemain}
+			#{payName}, #{payTotal}, #{payTotal}
 		)
 	</insert>
 	
@@ -101,22 +101,12 @@
 		select * from pay where pay_no = #{payNo}
 	</select>
 	
-	<!-- 취소(전체/부분) -->
+	<!-- 취소 -->
 	<update id="cancelAll">
 		update pay_detail 
 		set pay_detail_status = 'N' 
-		where pay_detail_origin = #{payDetailOrigin}
+		where pay_detail_origin = #{payNo}
 	</update>
-	<update id="cancelPart">
-		update pay_detail 
-		set pay_detail_status = 'N' 
-		where pay_detail_no = #{payDetailNo}
-	</update>
-	
-	<!-- 결제상세정보 단일조회 -->
-	<select id="findDetail" resultType="PayDetailDto">
-		select * from pay_detail where pay_detail_no = #{payDetailNo}
-	</select>
 	
 	<!-- 결제잔여금액 수정 -->
 	<update id="updatePay">
@@ -124,6 +114,12 @@
 		set pay_remain = #{payRemain} 
 		where pay_no = #{payNo}
 	</update>
+	
+	<!-- 결제상세정보 단일조회 -->
+	<select id="findDetail" resultType="PayDetailDto">
+		select * from pay_detail where pay_detail_no = #{payDetailNo}
+	</select>
+	
 	
 	<!-- 배송상태 조회 (관리자용) -->
 	<select id="findDeliveryStatus" resultType="String">
@@ -149,7 +145,20 @@
 		group by p.pay_no, p.pay_owner, pd_pay_detail_status
 		order by p.pay_no desc
 	</select>
+
+  <select id="selectListByUserId" resultType="PayDto">
+		select * from pay
+		where pay_owner = #{usersId}
+		order by pay_time desc
+	</select>
 	
+	<!-- 결제 결과 상세 페이지 -->
+	<select id="selectPayDetailList" resultType="PurchaseDetailviewDto">
+		select * from purchase_detail_view
+		where pay_no = #{payNo}
+		and pay_detail_status = 'Y'
+	</select>
+		
 <!-- 	유저구매목록 -->
 	<select id="findUserPay" resultType="payDto">
 		select * from pay where pay_owner =#{patOwner}
@@ -169,8 +178,4 @@
 
 	</select>
 
-
-	
-	
-	
 </mapper>
