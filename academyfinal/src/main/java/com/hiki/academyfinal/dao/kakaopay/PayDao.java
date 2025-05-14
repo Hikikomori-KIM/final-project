@@ -97,4 +97,14 @@ public class PayDao {
 		return sqlSession.selectList("pay.findDeliveryList");
 	}
 	
+	//유저 구매조회
+	public List<PayDto> findUsersPay(String usersId) {
+		return sqlSession.selectList("pay.findUserPay", usersId);
+	}
+	
+	//구매목록디테일조회
+	public List<PayDetailDto> findUsersPayDetail(long payOriginNum) {
+		return sqlSession.selectList("pay.findUsersDetailPay", payOriginNum);
+	}
+	
 }
