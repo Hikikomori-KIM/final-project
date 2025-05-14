@@ -9,7 +9,7 @@
 	<insert id="add">
 		INSERT INTO products (
 		product_no, product_name,
-		product_detail, product_price,
+		product_detail, product_price, 
 		discount_rate, discounted_price,
 		product_created_at,
 		category_no, brand_no, strength,
