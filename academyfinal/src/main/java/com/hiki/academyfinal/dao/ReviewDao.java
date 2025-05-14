@@ -1,6 +1,8 @@
 package com.hiki.academyfinal.dao;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,7 +50,13 @@ public class ReviewDao {
     public boolean adminDeleteReview(long reviewNo) {
         return sqlSession.delete("review.adminDeleteReview", reviewNo) > 0;
     }
-
+    public boolean hasWrittenReview(String usersId,long productNo) {
+    	Map<String,Object> param = new HashMap<>();
+    	param.put("usersId", usersId);
+    	param.put("productNo", productNo);
+    	int count = sqlSession.selectOne("review.hasWrittenReview",param);
+    	return count>0;
+    }
 
 
 }

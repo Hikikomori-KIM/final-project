@@ -158,4 +158,19 @@
 	<select id="findUsersDetailPay"	 resultType="payDetailDto">
 		select * from pay_detail where pay_detail_origin =#{payDetailOrigin}
 	</select>
+	<!-- 결제한 상품 리뷰작성 -->
+	<select id="hasUserPurchasedProduct" resultType="int">
+	  SELECT COUNT(*)
+	  FROM pay p
+	  JOIN pay_detail pd ON p.pay_no = pd.pay_detail_origin
+	  WHERE p.pay_owner = #{usersId}
+	    AND pd.product_no = #{productNo}
+	    AND p.delivery_status = '결제 완료'
+
+	</select>
+
+
+	
+	
+	
 </mapper>
