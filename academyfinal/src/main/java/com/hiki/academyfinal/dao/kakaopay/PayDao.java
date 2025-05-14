@@ -11,6 +11,7 @@ import org.springframework.stereotype.Repository;
 
 import com.hiki.academyfinal.dto.kakaopay.PayDetailDto;
 import com.hiki.academyfinal.dto.kakaopay.PayDto;
+import com.hiki.academyfinal.dto.kakaopay.PurchaseDetailViewDto;
 import com.hiki.academyfinal.vo.kakaopay.PayTotalVO;
 
 @Repository
@@ -68,12 +69,10 @@ public class PayDao {
 	public PayDetailDto selectDetailOne(long payDetailNo) {
 		return sqlSession.selectOne("pay.findDetail", payDetailNo);
 	}
-//	public boolean cancelAll(long payNo) {
-	public boolean cancelAll(long payDetailOrigin) {
-		return sqlSession.update("pay.cancelAll", payDetailOrigin) > 0;
-	}
-	public boolean cancelDetail(long payDetailNo) {
-		return sqlSession.update("pay.cancelPart", payDetailNo) > 0;
+	
+	// 결제 취소
+	public boolean cancelAll(long payNo) {
+		return sqlSession.update("pay.cancelAll", payNo) > 0;
 	}
 	public boolean updatePay(long payNo, long payRemain) {
 		Map<String, Object> params = new HashMap<>();
@@ -97,4 +96,13 @@ public class PayDao {
 		return sqlSession.selectList("pay.findDeliveryList");
 	}
 	
+	// 구매목록 조회 (결제 결과 출력)
+	public List<PayDto> getPurchaseListByUserId(String usersId) {
+		return sqlSession.selectList("pay.selectListByUserId", usersId);
+	}
+	
+	// 구매목록 → 상세사항
+	public List<PurchaseDetailViewDto> selectPayDetailList(long payNo) {
+	    return sqlSession.selectList("pay.selectPayDetailList", payNo);
+	}
 }
