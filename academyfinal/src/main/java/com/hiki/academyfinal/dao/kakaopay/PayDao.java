@@ -106,5 +106,14 @@ public class PayDao {
 	public List<PayDetailDto> findUsersPayDetail(long payOriginNum) {
 		return sqlSession.selectList("pay.findUsersDetailPay", payOriginNum);
 	}
+	//해당 유저가 특정 상품을 구매했는지 확인
+	public boolean hasUserPurchasedProduct(String usersId,long productNo) {
+		Map<String,Object> params = new HashMap<>();
+		params.put("usersId", usersId);
+		params.put("productNo", productNo);
+		int count = sqlSession.selectOne("pay.hasUserPurchasedProduct",params);
+		return count>0;
+	}
+	
 	
 }
