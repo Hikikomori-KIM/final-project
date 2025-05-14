@@ -85,13 +85,14 @@ public class PayDao {
 	public String findDeliveryStatus(long payNo) {
 		return sqlSession.selectOne("pay.findDeliveryStatus", payNo);
 	}
+	
 	public void updateDeliveryStatus(long payNo, String newStatus) {
 		Map<String, Object> params = new HashMap<>();
 		params.put("payNo", payNo);
 		params.put("status", newStatus);
 		sqlSession.update("pay.updateDeliveryStatus", params);
 	}
-	// 주문관리 리스트 불러오기 (관리자용)
+	// 전체 결제 목록 조회(관리자용)
 	public List<Map<String, Object>> findDeliveryList() {
 		return sqlSession.selectList("pay.findDeliveryList");
 	}
@@ -123,4 +124,7 @@ public class PayDao {
 		return count>0;
 	}
 	
+	public List<PayDto> selectAllPayList() {
+		return sqlSession.selectList("pay.selectAll");
+	}
 }
