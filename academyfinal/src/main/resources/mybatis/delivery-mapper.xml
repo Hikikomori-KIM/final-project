@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+  <mapper namespace="delivery">
+<!--   충돌날까봐뺌  배송관리(상품주문관리)-->
+
+<!-- 페이징 + 컬럼키워드 + 날짜별 유저 결제 목록 + 배송리스트 전체조회 
+	날짜는 버튼으로할거라 세분화 컬럼키워드는 통으로받아서 처리-->
+<select id="listAll" resultType="PayDto">
+  SELECT * FROM (
+      SELECT ROWNUM rn, TMP.* FROM (
+        select * from pay 
+        <include refid="where"></include>
+        order by pay_no desc  
+      ) TMP
+    ) 
+    WHERE rn BETWEEN #{start} AND #{end}
+	</select>
+<!-- TRUNC = 오늘 00:00 기준으로 잘라줌  -->
+<sql id="where">
+	<where>
+		<if test="today == true">
+			and pay_time >= trunc(sysdate)
+		</if>
+		<if test="dayOne == true">
+			and pay_time >= trunc(sysdate-1)
+		</if>
+		<if test="week == true">
+			and pay_time >= trunc(sysdate-7)
+		</if>
+		<if test="month == true">
+			and pay_time >= trunc(sysdate, 'MM')
+		</if>
+		<if test="deliveryWait == true">
+			and shipping = '배송준비'
+		</if>
+		<if test="deliveryOn == true">
+			and shipping = '배송중'
+		</if>
+		<if test="deliveryComplet == true">
+			and shipping = '배송완료'
+		</if>
+		<if test="returnProduct == true">
+			and shipping = '반품준비'
+		</if>
+		<if test="returnComplet == true">
+			and shipping = '반품완료'
+		</if>
+         <if test="column != null and keyword != null">
+        	 and instr(${column}, #{keyword}) >0
+        </if>
+   </where>
+</sql>
+
+<!-- 판매금액도한다 조건문 같이공유해서 -->
+<select id="totalPrice" resultType="long">
+	select sum(pay_total) from pay
+	<include refid="where"></include>
+</select>
+
+
+<!-- 버튼 누르면 배송중으로 변경 -->
+<update id="onDelivery">
+	update pay set SHIPPING = '배송중' where pay_no =#{payNo}
+</update>
+
+<!-- 배송취소요청오면 배송중인지 아닌지 확인하기 -->
+<select id="findShipping" resultType="string">
+	select shipping from pay where pay_no =#{payNo}
+</select>
+<!-- 혹시모르니까 유저한명꺼 전체조회 정희매퍼에 있겠지만 그냥씀 -->
+<select id="userPayList" resultType ="payDto">
+	select * from pay where users_id = #{usersId}
+</select>
+
+<!-- 짜치지만버튼 누르면 배송완료 -->
+<update id="finish">
+	update pay set shipping = '배송완료' where pay_no =#{payNo}
+</update>
+
+<!-- 배송취소할때 이거도같이불러줘야함 반품준비로변경 -->
+<update id="returnProduct">
+	update pay set shipping = '반품준비' where pay_no =#{payNo}
+</update>
+
+<!-- 버튼누르면 반품완료 -->
+<update id="returnComplet">
+	update pay set shipping = '반품완료' where pay_no =#{payNo}
+</update>
+
+  </mapper>
