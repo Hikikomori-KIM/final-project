@@ -17,4 +17,5 @@ public class PayDto {
 	private long payRemain;
 	private Timestamp payTime;
 	private String deliveryStatus;
+	private String shipping;
 }
