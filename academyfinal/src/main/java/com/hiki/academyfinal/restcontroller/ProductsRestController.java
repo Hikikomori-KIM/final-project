@@ -71,7 +71,7 @@ public class ProductsRestController {
     }
 
     // ✅ 상품 단일 조회
-    @GetMapping("/{productsNo}")
+    @GetMapping("/{productsNo:[0-9]+}")
     public ProductsDto find(@PathVariable Integer productsNo) {
         ProductsDto productsDto = productsDao.selectOne(productsNo);
         if (productsDto == null) throw new TargetNotFoundException();
@@ -129,5 +129,15 @@ public class ProductsRestController {
         String mdPick = body.get("mdPick"); // 'Y' 또는 'N'
         productsDao.updateMdPick(productNo, mdPick);
         return ResponseEntity.ok().build();
+    }
+    //등록일 기준 최신상품 조회
+    @GetMapping("/new")
+    public List<ProductListVO> getNewProducts(){
+    	return productService.getNewProducts();
+    }
+    //할인기준 상품 조회
+    @GetMapping("/specialprice")
+    public List<ProductListVO> getSpecialPriceProducts(){
+    	return productService.getSpecialPriceProduct();
     }
 }

@@ -221,4 +221,30 @@ public class ProductService {
 		}
 		return list;
 	}
+	
+	//최신상품 조회
+	public List<ProductListVO> getNewProducts(){
+		List<ProductListVO> list = productsDao.selectNewProducts();
+		for(ProductListVO productListVO : list) {
+			if(productListVO.getAttachmentNo() != null) {
+				productListVO.setImageUrl("http://localhost:8080/api/attachment/"+productListVO.getAttachmentNo());
+			} else {
+				productListVO.setImageUrl("/no-image.png");
+			}
+		}
+		return list;
+	}
+	//할인상품 조회
+	public List<ProductListVO> getSpecialPriceProduct(){
+		List<ProductListVO> list = productsDao.selectSpecialPriceProducts();
+		for(ProductListVO productListVO : list ) {
+			if(productListVO.getAttachmentNo() != null) {
+				productListVO.setImageUrl("http://localhost:8080/api/attachment/"+productListVO.getAttachmentNo());
+			}else {
+				productListVO.setImageUrl("/no-image.png");
+			}
+		}
+		return list;
+	}
+	
 }
