@@ -241,6 +241,7 @@ public class KakaoPayRestController {
 		);
 		payDao.updatePay(payNo, 0L);
 		payDao.cancelAll(payNo);
+		payDao.updateDeliveryStatus(payNo, "결제 취소");
 	}
 
 }
