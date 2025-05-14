@@ -1,5 +1,7 @@
 package com.hiki.academyfinal.vo;
 
+import java.sql.Timestamp;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -20,4 +22,6 @@ public class ProductListVO {
     private Integer attachmentNo; // ✅ 꼭 필요함!
     private String imageUrl;
     private String mdPick; // "Y" 또는 "N"
+    
+    private Timestamp productCreatedAt;
 }
