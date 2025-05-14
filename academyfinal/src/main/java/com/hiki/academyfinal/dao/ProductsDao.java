@@ -76,7 +76,7 @@ public class ProductsDao {
 	    param.put("mdPick", mdPick);
 	    sqlSession.update("products.updateMdPick", param);
 	}
- 
+
 	
 	
 //	송시우가필요한데이터 검색&페이징
@@ -99,5 +99,6 @@ public class ProductsDao {
 	public List<ProductListVO> selectSpecialPriceProducts(){
 		return sqlSession.selectList("products.getSpecialPriceProducts");
 	}
+
 
 }
