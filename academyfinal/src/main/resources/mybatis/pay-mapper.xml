@@ -150,4 +150,12 @@
 		order by p.pay_no desc
 	</select>
 	
+<!-- 	유저구매목록 -->
+	<select id="findUserPay" resultType="payDto">
+		select * from pay where pay_owner =#{patOwner}
+	</select>
+<!-- 	구매목록의상세  -->
+	<select id="findUsersDetailPay"	 resultType="payDetailDto">
+		select * from pay_detail where pay_detail_origin =#{payDetailOrigin}
+	</select>
 </mapper>
