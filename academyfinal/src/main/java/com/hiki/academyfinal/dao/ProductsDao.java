@@ -8,6 +8,8 @@ import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import com.hiki.academyfinal.dto.ProductsDto;
+import com.hiki.academyfinal.vo.MachingPageVO;
+import com.hiki.academyfinal.vo.MachingResponseVO;
 import com.hiki.academyfinal.vo.ProductListVO;
 import com.hiki.academyfinal.vo.ProductSalesVO;
 
@@ -74,6 +76,21 @@ public class ProductsDao {
 	    param.put("mdPick", mdPick);
 	    sqlSession.update("products.updateMdPick", param);
 	}
+
+	
+	
+//	송시우가필요한데이터 검색&페이징
+	public List<MachingResponseVO> productList(MachingPageVO vo){
+		List<MachingResponseVO> list= sqlSession.selectList("products.listTopNQuery",vo);
+//		System.out.println("vo"+list);
+		return list;
+	}
+	//카운트
+	public int count() {
+		int count = sqlSession.selectOne("products.count");
+		return count;
+	}
+
 	//최신상품 페이지
 	public List<ProductListVO> selectNewProducts(){
 		return sqlSession.selectList("products.getNewProducts");
@@ -83,4 +100,5 @@ public class ProductsDao {
 		return sqlSession.selectList("products.getSpecialPriceProducts");
 	}
 	
+
 }

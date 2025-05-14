@@ -175,4 +175,28 @@
 
 
 
+<!-- 송시우가 필요한데이터 -->
+<select id="listTopNQuery" resultType="machingResponseVO">
+	SELECT * FROM (
+      SELECT ROWNUM rn, TMP.* FROM (
+        SELECT * from products
+        <include refid="where"></include>
+        order by product_no asc
+      ) TMP
+    ) 
+    WHERE rn BETWEEN #{start} AND #{end}
+</select>
+
+<sql id="where">
+	<where>
+		<if test="productName != null and productName != ''">
+			and instr(product_name, #{productName}) >0
+		</if>
+	</where>
+</sql>
+
+<select id="count" resultType="int">
+	select count(*) from products
+</select>
+
 </mapper>
