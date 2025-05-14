@@ -74,4 +74,13 @@ public class ProductsDao {
 	    param.put("mdPick", mdPick);
 	    sqlSession.update("products.updateMdPick", param);
 	}
+	//최신상품 페이지
+	public List<ProductListVO> selectNewProducts(){
+		return sqlSession.selectList("products.getNewProducts");
+	}
+	//할인상품 페이지
+	public List<ProductListVO> selectSpecialPriceProducts(){
+		return sqlSession.selectList("products.getSpecialPriceProducts");
+	}
+	
 }

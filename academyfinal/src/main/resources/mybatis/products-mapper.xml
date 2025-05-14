@@ -35,7 +35,8 @@
 		p.strength AS strength,
 		p.md_pick AS mdPick, <!-- ✅ 추가 -->
 		b.brand_name AS brand,
-		a.attachment_no AS attachmentNo
+		a.attachment_no AS attachmentNo,
+		p.product_created_at AS productCreatedAt 
 		FROM products p
 		LEFT JOIN brands b ON p.brand_no = b.brand_no
 		LEFT JOIN product_img pi
@@ -134,6 +135,44 @@
 		SET md_pick = #{mdPick}
 		WHERE product_no = #{productNo}
 	</update>
+	<!-- ✅ 이 쿼리가 반드시 있어야 함 -->
+	<select id="getNewProducts" resultType="ProductListVO">
+		SELECT
+			p.product_no AS productNo,
+			p.product_name AS productName,
+			p.product_price AS productPrice,
+			p.discount_rate AS discountRate,
+			p.discounted_price AS discountedPrice,
+			p.strength AS strength,
+			p.md_pick AS mdPick,
+			b.brand_name AS brand,
+			a.attachment_no AS attachmentNo,
+			p.product_created_at AS productCreatedAt
+		FROM products p
+		LEFT JOIN brands b ON p.brand_no = b.brand_no
+		LEFT JOIN product_img pi ON p.product_no = pi.product_no AND pi.image_type = 'main'
+		LEFT JOIN attachment a ON pi.attachment_no = a.attachment_no
+		ORDER BY p.product_created_at DESC
+	</select>
+	<select id="getSpecialPriceProducts" resultType="ProductListVO">
+		SELECT
+			p.product_no AS productNo,
+			p.product_name AS productName,
+			p.product_price AS productPrice,
+			p.discount_rate AS discountRate,
+			p.discounted_price AS discountedPrice,
+			p.strength AS strength,
+			p.md_pick AS mdPick,
+			b.brand_name AS brand,
+			a.attachment_no AS attachmentNo,
+			p.product_created_at AS productCreatedAt
+		FROM products p
+		LEFT JOIN brands b ON p.brand_no = b.brand_no
+		LEFT JOIN product_img pi ON p.product_no = pi.product_no AND pi.image_type = 'main'
+		LEFT JOIN attachment a ON pi.attachment_no = a.attachment_no
+		ORDER BY p.discount_rate DESC
+	</select>
+
 
 
 </mapper>
