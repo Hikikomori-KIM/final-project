@@ -99,6 +99,6 @@ public class ProductsDao {
 	public List<ProductListVO> selectSpecialPriceProducts(){
 		return sqlSession.selectList("products.getSpecialPriceProducts");
 	}
-	
+
 
 }
