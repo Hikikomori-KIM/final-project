@@ -145,8 +145,8 @@
 		group by p.pay_no, p.pay_owner, pd_pay_detail_status
 		order by p.pay_no desc
 	</select>
-	
-	<select id="selectListByUserId" resultType="PayDto">
+
+  <select id="selectListByUserId" resultType="PayDto">
 		select * from pay
 		where pay_owner = #{usersId}
 		order by pay_time desc
@@ -159,4 +159,23 @@
 		and pay_detail_status = 'Y'
 	</select>
 		
+<!-- 	유저구매목록 -->
+	<select id="findUserPay" resultType="payDto">
+		select * from pay where pay_owner =#{patOwner}
+	</select>
+<!-- 	구매목록의상세  -->
+	<select id="findUsersDetailPay"	 resultType="payDetailDto">
+		select * from pay_detail where pay_detail_origin =#{payDetailOrigin}
+	</select>
+	<!-- 결제한 상품 리뷰작성 -->
+	<select id="hasUserPurchasedProduct" resultType="int">
+	  SELECT COUNT(*)
+	  FROM pay p
+	  JOIN pay_detail pd ON p.pay_no = pd.pay_detail_origin
+	  WHERE p.pay_owner = #{usersId}
+	    AND pd.product_no = #{productNo}
+	    AND p.delivery_status = '결제 완료'
+
+	</select>
+
 </mapper>

@@ -62,20 +62,23 @@
   </select>
   
   <sql id="where">
-  	<where>
-  		<if test="usersId != null">
-  			and users_id = #{usersId}
-  		</if>
-  		<if test="usersName != null">
-  			and users_name=#{usersName}
-  		</if>
-  		<if test="usersEmail != null">
-  			and users_email =#{usersEmail}
-  		</if>
-  		<if test="usersProvider != null">
-  			and users_provider =#{usersProvider}
-  		</if>
-  	</where>
+  	 <where>
+    <if test="usersId != null">
+      AND INSTR(users_id, #{usersId}) > 0
+    </if>
+
+    <if test="usersName != null">
+      AND INSTR(users_name, #{usersName}) > 0
+    </if>
+
+    <if test="usersEmail != null">
+      AND INSTR(users_email, #{usersEmail}) > 0
+    </if>
+
+    <if test="usersProvider != null">
+      AND users_provider=#{usersProvider}
+    </if>
+  </where>
   </sql>
   
     <select id="count" resultType="int">

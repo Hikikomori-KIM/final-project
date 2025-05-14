@@ -78,6 +78,12 @@
 		DELETE FROM reviews WHERE review_no = #{reviewNo};
 		END;
 	</delete>
+	<select id="hasWrittenReview" resultType="int">
+		select count(*)
+		from reviews
+		where users_id = #{usersId}
+			and product_no = #{productNo}
+	</select>
 
 
 </mapper>
