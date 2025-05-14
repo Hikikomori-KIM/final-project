@@ -13,4 +13,28 @@
 <select id="selectList" resultType="productDetailViewDto">
 	select * from product_detail_view
 </select>
+
+<!-- 프로덕트 탑앤쿼리 & 검색기능(이름만) 추가 -->
+<select id="listTopNQuery" resultType="machingResponseVO">
+	SELECT * FROM (
+      SELECT ROWNUM rn, TMP.* FROM (
+        SELECT * from product_detail_view
+        <include refid="where"></include>
+        order by product_no asc
+      ) TMP
+    ) 
+    WHERE rn BETWEEN #{start} AND #{end}
+</select>
+
+<sql id="where">
+	<where>
+		<if test="productName != null and productName != ''">
+			and instr(product_name, #{productName}) >0
+		</if>
+	</where>
+</sql>
+
+<select id="count" resultType="int">
+	select count(*) from product_detail_view
+</select>
   </mapper>

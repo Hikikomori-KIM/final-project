@@ -1,5 +1,6 @@
 package com.hiki.academyfinal.restcontroller;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -18,12 +19,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.hiki.academyfinal.dao.ProductDetailViewDao;
+import com.hiki.academyfinal.dao.ProductsDao;
 import com.hiki.academyfinal.dao.ScentListViewDao;
 import com.hiki.academyfinal.dao.ScentRecommendationDao;
 import com.hiki.academyfinal.dto.ProductDetailViewDto;
 import com.hiki.academyfinal.dto.ScentListViewDto;
 import com.hiki.academyfinal.dto.ScentRecommendationDto;
 import com.hiki.academyfinal.service.SurveyService;
+import com.hiki.academyfinal.vo.MachingPageVO;
+import com.hiki.academyfinal.vo.MachingResponseVO;
 import com.hiki.academyfinal.vo.RequestMakeSurveyVO;
 
 
@@ -43,6 +47,9 @@ public class ScentRestController {
 	
 	@Autowired
 	private ProductDetailViewDao productDetailViewDao;
+	
+	@Autowired
+	private ProductsDao productsDao;
 	
 //	@PostMapping("/make")
 //	public  ResponseEntity<String> scentSuvAdd(@RequestBody RequestMakeSurveyVO requestMakeSurveyVO) {
@@ -83,10 +90,17 @@ public class ScentRestController {
 	public List<ScentRecommendationDto> list(){
 		return scentRecommendationDao.list();
 	} 
-	//매칭 프로덕트리스트 보여주기(탑앤쿼리와 검색은 시간나면추가)이게ㅐ중요한게아님 유저가 선택하는거까지 가는게중요
-	@GetMapping("/productList")
-	public List<ProductDetailViewDto> productList(){
-		return productDetailViewDao.productList();
+	//매칭 프로덕트리스트 보여주기+탑앤쿼리 네임서치
+	@PostMapping("/productList")
+	public Map<String, Object> productList(@RequestBody MachingPageVO machingPageVO ){
+	
+		Map<String,Object> result = new HashMap<>();
+		List<MachingResponseVO> list = productsDao.productList(machingPageVO);
+		int count = productsDao.count();
+		result.put("list", list);
+		result.put("count", count);
+
+	    return result;
 	}
 	
 	//매칭 프로덕트 변경 아 실수했네 여기서하면안되는데..
