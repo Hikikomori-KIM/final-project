@@ -12,6 +12,8 @@ import org.springframework.stereotype.Repository;
 import com.hiki.academyfinal.dto.kakaopay.PayDetailDto;
 import com.hiki.academyfinal.dto.kakaopay.PayDto;
 import com.hiki.academyfinal.dto.kakaopay.PurchaseDetailViewDto;
+import com.hiki.academyfinal.vo.DeliveryRequestVO;
+import com.hiki.academyfinal.vo.DeliveryResponseVO;
 import com.hiki.academyfinal.vo.kakaopay.PayTotalVO;
 
 @Repository
@@ -139,6 +141,48 @@ public class PayDao {
 
 	public void cancelPayStatusByTid(String payTid) {
 	    sqlSession.update("pay.cancelPayStatusByTid", payTid);
+	}
+	
+	//정정히Dao침투하기
+	//모든 유저의 구매목록 + search+ 판매까지 
+	public DeliveryResponseVO payAllList(DeliveryRequestVO deliveryRequestVO){
+		List<PayDto> list = sqlSession.selectList("delivery.listAll",deliveryRequestVO);
+		Long totalPrice = sqlSession.selectOne("delivery.totalPrice", deliveryRequestVO);
+		int count = sqlSession.selectOne("delivery.count", deliveryRequestVO);
+		DeliveryResponseVO deliveryResponseVO = new DeliveryResponseVO();
+		deliveryResponseVO.setList(list);
+		deliveryResponseVO.setTotalPrice(totalPrice);
+		deliveryResponseVO.setCount(count);
+		return deliveryResponseVO;
+	}
+	
+	
+	//배송중으로변경
+	public boolean shippingUpdate(long payNo){
+		return sqlSession.update("delivery.onDelivery",payNo) >0;
+	}
+	//배송완료로 변경
+	public boolean complete(long payNo){
+		return sqlSession.update("delivery.finish",payNo) >0;
+	}
+	
+	//중요 배송중인지아닌지 판별해야함 여기서 그냥 배송중이면 true 아니면 false쳐버림
+	public boolean findShipping(long payNo){
+		String ddd = sqlSession.selectOne("delivery.findShipping",payNo);
+		if(ddd.equals("배송중")) {
+			return true;
+		}
+		return false;
+	}
+	
+	//반품요청중으로 변경
+	public boolean returnProduct(long payNo){
+		return sqlSession.update("delivery.returnProduct",payNo) >0 ; 
+	}
+	
+	//반품완료로 변경
+	public boolean returnComplete(long payNo){
+		return sqlSession.update("delivery.returnComplete",payNo) >0;
 	}
 
 	

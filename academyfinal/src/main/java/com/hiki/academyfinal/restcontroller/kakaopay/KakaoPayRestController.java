@@ -10,9 +10,11 @@ import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -33,12 +35,12 @@ import com.hiki.academyfinal.service.KakaoPayService;
 import com.hiki.academyfinal.service.ProductService;
 import com.hiki.academyfinal.service.TokenService;
 import com.hiki.academyfinal.vo.ClaimVO;
+import com.hiki.academyfinal.vo.DeliveryRequestVO;
+import com.hiki.academyfinal.vo.DeliveryResponseVO;
 import com.hiki.academyfinal.vo.kakaopay.KakaoPayApproveResponseVO;
 import com.hiki.academyfinal.vo.kakaopay.KakaoPayApproveVO;
 import com.hiki.academyfinal.vo.kakaopay.KakaoPayCancelResponseVO;
 import com.hiki.academyfinal.vo.kakaopay.KakaoPayCancelVO;
-import com.hiki.academyfinal.vo.kakaopay.KakaoPayOrderResponseVO;
-import com.hiki.academyfinal.vo.kakaopay.KakaoPayOrderVO;
 import com.hiki.academyfinal.vo.kakaopay.KakaoPayPayVO;
 import com.hiki.academyfinal.vo.kakaopay.KakaoPayReadyResponseVO;
 import com.hiki.academyfinal.vo.kakaopay.KakaoPayReadyVO;
@@ -264,6 +266,33 @@ public class KakaoPayRestController {
 	    reviewDao.deleteReviewsByUserAndProductList(claimVO.getUsersId(), refundedProductNos);
 	}
 
+	//전체결제관리 ㅇㅇㅇㅇㅇㅇㅇㅇ
+	@PostMapping("/total")
+	public DeliveryResponseVO totalList(@RequestBody DeliveryRequestVO deliveryRequestVO) {
+		return payDao.payAllList(deliveryRequestVO);
+	}
+	
+	//배송상태관리 
+	//배송중
+	@PatchMapping("/onDelivery")
+	public ResponseEntity<String> shippingUpdate(@RequestBody long payNo){
+		payDao.shippingUpdate(payNo);
+	return ResponseEntity.ok("배송중변경완료");
+	}
+	
+	//배송완료로변경
+	@PatchMapping("/completeDelivery")
+	public ResponseEntity<String> shippingComplete(@RequestBody long payNo){
+	payDao.complete(payNo);
+	return ResponseEntity.ok("배송완료로 변경완료");
+	}
+	
+	//반품완료
+	@PatchMapping("/returnComplete")
+	public ResponseEntity<String> returnComplete(@RequestBody long payNo){
+		payDao.returnComplete(payNo);
+	return ResponseEntity.ok("반품완료로 변경완료");
+	}
 
-
+	
 }

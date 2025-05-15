@@ -15,7 +15,7 @@ public class PurchaseDetailViewDto {
 	private long payTotal; // 총 가격
 	private Timestamp payTime; // 주문일자
 	private String deliveryStatus; // 결제 상태
-	private String shipping; // 배송 진행 상태
+	private String shipping; // 배송진행 상태
 	
 	// payDetailDto
 	private long payDetailOrigin; // payDetailDto에서의 주문번호(=payNo)
