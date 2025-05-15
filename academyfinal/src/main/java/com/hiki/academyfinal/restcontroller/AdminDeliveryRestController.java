@@ -51,7 +51,7 @@ public class AdminDeliveryRestController {
 	public void adminCancelPay(@PathVariable long payNo) throws URISyntaxException {
 	    payDao.cancelAll(payNo); //status = n
 	    payDao.returnProduct(payNo); // shipping = '반품준비'
-	    //tid 필요하고 결제금액 필요
+	    //tid 필요하고 결제금액 필요 
 	    PayDto payDto = payDao.findDto(payNo);
 	    KakaoPayCancelVO vo = KakaoPayCancelVO.builder()
 	    	    .tid(payDto.getPayTid())
