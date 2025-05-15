@@ -108,6 +108,7 @@ public class PayDao {
 	public List<PurchaseDetailViewDto> selectPayDetailList(long payNo) {
 	    return sqlSession.selectList("pay.selectPayDetailList", payNo);
 	}
+	
 	//유저 구매조회
 	public List<PayDto> findUsersPay(String usersId) {
 		return sqlSession.selectList("pay.findUserPay", usersId);
@@ -184,6 +185,14 @@ public class PayDao {
 	public boolean returnComplete(long payNo){
 		return sqlSession.update("delivery.returnComplete",payNo) >0;
 	}
+	
+	public boolean updateShippingStatus(long payNo, String newStatus) {
+	    Map<String, Object> params = new HashMap<>();
+	    params.put("payNo", payNo);
+	    params.put("newStatus", newStatus);
+	    return sqlSession.update("pay.updateShippingStatus", params) > 0;
+	}
+
 
 	
 }

@@ -47,10 +47,10 @@
 	<select id="listPay" resultType="PayDto">
 		select * from pay order by pay_no desc
 	</select>
-	<select id="listPayDetail" resultType="PayDetailDto">
-		select * from pay_detail
-		where pay_detail_origin = #{payDetailOrigin}
-		order by pay_detail_no asc
+	<select id="selectPayDetailList" resultType="PurchaseDetailViewDto">
+		select * from purchase_detail_view
+		where pay_detail_origin = #{payNo}
+		order by pay_no asc
 	</select>
 	
 	<!-- 
@@ -155,13 +155,6 @@
 		where pay_owner = #{usersId}
 		order by pay_time desc
 	</select>
-	
-	<!-- 결제 결과 상세 페이지 -->
-	<select id="selectPayDetailList" resultType="PurchaseDetailviewDto">
-		select * from purchase_detail_view
-		where pay_no = #{payNo}
-		and pay_detail_status = 'Y'
-	</select>
 		
 <!-- 	유저구매목록 -->
 	<select id="findUserPay" resultType="PayDto">
@@ -185,7 +178,13 @@
 		select * from pay
 		order by pay_time desc
 	</select>
-	
+
+	<update id="updateShippingStatus">
+	  UPDATE pay
+	  SET delivery_status = #{newStatus}
+	  WHERE pay_no = #{payNo}
+	</update>
+
 	<!-- payNo로 환불된 상품 찾기  -->
 	<select id="findRefundedProductNoByPayNo" resultType="java.lang.Long">
 		select product_no from pay_detail

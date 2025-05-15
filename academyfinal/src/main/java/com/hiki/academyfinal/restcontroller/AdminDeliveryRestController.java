@@ -5,10 +5,14 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -43,5 +47,16 @@ public class AdminDeliveryRestController {
 	public void adminCancelPay(@PathVariable long payNo) {
 	    payDao.cancelAll(payNo);
 	}
+	
+	@PatchMapping("/shipping/{payNo}")
+	public ResponseEntity<?> updateShippingStatus(
+	    @PathVariable long payNo,
+	    @RequestBody Map<String, String> body) {
+	    String newStatus = body.get("newStatus");
+	    boolean result = payDao.updateShippingStatus(payNo, newStatus);
+	    return result ? ResponseEntity.ok().build()
+	                  : ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+	}
+
 }
 
