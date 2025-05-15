@@ -131,6 +131,18 @@ public class PayDao {
 		return sqlSession.selectList("pay.selectAll");
 	}
 	
+	//payNo에서 환불된 상품 찾기 
+	public List<Long> findRefundedProductNoByPayNo(long payNo){
+		return sqlSession.selectList("pay.findRefundedProductNoByPayNo",payNo);
+	}
+	
+	public void cancelByTid(String payTid) {
+	    sqlSession.update("pay.cancelByTid", payTid);
+	}
+
+	public void cancelPayStatusByTid(String payTid) {
+	    sqlSession.update("pay.cancelPayStatusByTid", payTid);
+	}
 	
 	//정정히Dao침투하기
 	//모든 유저의 구매목록 + search+ 판매까지 

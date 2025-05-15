@@ -109,20 +109,26 @@ public class KakaoPayService {
 		return restTemplate.postForObject(uri, entity, KakaoPayOrderResponseVO.class);
 	}
 	// 결제 취소(cancel)
+	@Transactional
 	public KakaoPayCancelResponseVO cancel(KakaoPayCancelVO vo) throws URISyntaxException {
-		URI uri = new URI("https://open-api.kakaopay.com/online/v1/payment/cancel");
-		
-		Map<String, String> body = new HashMap<>();
-		body.put("cid", kakaoPayProperties.getCid());
-		body.put("tid", vo.getTid());
-		body.put("cancel_amount", String.valueOf(vo.getCancelAmount()));
-		body.put("cancel_tax_free_amount", "0");
-		
-		//HttpEntity entity = new HttpEntity(body, headers); 기존 코드
-		HttpEntity<Map<String, String>> entity = new HttpEntity<>(body, headers);//데이터 타입 지정해서 경고 푼 예시
-		
-		return restTemplate.postForObject(uri, entity, KakaoPayCancelResponseVO.class);
+	    URI uri = new URI("https://open-api.kakaopay.com/online/v1/payment/cancel");
+
+	    Map<String, String> body = new HashMap<>();
+	    body.put("cid", kakaoPayProperties.getCid());
+	    body.put("tid", vo.getTid());
+	    body.put("cancel_amount", String.valueOf(vo.getCancelAmount()));
+	    body.put("cancel_tax_free_amount", "0");
+
+	    HttpEntity<Map<String, String>> entity = new HttpEntity<>(body, headers);
+	    KakaoPayCancelResponseVO response = restTemplate.postForObject(uri, entity, KakaoPayCancelResponseVO.class);
+
+	    // ✅ DB 상태 반영
+	    payDao.cancelByTid(vo.getTid());             // pay_detail 상태값 N 처리
+	    payDao.cancelPayStatusByTid(vo.getTid());    // pay 테이블 상태, 잔액 처리
+
+	    return response;
 	}
+
 	
 	// 결제DB에 등록
 	@Transactional
@@ -135,6 +141,8 @@ public class KakaoPayService {
 					.payTid(approveVO.getTid()) // 거래번호
 					.payName(readyVO.getProductName()) // 구매상품명
 					.payTotal(readyVO.getTotalAmount()) // 구매금액
+					.paymentMethod("KakaoPay")                        // ✅ 결제수단 명시 (CHECK 제약조건에 맞게)
+			        .payCash("입금확인")                                     // ✅ 현금영수증 여부 (임시로 'N')
 				.build());
 				
 		// pay_detail 등록
