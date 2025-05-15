@@ -181,7 +181,7 @@
 
 	<update id="updateShippingStatus">
 	  UPDATE pay
-	  SET delivery_status = #{newStatus}
+	  SET shipping = #{newStatus}
 	  WHERE pay_no = #{payNo}
 	</update>
 
