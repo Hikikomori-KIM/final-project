@@ -31,12 +31,12 @@ import com.hiki.academyfinal.service.KakaoPayService;
 import com.hiki.academyfinal.service.ProductService;
 import com.hiki.academyfinal.service.TokenService;
 import com.hiki.academyfinal.vo.ClaimVO;
+import com.hiki.academyfinal.vo.DeliveryRequestVO;
+import com.hiki.academyfinal.vo.DeliveryResponseVO;
 import com.hiki.academyfinal.vo.kakaopay.KakaoPayApproveResponseVO;
 import com.hiki.academyfinal.vo.kakaopay.KakaoPayApproveVO;
 import com.hiki.academyfinal.vo.kakaopay.KakaoPayCancelResponseVO;
 import com.hiki.academyfinal.vo.kakaopay.KakaoPayCancelVO;
-import com.hiki.academyfinal.vo.kakaopay.KakaoPayOrderResponseVO;
-import com.hiki.academyfinal.vo.kakaopay.KakaoPayOrderVO;
 import com.hiki.academyfinal.vo.kakaopay.KakaoPayPayVO;
 import com.hiki.academyfinal.vo.kakaopay.KakaoPayReadyResponseVO;
 import com.hiki.academyfinal.vo.kakaopay.KakaoPayReadyVO;
@@ -245,4 +245,11 @@ public class KakaoPayRestController {
 	}
 
 
+	
+	
+	//전체결제관리 ㅇㅇㅇㅇㅇㅇㅇㅇ
+	@PostMapping("/total")
+	public DeliveryResponseVO totalList(@RequestBody DeliveryRequestVO deliveryRequestVO) {
+		return payDao.payAllList(deliveryRequestVO);
+	}
 }

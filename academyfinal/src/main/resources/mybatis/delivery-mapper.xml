@@ -40,13 +40,13 @@
 		<if test="deliveryOn == true">
 			and shipping = '배송중'
 		</if>
-		<if test="deliveryComplet == true">
+		<if test="deliveryComplete == true">
 			and shipping = '배송완료'
 		</if>
 		<if test="returnProduct == true">
 			and shipping = '반품준비'
 		</if>
-		<if test="returnComplet == true">
+		<if test="returnComplete == true">
 			and shipping = '반품완료'
 		</if>
          <if test="column != null and keyword != null">
@@ -56,8 +56,8 @@
 </sql>
 
 <!-- 판매금액도한다 조건문 같이공유해서 -->
-<select id="totalPrice" resultType="long">
-	select sum(pay_total) from pay
+<select id="totalPrice" resultType="Long">
+	select sum(pay_total)AS total_price from pay
 	<include refid="where"></include>
 </select>
 
@@ -91,4 +91,9 @@
 	update pay set shipping = '반품완료' where pay_no =#{payNo}
 </update>
 
+<!-- 카운트 -->
+<select id="count" resultType="int">
+	select count(*) from PAY
+	<include refid="where"></include>
+</select>
   </mapper>
