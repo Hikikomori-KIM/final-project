@@ -9,6 +9,7 @@ import java.util.Map;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -23,6 +24,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.hiki.academyfinal.dao.ProductsDao;
+import com.hiki.academyfinal.dao.ReviewDao;
 import com.hiki.academyfinal.dao.VolumeDao;
 import com.hiki.academyfinal.dao.kakaopay.PayDao;
 import com.hiki.academyfinal.dto.ProductsDto;
@@ -62,6 +64,8 @@ public class KakaoPayRestController {
 	private KakaoPayService kakaoPayService;
 	@Autowired
 	private TokenService tokenService;
+	@Autowired
+	private ReviewDao reviewDao;
 	
 	// Flash value를 저장하기 위한 저장소
 	private Map<String, KakaoPayApproveVO> flashMap = Collections.synchronizedMap(new HashMap<>()); // thread-safe
@@ -221,34 +225,47 @@ public class KakaoPayRestController {
 //	}
 	
 	// 결제 취소하기 (전체취소)
+	@Transactional
 	@DeleteMapping("/cancelAll/{payNo}")
 	public void cancelAll(
-			@RequestHeader("Authorization") String bearerToken,
-			@PathVariable long payNo) throws URISyntaxException {
-		// 토큰 해석
-		ClaimVO claimVO = tokenService.parseBearerToken(bearerToken);
-		// 상세 조회
-		PayDto payDto = payDao.selectOne(payNo);
-		// 결제 내역이 없을 경우
-		if(payDto == null) throw new TargetNotFoundException();
-		// 본인 확인
-		if(payDto.getPayOwner().equals(claimVO.getUsersId()) == false)
-			throw new TargetNotFoundException();
-		// 카카오페이 취소 요청
-		KakaoPayCancelResponseVO response = kakaoPayService.cancel(
-				KakaoPayCancelVO.builder()
-					.tid(payDto.getPayTid())
-					.cancelAmount(payDto.getPayTotal())
-				.build()
-		);
-		payDao.updatePay(payNo, 0L);
-		payDao.cancelAll(payNo);
-		payDao.updateDeliveryStatus(payNo, "결제 취소");
+	        @RequestHeader("Authorization") String bearerToken,
+	        @PathVariable long payNo) throws URISyntaxException {
+	    
+	    // 토큰 해석
+	    ClaimVO claimVO = tokenService.parseBearerToken(bearerToken);
+
+	    // 결제 정보 조회
+	    PayDto payDto = payDao.selectOne(payNo);
+	    if (payDto == null) throw new TargetNotFoundException();
+
+	    // 본인 확인
+	    if (!payDto.getPayOwner().equals(claimVO.getUsersId())) {
+	        throw new TargetNotFoundException();
+	    }
+
+	    // ✅ 이미 취소된 경우 방지
+	    if (payDto.getPayRemain() == 0L || "결제 취소".equals(payDto.getDeliveryStatus())) {
+	        throw new IllegalStateException("이미 취소된 결제입니다.");
+	    }
+
+	    // ✅ 결제 취소 요청 (잔여 금액 기준)
+	    KakaoPayCancelResponseVO response = kakaoPayService.cancel(
+	            KakaoPayCancelVO.builder()
+	                    .tid(payDto.getPayTid())
+	                    .cancelAmount(payDto.getPayRemain()) // ⭐ 핵심: payRemain 사용
+	                    .build()
+	    );
+
+	    // DB 상태 갱신
+	    payDao.updatePay(payNo, 0L); // 잔여 금액 0
+	    payDao.cancelAll(payNo); // pay_detail 상태 'N' 처리
+	    payDao.updateDeliveryStatus(payNo, "결제 취소");
+
+	    // 환불된 상품에 대해 리뷰 자동 삭제
+	    List<Long> refundedProductNos = payDao.findRefundedProductNoByPayNo(payNo);
+	    reviewDao.deleteReviewsByUserAndProductList(claimVO.getUsersId(), refundedProductNos);
 	}
 
-
-	
-	
 	//전체결제관리 ㅇㅇㅇㅇㅇㅇㅇㅇ
 	@PostMapping("/total")
 	public DeliveryResponseVO totalList(@RequestBody DeliveryRequestVO deliveryRequestVO) {

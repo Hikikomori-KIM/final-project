@@ -57,6 +57,19 @@ public class ReviewDao {
     	int count = sqlSession.selectOne("review.hasWrittenReview",param);
     	return count>0;
     }
-
+    //환불시 리뷰삭제
+    public int deleteReviewsByUserAndProductList(String usersId,List<Long> productNos) {
+    	Map<String,Object> param = new HashMap<>();
+    	param.put("usersId", usersId);
+    	param.put("productNos", productNos);
+    	return sqlSession.delete("review.deleteReviewsByUserAndProductList",param);
+    }
+    
+    public int deleteReviewByUserAndProduct(String usersId, long productNo) {
+        Map<String, Object> param = new HashMap<>();
+        param.put("usersId", usersId);
+        param.put("productNo", productNo);
+        return sqlSession.delete("review.deleteReviewByUserAndProduct", param);
+    }
 
 }
