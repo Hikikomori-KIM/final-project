@@ -84,6 +84,21 @@
 		where users_id = #{usersId}
 			and product_no = #{productNo}
 	</select>
-
+	
+	<delete id="deleteReviewsByUserAndProductList">
+	  DELETE FROM reviews
+	  WHERE users_id = #{usersId}
+	  AND product_no IN
+	  <foreach collection="productNos" item="productNo" open="(" close=")" separator=",">
+	    #{productNo}
+	  </foreach>
+	</delete>
+	
+	<delete id="deleteReviewByUserAndProduct">
+	  DELETE FROM reviews
+	  WHERE users_id = #{usersId}
+	  AND product_no = #{productNo}
+	</delete>
+	
 
 </mapper>

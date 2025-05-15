@@ -9,16 +9,20 @@
 	<select id="paySequence" resultType="long">
 		select pay_seq.nextval from dual 
 	</select>
+	
 	<insert id="addPay">
 		insert into pay(
 			pay_no, pay_owner, pay_tid,
-			pay_name, pay_total, pay_remain
+			pay_name, pay_total, pay_remain,
+			payment_method, pay_cash
 		)
 		values(
 			#{payNo}, #{payOwner}, #{payTid},
-			#{payName}, #{payTotal}, #{payTotal}
+			#{payName}, #{payTotal}, #{payTotal},
+			#{paymentMethod}, #{payCash}
 		)
 	</insert>
+
 	
 <select id="payDetailSequence" resultType="long">
 		select pay_detail_seq.nextval from dual
@@ -181,5 +185,35 @@
 		select * from pay
 		order by pay_time desc
 	</select>
+	
+	<!-- payNo로 환불된 상품 찾기  -->
+	<select id="findRefundedProductNoByPayNo" resultType="java.lang.Long">
+		select product_no from pay_detail
+		where pay_detail_origin = #{payNo}
+		and pay_detail_status = 'N'
+	</select>
+	
+	<!-- pay_detail 상태값 변경 -->
+	<update id="pay.cancelByTid">
+	    UPDATE pay_detail
+	    SET pay_detail_status = 'N'
+	    WHERE pay_detail_origin IN (
+	        SELECT pay_no FROM pay WHERE pay_tid = #{payTid}
+	    )
+	</update>
+	
+	<!-- pay 테이블의 상태 변경 -->
+	<update id="pay.cancelPayStatusByTid">
+	    UPDATE pay
+	    SET delivery_status = 'CANCEL',
+	        pay_remain = 0
+	    WHERE pay_tid = #{payTid}
+	</update>
 
+	<select id="findPayByTid" resultType="PayDto">
+		select * from pay where pay_tid = #{payTid}
+	</select>
+		
+	
+	
 </mapper>

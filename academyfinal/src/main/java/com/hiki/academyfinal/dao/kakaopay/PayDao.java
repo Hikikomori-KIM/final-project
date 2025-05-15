@@ -127,4 +127,19 @@ public class PayDao {
 	public List<PayDto> selectAllPayList() {
 		return sqlSession.selectList("pay.selectAll");
 	}
+	
+	//payNo에서 환불된 상품 찾기 
+	public List<Long> findRefundedProductNoByPayNo(long payNo){
+		return sqlSession.selectList("pay.findRefundedProductNoByPayNo",payNo);
+	}
+	
+	public void cancelByTid(String payTid) {
+	    sqlSession.update("pay.cancelByTid", payTid);
+	}
+
+	public void cancelPayStatusByTid(String payTid) {
+	    sqlSession.update("pay.cancelPayStatusByTid", payTid);
+	}
+
+	
 }
