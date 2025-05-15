@@ -9,9 +9,11 @@ import java.util.Map;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -252,4 +254,28 @@ public class KakaoPayRestController {
 	public DeliveryResponseVO totalList(@RequestBody DeliveryRequestVO deliveryRequestVO) {
 		return payDao.payAllList(deliveryRequestVO);
 	}
+	
+	//배송상태관리 
+	//배송중
+	@PatchMapping("/onDelivery")
+	public ResponseEntity<String> shippingUpdate(@RequestBody long payNo){
+		payDao.shippingUpdate(payNo);
+	return ResponseEntity.ok("배송중변경완료");
+	}
+	
+	//배송완료로변경
+	@PatchMapping("/completeDelivery")
+	public ResponseEntity<String> shippingComplete(@RequestBody long payNo){
+	payDao.complete(payNo);
+	return ResponseEntity.ok("배송완료로 변경완료");
+	}
+	
+	//반품완료
+	@PatchMapping("/returnComplete")
+	public ResponseEntity<String> returnComplete(@RequestBody long payNo){
+		payDao.returnComplete(payNo);
+	return ResponseEntity.ok("반품완료로 변경완료");
+	}
+
+	
 }
