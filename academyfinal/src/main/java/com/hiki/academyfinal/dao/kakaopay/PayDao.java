@@ -188,8 +188,8 @@ public class PayDao {
 	
 	public boolean updateShippingStatus(long payNo, String newStatus) {
 	    Map<String, Object> params = new HashMap<>();
-	    params.put("payNo", payNo);
 	    params.put("newStatus", newStatus);
+	    params.put("payNo", payNo);
 	    return sqlSession.update("pay.updateShippingStatus", params) > 0;
 	}
 
