@@ -12,6 +12,8 @@ import org.springframework.stereotype.Repository;
 import com.hiki.academyfinal.dto.kakaopay.PayDetailDto;
 import com.hiki.academyfinal.dto.kakaopay.PayDto;
 import com.hiki.academyfinal.dto.kakaopay.PurchaseDetailViewDto;
+import com.hiki.academyfinal.vo.DeliveryRequestVO;
+import com.hiki.academyfinal.vo.DeliveryResponseVO;
 import com.hiki.academyfinal.vo.kakaopay.PayTotalVO;
 
 @Repository
@@ -126,5 +128,19 @@ public class PayDao {
 	
 	public List<PayDto> selectAllPayList() {
 		return sqlSession.selectList("pay.selectAll");
+	}
+	
+	
+	//정정히Dao침투하기
+	//모든 유저의 구매목록 + search+ 판매까지 
+	public DeliveryResponseVO payAllList(DeliveryRequestVO deliveryRequestVO){
+		List<PayDto> list = sqlSession.selectList("delivery.listAll",deliveryRequestVO);
+		Long totalPrice = sqlSession.selectOne("delivery.totalPrice", deliveryRequestVO);
+		int count = sqlSession.selectOne("delivery.count", deliveryRequestVO);
+		DeliveryResponseVO deliveryResponseVO = new DeliveryResponseVO();
+		deliveryResponseVO.setList(list);
+		deliveryResponseVO.setTotalPrice(totalPrice);
+		deliveryResponseVO.setCount(count);
+		return deliveryResponseVO;
 	}
 }
