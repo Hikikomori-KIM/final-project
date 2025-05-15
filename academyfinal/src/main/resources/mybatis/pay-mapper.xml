@@ -213,6 +213,8 @@
 		select * from pay where pay_tid = #{payTid}
 	</select>
 		
-	
-	
+	<!-- No로 셀렉원 -->
+	<select id ="findDto" resultType="payDto">
+		select * from pay where pay_no = #{payNo}
+	</select>
 </mapper>

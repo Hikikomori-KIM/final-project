@@ -14,6 +14,7 @@ import com.hiki.academyfinal.dto.kakaopay.PayDto;
 import com.hiki.academyfinal.dto.kakaopay.PurchaseDetailViewDto;
 import com.hiki.academyfinal.vo.DeliveryRequestVO;
 import com.hiki.academyfinal.vo.DeliveryResponseVO;
+import com.hiki.academyfinal.vo.PayUsersVO;
 import com.hiki.academyfinal.vo.kakaopay.PayTotalVO;
 
 @Repository
@@ -147,7 +148,7 @@ public class PayDao {
 	//정정히Dao침투하기
 	//모든 유저의 구매목록 + search+ 판매까지 
 	public DeliveryResponseVO payAllList(DeliveryRequestVO deliveryRequestVO){
-		List<PayDto> list = sqlSession.selectList("delivery.listAll",deliveryRequestVO);
+		List<PayUsersVO> list = sqlSession.selectList("delivery.listAll",deliveryRequestVO);
 		Long totalPrice = sqlSession.selectOne("delivery.totalPrice", deliveryRequestVO);
 		int count = sqlSession.selectOne("delivery.count", deliveryRequestVO);
 		DeliveryResponseVO deliveryResponseVO = new DeliveryResponseVO();
@@ -192,7 +193,10 @@ public class PayDao {
 	    params.put("payNo", payNo);
 	    return sqlSession.update("pay.updateShippingStatus", params) > 0;
 	}
-
+//걍구매목록조회하기 간단하게 no로만
+	public PayDto findDto(long payNo) {
+		return sqlSession.selectOne("pay.findDto", payNo);
+	}
 
 	
 }
