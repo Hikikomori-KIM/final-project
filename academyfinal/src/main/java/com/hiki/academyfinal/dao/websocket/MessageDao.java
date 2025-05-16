@@ -22,7 +22,7 @@ public class MessageDao {
 		messageDto.setMessageNo(messageNo);
 		sqlSession.insert("messageList.add", messageDto);
 		return messageDto;
-	}
+	} 
 	
 	public List<MessageViewDto> listByRoom(long roomNo, long messageNo) {
 		Map<String, Object> params = new HashMap<>();
