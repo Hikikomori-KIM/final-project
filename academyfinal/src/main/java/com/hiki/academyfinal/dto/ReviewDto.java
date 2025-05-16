@@ -18,5 +18,7 @@ public class ReviewDto {
     private Timestamp reviewCreatedAt;
     private String attachmentNoList; // 이미지 여러개니까 콤마로 이어진 문자열
 
+    // ✅ 작성자(네이버 유저면 이메일, 일반 유저면 아이디)
+    private String reviewWriter;
 }
 

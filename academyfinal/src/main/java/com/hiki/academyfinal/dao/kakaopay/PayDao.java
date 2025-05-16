@@ -187,6 +187,11 @@ public class PayDao {
 		return sqlSession.update("delivery.returnComplete",payNo) >0;
 	}
 	
+	// 환불 시 필요한 상세 내역 조회
+	public List<PayDetailDto> findDetailsByTid(String tid) {
+	    return sqlSession.selectList("pay.findDetailsByTid", tid);
+	}
+
 	public boolean updateShippingStatus(long payNo, String newStatus) {
 	    Map<String, Object> params = new HashMap<>();
 	    params.put("newStatus", newStatus);

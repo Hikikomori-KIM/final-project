@@ -5,16 +5,40 @@
   
   <mapper namespace="accord">
   
+  	<select id="sequence" resultType="long">
+  		select accords_seq.nextval from dual 
+  	</select>
+  
   	<select id="findAll" resultType="AccordDto">
   		select accord_no, accord_name 
   		from accords 
   		order by accord_name 
   	</select>
+  	
 	<select id="findNoByName" resultType="int">
 	 	SELECT accord_no
 	 	FROM Accords
 	    WHERE accord_name = #{accordName}
 	</select>
-	  	
+	
+	<insert id="add">
+		insert into accords(
+			accord_no, accord_name 
+		) values(
+			#{accordNo}, #{accordName} 
+		)
+	</insert>
+	
+	<update id="update">
+		update accords
+		set
+		 accord_name = #{accordName} 
+		where
+		 accord_no = #{accordNo} 
+	</update>
+	
+	<delete id="delete">
+		delete accords where accord_no = #{accordNo} 
+	</delete>
   	
   </mapper>

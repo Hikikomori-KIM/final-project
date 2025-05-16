@@ -5,6 +5,10 @@
   
   <mapper namespace="brands">
   
+  	<select id="sequence" resultType="long">
+  		select brands_seq.NEXTVAL from dual 
+  	</select>
+  	
   	<select id="findAll" resultType="BrandDto">
   		select brand_no, brand_name 
   		from brands 
@@ -14,5 +18,21 @@
   	<delete id="delete">
   		delete brands where brand_no = #{brandNo}
   	</delete>
+  	
+  	<insert id="add">
+  		insert into brands(
+  			brand_no, brand_name 
+  		) values(
+  			#{brandNo}, #{brandName}
+  		)
+  	</insert>
+  	
+  	<update id="update">
+  		update brands
+  		set
+  		 brand_name = #{brandName}
+  		where
+  		 brand_no = #{brandNo}
+  	</update>
   	
   </mapper>

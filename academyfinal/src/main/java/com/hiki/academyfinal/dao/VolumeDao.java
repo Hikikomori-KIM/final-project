@@ -101,5 +101,12 @@ public class VolumeDao {
 	    param.put("qty", qty);
 	    sqlSession.update("volume.decreaseStock", param);
 	}
+	// 재고 복구용 메서드
+	public void increaseStock(long volumeNo, int qty) {
+	    Map<String, Object> param = new HashMap<>();
+	    param.put("volumeNo", volumeNo);
+	    param.put("qty", qty);
+	    sqlSession.update("volume.increaseStock", param);
+	}
 
 }

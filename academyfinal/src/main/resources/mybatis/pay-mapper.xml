@@ -212,6 +212,15 @@
 	<select id="findPayByTid" resultType="PayDto">
 		select * from pay where pay_tid = #{payTid}
 	</select>
+	
+	<select id="pay.findDetailsByTid" resultType="com.hiki.academyfinal.dto.kakaopay.PayDetailDto">
+	    SELECT pd.*
+	    FROM pay_detail pd
+	    JOIN pay p ON pd.pay_detail_origin = p.pay_no
+	    WHERE p.pay_tid = #{tid}
+	      AND pd.pay_detail_status = 'Y'
+	</select>
+
 		
 	<!-- No로 셀렉원 -->
 	<select id ="findDto" resultType="payDto">

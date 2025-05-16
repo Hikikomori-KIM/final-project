@@ -46,7 +46,7 @@ public class ProductsDao {
         return sqlSession.update("products.update", dto);
     }
 
-    public int sequence() {
+    public long sequence() {
         return sqlSession.selectOne("products.sequence");
     }
 
