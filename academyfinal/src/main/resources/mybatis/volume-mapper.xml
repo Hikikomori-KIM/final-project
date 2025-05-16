@@ -143,5 +143,12 @@
 	    SET volume_stock = volume_stock - #{qty}
 	    WHERE volume_no = #{volumeNo}
 	</update>
+	<!--용량 재고 증가용 매퍼-->
+	<update id="increaseStock">
+    UPDATE volume
+    SET volume_stock = volume_stock + #{qty}
+    WHERE volume_no = #{volumeNo}
+	</update>
+	
 
 </mapper>

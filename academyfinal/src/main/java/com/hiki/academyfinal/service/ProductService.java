@@ -70,7 +70,7 @@ public class ProductService {
 			int discounted = discountRate > 0 ? (originPrice * (100 - discountRate) / 100) : originPrice;
 
 			VolumeDto volume = VolumeDto.builder().volumeNo(volumeNo).productNo(productNo).volumeMl(input.getVolumeMl())
-					.volumeStock(input.getVolumeStock()).volumePrice(originPrice).discountedVolumePrice(discounted)
+					.volumeStock(input.getVolumeStock()).volumePrice(originPrice).discountedVolumePrice(discounted).volumeStatus("active") 
 					.build();
 			volumeDao.insert(volume);
 		}

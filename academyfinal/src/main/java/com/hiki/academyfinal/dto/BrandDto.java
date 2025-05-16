@@ -7,6 +7,6 @@ import lombok.NoArgsConstructor;
 
 @Data @AllArgsConstructor @NoArgsConstructor @Builder
 public class BrandDto {
-	private Integer brandNo;
+	private long brandNo;
 	private String brandName;
 }

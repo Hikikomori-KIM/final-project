@@ -184,6 +184,12 @@ public class PayDao {
 	public boolean returnComplete(long payNo){
 		return sqlSession.update("delivery.returnComplete",payNo) >0;
 	}
+	
+	// 환불 시 필요한 상세 내역 조회
+	public List<PayDetailDto> findDetailsByTid(String tid) {
+	    return sqlSession.selectList("pay.findDetailsByTid", tid);
+	}
+
 
 	
 }
