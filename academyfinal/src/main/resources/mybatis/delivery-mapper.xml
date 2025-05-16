@@ -9,15 +9,21 @@
 
 <!-- 페이징 + 컬럼키워드 + 날짜별 유저 결제 목록 + 배송리스트 전체조회 
 	날짜는 버튼으로할거라 세분화 컬럼키워드는 통으로받아서 처리-->
-<select id="listAll" resultType="PayDto">
-  SELECT * FROM (
-      SELECT ROWNUM rn, TMP.* FROM (
-        select * from pay 
-        <include refid="where"></include>
-        order by pay_no desc  
-      ) TMP
-    ) 
-    WHERE rn BETWEEN #{start} AND #{end}
+<select id="listAll" resultType="PayUsersVO">
+		select * from (
+		  select rownum rn, tmp.* from (
+		    select 
+		      p.*, 
+		      u.users_name,
+		      u.users_provider
+		    from pay p
+		    left join users u on p.pay_owner = u.users_id
+		    <include refid="where" />
+		    order by p.pay_no desc
+		  ) tmp
+		)
+		where rn between #{start} and #{end}
+
 	</select>
 <!-- TRUNC = 오늘 00:00 기준으로 잘라줌  -->
 <sql id="where">

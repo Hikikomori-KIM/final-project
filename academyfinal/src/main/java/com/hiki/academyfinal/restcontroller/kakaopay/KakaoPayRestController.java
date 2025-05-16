@@ -208,7 +208,7 @@ public class KakaoPayRestController {
 	public Map<String, Object> getPayDetail(@PathVariable long payNo) {
 	    Map<String, Object> result = new HashMap<>();
 	    result.put("payInfo", payDao.selectOne(payNo));
-	    result.put("productList", payDao.selectPayDetailList(payNo));
+	    result.put("payDetail", payDao.selectPayDetailList(payNo));
 	    return result;
 	}
 //	@GetMapping("/listPay/detail/{payNo}")
@@ -272,27 +272,7 @@ public class KakaoPayRestController {
 		return payDao.payAllList(deliveryRequestVO);
 	}
 	
-	//배송상태관리 
-	//배송중
-	@PatchMapping("/onDelivery")
-	public ResponseEntity<String> shippingUpdate(@RequestBody long payNo){
-		payDao.shippingUpdate(payNo);
-	return ResponseEntity.ok("배송중변경완료");
-	}
 	
-	//배송완료로변경
-	@PatchMapping("/completeDelivery")
-	public ResponseEntity<String> shippingComplete(@RequestBody long payNo){
-	payDao.complete(payNo);
-	return ResponseEntity.ok("배송완료로 변경완료");
-	}
-	
-	//반품완료
-	@PatchMapping("/returnComplete")
-	public ResponseEntity<String> returnComplete(@RequestBody long payNo){
-		payDao.returnComplete(payNo);
-	return ResponseEntity.ok("반품완료로 변경완료");
-	}
 
 	
 }
