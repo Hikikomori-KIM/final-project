@@ -106,6 +106,9 @@ public class UsersDao {
 		}
 		boolean isValid = encoder.matches(usersDto.getUsersPw(), findDto.getUsersPw());
 		if(isValid) {
+			System.out.println("입력 비밀번호: " + usersDto.getUsersPw());
+			System.out.println("DB 비밀번호: " + findDto.getUsersPw());
+			System.out.println("검증결과: " + encoder.matches(usersDto.getUsersPw(), findDto.getUsersPw()));
 			return sqlSession.delete("users.delete",usersDto.getUsersId())>0;
 		}
 		throw new TargetNotFoundException("비번틀림");
