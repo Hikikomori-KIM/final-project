@@ -36,6 +36,7 @@ public class MessageRestController {
 	@Autowired
 	private RoomDao roomDao;
 	
+	// 모든 메시지 목록
 	@GetMapping("/")
 	public MessageListVO list(@RequestHeader(value="Authorization", required=false) String bearerToken) {
 		ClaimVO claimVO = tokenService.parseBearerToken(bearerToken);
@@ -49,9 +50,22 @@ public class MessageRestController {
 	}
 	
 	@GetMapping("/room")
-	public MessageListVO listByRoomNoParam(
+	public MessageListVO listByRoomNo(@RequestHeader(value="Authorization", required=false) String bearerToken,
+			@RequestParam long roomNo) {
+		ClaimVO claimVO = tokenService.parseBearerToken(bearerToken);
+		System.out.println("Bearer Token: " + bearerToken);
+		List<MessageViewDto> list = messageDao.selectListByPaging(claimVO.getUsersId(), roomNo);
+		List<MessageVO> convertList = messageConverter.convertMessageFormat(list, claimVO.getUsersId());
+		return MessageListVO.builder()
+					.last(true) // 페이징이 필요하면 false
+					.list(convertList)
+				.build();
+	}
+	
+	@GetMapping("/room/{roomNo}")
+	public MessageListVO listByRoom(
 	    @RequestHeader(value = "Authorization", required = false) String bearerToken,
-	    @RequestParam("roomNo") long roomNo) {
+	    @PathVariable long roomNo) {
 		
 	    ClaimVO claimVO = tokenService.parseBearerToken(bearerToken);
 	    String usersId = claimVO.getUsersId();
@@ -81,23 +95,8 @@ public class MessageRestController {
 		int cnt = messageDao.cntByPaging(claimVO.getUsersId(), messageNo);
 		boolean last = cnt==list.size();
 		return MessageListVO.builder()
-					.last(last).list(convertList)
+				.last(last).list(convertList)
 				.build();
 	}
-	
-	@GetMapping("/room/{roomNo}")
-	public MessageListVO listByRoomNo(
-	        @RequestHeader(value = "Authorization", required = false) String bearerToken,
-	        @PathVariable long roomNo) {
-
-	    ClaimVO claimVO = tokenService.parseBearerToken(bearerToken);
-	    List<MessageViewDto> list = messageDao.selectListByPaging(claimVO.getUsersId(), roomNo);
-	    List<MessageVO> convertList = messageConverter.convertMessageFormat(list, claimVO.getUsersId());
-	    return MessageListVO.builder()
-	            .last(true) // 페이징 필요하면 false
-	            .list(convertList)
-	            .build();
-	}
-	
 	
 }

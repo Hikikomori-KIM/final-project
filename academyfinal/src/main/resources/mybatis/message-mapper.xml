@@ -23,7 +23,7 @@
 	<!-- 메시지 조회 -->
 	<select id="list" resultType="MessageViewDto">
 		select * from message_view
-		where message_type in ('CAHT', 'SYSTEM')
+		where room_no  = #{roomNo} and message_type in ('CHAT', 'SYSTEM')
 		order by message_no asc
 	</select>
 	
@@ -62,18 +62,19 @@
 
 	
 	<select id="listByPaging" resultType="MessageViewDto">
-	SELECT *
-    FROM message_view
-    WHERE (message_sender = #{usersId} OR message_receiver = #{usersId})
-      AND room_no = #{roomNo}
-    ORDER BY message_no ASC
+		select * from message_view
+		where message_sender = #{usersId}
+		<if test="roomNo!=null">
+			and room_no = #{roomNo}
+		</if>
+		order by message_no asc
 	</select>
 	
 	<!--남은 데이터 개수 확인-->
 	<select id="cntByPaging" resultType="int">
 		select count(*) from message_view
 		where message_type in ('CHAT', 'SYSTEM')
-		<if test="messagNo != null">
+		<if test="messageNo != null">
 			<![CDATA[
 				and message_no < #{messageNo}
 			]]>
