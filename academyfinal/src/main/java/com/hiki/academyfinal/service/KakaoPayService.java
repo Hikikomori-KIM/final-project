@@ -122,12 +122,21 @@ public class KakaoPayService {
 	    HttpEntity<Map<String, String>> entity = new HttpEntity<>(body, headers);
 	    KakaoPayCancelResponseVO response = restTemplate.postForObject(uri, entity, KakaoPayCancelResponseVO.class);
 
-	    // ✅ DB 상태 반영
+	    // ✅ 1. 취소 전에 상세정보 조회
+	    List<PayDetailDto> details = payDao.findDetailsByTid(vo.getTid());
+
+	    // ✅ 2. 상태 변경
 	    payDao.cancelByTid(vo.getTid());             // pay_detail 상태값 N 처리
 	    payDao.cancelPayStatusByTid(vo.getTid());    // pay 테이블 상태, 잔액 처리
 
+	    // ✅ 3. 재고 복구
+	    for (PayDetailDto detail : details) {
+	        volumeDao.increaseStock(detail.getVolumeNo(), detail.getPayDetailQty());
+	    }
+
 	    return response;
 	}
+
 
 	
 	// 결제DB에 등록

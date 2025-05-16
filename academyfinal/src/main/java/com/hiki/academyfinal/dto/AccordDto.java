@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 
 @Data @NoArgsConstructor @AllArgsConstructor @Builder
 public class AccordDto {
-	private Integer accordNo;
+	private long accordNo;
 	private String accordName;
 	
 }

@@ -36,18 +36,30 @@
 
 	<!-- 리뷰 목록 -->
 	<select id="selectReviewList" resultType="ReviewDto">
-		SELECT r.*,
-		(SELECT
-		LISTAGG(ri.attachment_no, ',')
-		WITHIN GROUP (ORDER BY ri.attachment_no)
-		FROM review_image ri
-		WHERE ri.review_no = r.review_no) AS
-		attachmentNoList
+		SELECT 
+			r.review_no,
+			r.product_no,
+			r.review_rating,
+			r.review_comment,
+			r.review_created_at,
+			-- 네이버 유저면 이메일, 아니면 ID
+			CASE 
+				WHEN u.users_provider = 'naver' THEN u.users_email
+				ELSE u.users_id
+			END AS reviewWriter,
+			-- 이미지 번호 리스트
+			(
+				SELECT LISTAGG(ri.attachment_no, ',') 
+				WITHIN GROUP (ORDER BY ri.attachment_no)
+				FROM review_image ri
+				WHERE ri.review_no = r.review_no
+			) AS attachmentNoList
 		FROM reviews r
-		WHERE product_no = #{productNo}
-		ORDER BY
-		review_created_at DESC
+		JOIN users u ON r.users_id = u.users_id
+		WHERE r.product_no = #{productNo}
+		ORDER BY r.review_created_at DESC
 	</select>
+
 
 	<select id="sequence" resultType="long">
 		SELECT reviews_seq.NEXTVAL FROM
