@@ -10,6 +10,7 @@ import org.springframework.stereotype.Repository;
 
 import com.hiki.academyfinal.dto.ProductDetailViewDto;
 import com.hiki.academyfinal.dto.ScentRecommendationDto;
+import com.hiki.academyfinal.vo.MachingListVO;
 
 @Repository
 public class ScentRecommendationDao {
@@ -17,7 +18,7 @@ public class ScentRecommendationDao {
 	@Autowired
 	private SqlSession sqlSession;
 
-	public List<ScentRecommendationDto> list(){
+	public List<MachingListVO> list(){
 		return sqlSession.selectList("scentRecommendation.list");
 	}
 	//아이템만수정
