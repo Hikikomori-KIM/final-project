@@ -22,4 +22,5 @@ public class MessageViewDto {
 	private String receiverType;
 	
 	private Long roomNo;
+	private String usersName;
 }
