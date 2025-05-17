@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -15,12 +16,16 @@ import org.springframework.web.server.ResponseStatusException;
 
 import com.hiki.academyfinal.dao.websocket.MessageDao;
 import com.hiki.academyfinal.dao.websocket.RoomDao;
+import com.hiki.academyfinal.dto.websocket.MessageDto;
 import com.hiki.academyfinal.dto.websocket.MessageViewDto;
+import com.hiki.academyfinal.error.TargetNotFoundException;
 import com.hiki.academyfinal.service.TokenService;
 import com.hiki.academyfinal.util.MessageConverter;
 import com.hiki.academyfinal.vo.ClaimVO;
 import com.hiki.academyfinal.vo.websocket.MessageListVO;
 import com.hiki.academyfinal.vo.websocket.MessageVO;
+
+import io.swagger.v3.oas.annotations.parameters.RequestBody;
 
 @CrossOrigin
 @RestController
@@ -47,6 +52,17 @@ public class MessageRestController {
 		return MessageListVO.builder()
 					.last(last).list(convertList)
 				.build();
+	}
+	
+	@PostMapping("/")
+	public MessageDto addMessage(@RequestBody MessageDto messageDto,
+			@RequestHeader(value="Authorization", required=false) String bearerToken) {
+		ClaimVO claimVO = tokenService.parseBearerToken(bearerToken);
+		messageDto.setMessageSender(claimVO.getUsersId());
+		if(messageDto.getRoomNo() == null)
+			throw new TargetNotFoundException();
+		MessageDto result = messageDao.add(messageDto);
+		return result;
 	}
 	
 	@GetMapping("/room")

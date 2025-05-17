@@ -6,17 +6,17 @@
 <mapper namespace="messageList">
 
 	<!-- 등록 -->
-	<select id="sequence" resultType="long">
+	<select id="sequence" resultType="Long">
 		select message_seq.nextval from dual
 	</select>
 	<insert id="add">
 		insert into message(
-			message_no, message_type, message_content,
-			message_time, message_sender, message_receiver, room_no
+			message_no, room_no, message_type, message_content,
+			message_time, message_sender, message_receiver
 		)
 		values(
-			#{messageNo}, #{messageType}, #{messageContent},
-			#{messageTime}, #{messageSender}, #{messageReceiver}, #{roomNo}
+			#{messageNo}, #{roomNo}, #{messageType}, #{messageContent},
+			#{messageTime}, #{messageSender}, #{messageReceiver}
 		)
 	</insert>
 	
@@ -59,7 +59,6 @@
 			<include refid="top-n-footer"/>
 		) order by message_no asc
 	</select>
-
 	
 	<select id="listByPaging" resultType="MessageViewDto">
 		select * from message_view
