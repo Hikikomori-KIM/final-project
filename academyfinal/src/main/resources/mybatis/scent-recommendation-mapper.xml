@@ -5,8 +5,10 @@
   <mapper namespace="scentRecommendation">
   
   <!-- select -->
-  <select id="list" resultType="scentRecommendationDto">
-  	select * from scent_recommendation
+  <select id="list" resultType="MachingListVO">
+  	select sr.*, p.product_name
+	from scent_recommendation sr
+	join products p on sr.product_no = p.product_no
   </select>
   
   <!-- 관리자가 설정하고싶은 아이템으로변경ㅋ -->
