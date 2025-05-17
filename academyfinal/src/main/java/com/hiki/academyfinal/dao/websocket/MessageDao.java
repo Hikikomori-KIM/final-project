@@ -24,20 +24,20 @@ public class MessageDao {
 		return messageDto;
 	} 
 	
-	public List<MessageViewDto> listByRoom(long roomNo, long messageNo) {
+	public List<MessageViewDto> listByRoom(Long roomNo, Long messageNo) {
 		Map<String, Object> params = new HashMap<>();
 		params.put("roomNo", roomNo);
 		params.put("messageNo", messageNo);
 		return sqlSession.selectList("messageList.listByRoom", params);
 	}
-	
+
 	public List<MessageViewDto> selectListByPaging(String usersId) {
 		Map<String, Object> params = new HashMap<>();
 		params.put("usersId", usersId);
 		return sqlSession.selectList("messageList.listByPaging", params);
 	}
 	
-	public List<MessageViewDto> selectListByPaging(String usersId, long roomNo) {
+	public List<MessageViewDto> selectListByPaging(String usersId, Long roomNo) {
 		Map<String, Object> params = new HashMap<>();
 		params.put("usersId", usersId);
 		params.put("roomNo", roomNo);
@@ -50,15 +50,15 @@ public class MessageDao {
 		return sqlSession.selectOne("messageList.cntByPaging", params);
 	}
 	
-	public int cntByPaging(String usersId, long messageNo) {
+	public int cntByPaging(String usersId, Long roomNo) {
 		Map<String, Object> params = new HashMap<>();
 		params.put("usersId", usersId);
-		params.put("messageNo", messageNo);
+		params.put("roomNo", roomNo);
 		return sqlSession.selectOne("messageList.cntByPaging", params);
 	}
 	
 	// message 테이블에 있는 RoomNo가 같은 메시지만 불러오도록 처리
-	public boolean checkMessageAccess(long messageNo, long roomNo, String usersId) {
+	public boolean checkMessageAccess(Long messageNo, Long roomNo, String usersId) {
 		Map<String, Object> params = new HashMap<>();
 		params.put("messageNo", messageNo);
 		params.put("roomNo", roomNo);
