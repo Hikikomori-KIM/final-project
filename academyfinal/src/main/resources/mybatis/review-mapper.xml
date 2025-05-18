@@ -111,6 +111,14 @@
 	  WHERE users_id = #{usersId}
 	  AND product_no = #{productNo}
 	</delete>
+	<!-- 리뷰개수 -->
+	<select id="countByProduct" parameterType="long" resultType="int">
+	  SELECT COUNT(*) FROM reviews WHERE product_no = #{productNo}
+	</select>
+	<!-- 리뷰평점 -->
+	<select id="averageRatingByProduct" parameterType="long" resultType="double">
+	  SELECT NVL(AVG(review_rating), 0) FROM reviews WHERE product_no = #{productNo}
+	</select>
 	
 
 </mapper>

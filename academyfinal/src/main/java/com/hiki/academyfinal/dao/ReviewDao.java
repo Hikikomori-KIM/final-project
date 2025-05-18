@@ -71,5 +71,14 @@ public class ReviewDao {
         param.put("productNo", productNo);
         return sqlSession.delete("review.deleteReviewByUserAndProduct", param);
     }
+    // 특정 상품의 리뷰 개수
+    public int countByProduct(long productNo) {
+        return sqlSession.selectOne("review.countByProduct", productNo);
+    }
 
+    // 특정 상품의 평균 평점
+    public double averageRatingByProduct(long productNo) {
+        Double result = sqlSession.selectOne("review.averageRatingByProduct", productNo);
+        return result != null ? result : 0.0;
+    }
 }

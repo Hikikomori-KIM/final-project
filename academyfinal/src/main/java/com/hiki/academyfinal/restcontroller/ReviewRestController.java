@@ -1,7 +1,9 @@
 package com.hiki.academyfinal.restcontroller;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -105,6 +107,17 @@ public class ReviewRestController {
 	public void admindeleteReview(@PathVariable long reviewNo) {
 		// 이미지 연동된 첨부파일도 삭제하려면 여기서 AttachmentService 호출 필요
 		reviewDao.adminDeleteReview(reviewNo);
+	}
+	//리뷰수 및 평점
+	@GetMapping("/stat/{productNo}")
+	public Map<String, Object> getReviewStat(@PathVariable long productNo) {
+	    int count = reviewDao.countByProduct(productNo);
+	    double average = reviewDao.averageRatingByProduct(productNo);
+
+	    Map<String, Object> result = new HashMap<>();
+	    result.put("count", count);
+	    result.put("average", average);
+	    return result;
 	}
 
 }
