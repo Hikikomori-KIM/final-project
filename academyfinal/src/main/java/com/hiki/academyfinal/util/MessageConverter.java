@@ -23,11 +23,12 @@ public class MessageConverter {
 				convertList.add(ChatResponseVO.builder()
 							.messageNo(messageViewDto.getMessageNo())
 							.usersId(messageViewDto.getMessageSender())
-							.usersName(messageViewDto.getSenderId())
+							.usersName(messageViewDto.getUsersName())
 							.usersType(messageViewDto.getSenderType())
 							.type("CHAT")
 							.content(messageViewDto.getMessageContent())
 							.time(messageViewDto.getMessageTime().toLocalDateTime())
+							.roomNo(messageViewDto.getRoomNo())
 						.build());
 						break;
 			case "SYSTEM" :

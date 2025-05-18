@@ -18,4 +18,5 @@ public class ChatResponseVO implements MessageVO {
 	private LocalDateTime time;
 	
 	private Long roomNo;
+	// 클라이언트에 메시지를 보낼 때 어떤 방의 메시지인지 알려줘야 함
 }

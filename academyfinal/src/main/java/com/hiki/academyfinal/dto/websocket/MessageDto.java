@@ -16,5 +16,5 @@ public class MessageDto {
 	private String messageSender;
 	private String messageReceiver;
 	
-	private long roomNo;
+	private Long roomNo;
 }

@@ -144,15 +144,19 @@ public class UsersRestController {
 			return ResponseEntity.ok("비밀번호 변경 완료");
 		}
 	
-		@DeleteMapping
+		@DeleteMapping("/exit")
 		public void exit(@RequestBody UsersLoginVO vo) {
+			System.out.println("====탈퇴로직시작====");
+			System.out.println("vo"+vo);
 			ModelMapper mapper = new ModelMapper();
 			UsersDto usersDto = mapper.map(vo, UsersDto.class);
-			usersTokenDao.clean(vo.getUsersId());
+			System.out.println("usersDto : "+ usersDto);
 			usersDao.exit(usersDto);	
+			usersTokenDao.clean(vo.getUsersId());
 		}
 		@DeleteMapping("/naver/{usersId}")
 		public void exitNaver(@PathVariable String usersId) {
+			System.out.println("시발설마");
 			usersTokenDao.clean(usersId);
 			usersDao.exitNaver(usersId);
 		}

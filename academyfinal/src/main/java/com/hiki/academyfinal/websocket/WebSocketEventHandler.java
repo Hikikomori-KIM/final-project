@@ -25,7 +25,7 @@ import lombok.extern.slf4j.Slf4j;
 public class WebSocketEventHandler {
 
     @Autowired
-    private SimpMessagingTemplate messagingTemplate;
+    private SimpMessagingTemplate messagingTemplate; // 전송 도구
     @Autowired
     private TokenService tokenService;
     @Autowired

@@ -1,6 +1,5 @@
 package com.hiki.academyfinal.restcontroller;
 
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -26,6 +25,7 @@ import com.hiki.academyfinal.dto.ProductDetailViewDto;
 import com.hiki.academyfinal.dto.ScentListViewDto;
 import com.hiki.academyfinal.dto.ScentRecommendationDto;
 import com.hiki.academyfinal.service.SurveyService;
+import com.hiki.academyfinal.vo.MachingListVO;
 import com.hiki.academyfinal.vo.MachingPageVO;
 import com.hiki.academyfinal.vo.MachingResponseVO;
 import com.hiki.academyfinal.vo.RequestMakeSurveyVO;
@@ -87,7 +87,7 @@ public class ScentRestController {
 	}
 	//관리자 매칭리스트
 	@GetMapping("/list")
-	public List<ScentRecommendationDto> list(){
+	public List<MachingListVO> list(){
 		return scentRecommendationDao.list();
 	} 
 	//매칭 프로덕트리스트 보여주기+탑앤쿼리 네임서치
