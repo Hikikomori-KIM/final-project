@@ -204,7 +204,7 @@
 	<!-- pay 테이블의 상태 변경 -->
 	<update id="pay.cancelPayStatusByTid">
 	    UPDATE pay
-	    SET delivery_status = 'CANCEL',
+	    SET delivery_status = '결제취소',
 	        pay_remain = 0
 	    WHERE pay_tid = #{payTid}
 	</update>

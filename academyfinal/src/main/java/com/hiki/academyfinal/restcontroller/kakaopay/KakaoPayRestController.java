@@ -260,6 +260,7 @@ public class KakaoPayRestController {
 	    payDao.updatePay(payNo, 0L); // 잔여 금액 0
 	    payDao.cancelAll(payNo); // pay_detail 상태 'N' 처리
 	    payDao.updateDeliveryStatus(payNo, "결제 취소");
+	    payDao.returnProduct(payNo);
 
 	    // 환불된 상품에 대해 리뷰 자동 삭제
 	    List<Long> refundedProductNos = payDao.findRefundedProductNoByPayNo(payNo);
