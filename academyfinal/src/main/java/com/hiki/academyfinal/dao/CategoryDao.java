@@ -15,13 +15,13 @@ public class CategoryDao {
     private SqlSession sqlSession;
 
     // 🔹 시퀀스 미리 조회 (insert 시 사용)
-    public int sequence() {
+    public long sequence() {
         return sqlSession.selectOne("category.sequence");
     }
 
     // 🔹 카테고리 등록
     public CategoryDto insert(CategoryDto dto) {
-        int categoryNo = sequence();
+    	long categoryNo = sequence();
         dto.setCategoryNo(categoryNo);
         sqlSession.insert("category.add", dto);
         return dto;
