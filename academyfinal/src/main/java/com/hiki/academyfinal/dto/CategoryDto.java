@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 
 @Data @NoArgsConstructor @AllArgsConstructor @Builder
 public class CategoryDto {
-	private int categoryNo;
+	private long categoryNo;
 	private String categoryName;
-	private int parentCategoryNo;
+	private long parentCategoryNo;
 }
